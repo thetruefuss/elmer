@@ -1,0 +1,59 @@
+{% if users_list %}
+<br>
+<div class="card border-light">
+  <div class="card-header text-center font-weight-bold" style="color:#607d8b; border-bottom: 2px solid #1f89de; display: inline-block; font-size: 16px; font-weight: 900; letter-spacing: -.4px; margin: 3px 0; padding-bottom: 0; text-transform: uppercase;">
+    Suggested Members
+  </div>
+{% for user in users_list %}
+<div class="card" style="border:none;border-bottom: 1px solid rgba(0,0,0,.125); margin-bottom:5px;" id="su">
+  <div class="card-body" style="padding:10px;">
+    <div class="text-center" style="float:left; width:20%;">
+      {% if user.profile.get_picture %}
+      <img src="{{user.profile.get_picture}}" class="rounded" width="30px" height="30px">
+      {% endif %}
+    </div>
+    <div style="float:right; width:80%;">
+      <h5 style="font-size:16px;"><a href="{% url 'user_profile' user.username %}" class="card-link" title="{{user.username}}">{{user.profile.screen_name}}</a>
+        {% ifequal current_user user %}
+        {% else %}
+        	{% if current_user in user.profile.followers.all %}
+          		<a href="{% url 'follow_user' user.id %}" class="btn btn-primary btn-sm" id="follow_su" style="float:right;">Unfollow</a>
+        	{% else %}
+            	<a href="{% url 'follow_user' user.id %}" class="btn btn-outline-primary btn-sm" id="follow_su" style="float:right;">Follow</a>
+        	{% endif %}
+        {% endifequal %}
+
+     </h5>
+    </div>
+  </div>
+</div>
+{% endfor %}
+</div>
+<script>
+// Follow user
+$(document).ready(function(){
+    $("a#follow_su").on("click", function () {
+    {% if not current_user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    var $follow_url=$(this).attr("href");
+    var $follow_btn=$(this);
+    $.ajax({
+      url: $follow_url,
+      type: 'GET',
+      success: function (data) {
+        $follow_btn.text(data);
+        console.log('working')
+        if ($follow_btn.hasClass('btn-outline-primary')) {
+          $follow_btn.removeClass('btn-outline-primary').addClass('btn-primary');
+        } else if ($follow_btn.hasClass('btn-primary')) {
+          $follow_btn.removeClass('btn-primary').addClass('btn-outline-primary');
+        } else { console.log('Unexpected error!'); }
+      }
+    });
+    {% endif %}
+    return false;
+  });
+});
+</script>
+{% endif %}

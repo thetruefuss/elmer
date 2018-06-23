@@ -1,0 +1,14 @@
+{% load humanize %}
+{% load emoticons_tags %}
+
+<li message-id="{{ chat_msg.id }}">
+  <a href="{% url 'user_profile' chat_msg.from_user.username %}" title="{{ chat_msg.from_user.profile.screen_name }}">
+  <img src="{{ chat_msg.from_user.profile.get_picture }}" class="picture">
+  </a>
+  <div style="margin:10px;">
+    <div class="speech-bubble">
+      <p>{{ chat_msg.message|emoticons }}</p>
+    </div>
+    <small class="pull-right text-muted">{{ chat_msg.date }}</small>
+  </div>
+</li>

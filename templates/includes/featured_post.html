@@ -1,0 +1,55 @@
+{% if featured_post %}
+<br>
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+    <a href="{% if featured_post.0.link %}{{featured_post.0.link}}{% else %}#{% endif %}" target="_blank">
+      <img class="d-block w-100" src="{{ featured_post.0.photo.url }}" alt="First slide">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>{{ featured_post.0.title }}</h5>
+    </a>
+      </div>
+    </div>
+    <div class="carousel-item">
+    <a href="{% if featured_post.1.link %}{{featured_post.1.link}}{% else %}#{% endif %}" target="_blank">
+      <img class="d-block w-100" src="{{ featured_post.1.photo.url }}" alt="Second slide">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>{{ featured_post.1.title }}</h5>
+    </a>
+      </div>
+    </div>
+    <div class="carousel-item">
+    <a href="{% if featured_post.2.link %}{{featured_post.2.link}}{% else %}#{% endif %}" target="_blank">
+      <img class="d-block w-100" src="{{ featured_post.2.photo.url }}" alt="Third slide">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>{{ featured_post.2.title }}</h5>
+    </a>
+      </div>
+    </div>
+    <div class="carousel-item">
+    <a href="{% if featured_post.3.link %}{{featured_post.3.link}}{% else %}#{% endif %}" target="_blank">
+      <img class="d-block w-100" src="{{ featured_post.3.photo.url }}" alt="Third slide">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>{{ featured_post.3.title }}</h5>
+    </a>
+      </div>
+    </div>
+    <div class="carousel-item">
+    <a href="{% if featured_post.4.link %}{{featured_post.4.link}}{% else %}#{% endif %}" target="_blank">
+      <img class="d-block w-100" src="{{ featured_post.4.photo.url }}" alt="Third slide">
+      <div class="carousel-caption d-none d-md-block">
+        <h5>{{ featured_post.4.title }}</h5>
+    </a>
+      </div>
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleSlidesOnly" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleSlidesOnly" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+  </div>
+</div>
+{% endif %}

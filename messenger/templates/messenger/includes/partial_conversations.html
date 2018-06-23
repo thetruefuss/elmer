@@ -1,0 +1,24 @@
+<div class="users-list">
+  <h5>Contacts ({{users_list.count}})</h5>
+  {% if users_list %}
+    {% for user in users_list %}
+      <a href="{% url 'messages' user.username %}" class="card-link" style="margin-left:0px; position:relative;" title="{{ user.profile.screen_name }}">
+        <img src="{{ user.profile.get_picture }}" class="conversation-portrait">
+        {% for conversation in conversations %}
+          {% if conversation.user.username == user.username %}
+            {% if conversation.unread > 0 %}
+              <span style="background-color:#1f89de;font-weight:bold;">{{ conversation.unread }}</span>
+            {% endif %}
+            {% if conversation.user.username == active %}
+              <span style="background-color:transparent;"><i class="fa fa-check-circle fa-lg" style="color:green;"></i></span>
+            {% endif %}
+          {% endif %}
+        {% endfor %}
+      </a>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-light text-center" role="alert">
+    You don't have any contacts right now.
+    </div>
+  {% endif %}
+</div>

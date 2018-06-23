@@ -1,0 +1,68 @@
+<br>
+<div class="card border-light">
+  <div class="card-header" style="color:#607d8b; border-bottom: 2px solid #1f89de; display: inline-block; font-size: 16px; font-weight: 900; letter-spacing: -.4px; margin: 3px 0; padding-bottom: 0; text-transform: uppercase; text-align:center;">
+    Get updates now
+    <br>
+    {% if board in request.user.subscribed_boards.all %}
+      <a href="{% url 'subscribe' board.slug %}" class="btn btn-secondary btn-sm" id="subscribe_board" style="margin-bottom:10px;">Unsubscribe</a>
+    {% else %}
+        <a href="{% url 'subscribe' board.slug %}" class="btn btn-primary btn-sm" id="subscribe_board" style="margin-bottom:10px;">Subscribe</a>
+    {% endif %}
+  </div>
+  <ul class="list-group list-group-flush" style="font-size:14px;">
+    <li class="list-group-item text-center text-muted">Board Info</li>
+    <li class="list-group-item"><b>Title: </b>{{board.title}}</li>
+    <li class="list-group-item"><b>Description: </b>{{board.description}}</li>
+    <li class="list-group-item"><b>Total Posts: </b>{{board.submitted_subjects.count}}</li>
+    <li class="list-group-item"><b>Admins: </b>
+    {% for admin in board.get_admins %}
+        <a href="{% url 'user_profile' admin.username %}">{{admin.profile.screen_name}}</a></p>
+    {% endfor %}
+    </li>
+    <li class="list-group-item"><b>Subscribers: </b><span id="board_subscribers">{{board.subscribers.count}}</span></li>
+
+    {# ONLY ADMINS CAN VIEW THESE OPTIONS #}
+    {% if admins %}
+      {% if request.user in admins %}
+        <li class="list-group-item text-center text-muted">Board Controls</li>
+        <li class="list-group-item"><b>Reports: </b><a href="{% url 'show_reports' board.slug %}" title="View reports about subjects and comments">View all reports</a></li>
+        <li class="list-group-item"><b>Edit board: </b><a href="{% url 'edit_board_cover' board.slug %}" title="Change the cover of this board">Change Cover</a></li>
+        <li class="list-group-item"><b>Banned Users: </b><a href="{% url 'banned_users' board.slug %}">View all banned users</a></li>
+      {% endif %}
+    {% endif %}
+  </ul>
+</div>
+
+
+<script type="text/javascript">
+// Subscribe boards
+$(document).ready(function(){
+  $("a#subscribe_board").on("click", function () {
+    {% if not request.user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    var $msg=$(this);
+    var $subscribe_url=$(this).attr("href");
+    var $board_subscribers=$('span#board_subscribers')
+    $.ajax({
+      url: $subscribe_url,
+      type: 'GET',
+      success: function (data) {
+        if ($msg.text() == 'Subscribe') {
+          $msg.removeClass('btn-primary');
+          $msg.addClass('btn-secondary');
+          $msg.text('Unsubscribe');
+          $board_subscribers.text(data);
+        } else if ($msg.text() == 'Unsubscribe') {
+          $msg.removeClass('btn-secondary');
+          $msg.addClass('btn-primary');
+          $msg.text('Subscribe');
+          $board_subscribers.text(data);
+        } else { console.log('Unexpected error!'); }
+      }
+    });
+    {% endif %}
+    return false;
+  });
+});
+</script>

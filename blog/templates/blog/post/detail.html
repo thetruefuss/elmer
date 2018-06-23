@@ -1,0 +1,67 @@
+{% extends "blog/index.html" %}
+{% load staticfiles %}
+{% load blog_tags %}
+{% load humanize %}
+
+
+
+{% block content %}
+<div class="details">
+		<div class="container">
+			<div class="det_pic">
+				  <img src="{{post.photo.url}}" class="img-responsive" alt="">
+			</div>
+			<div class="det_text">
+				<p>{{post.body|markdown|linebreaks}}</p>
+			</div>
+			<ul class="links">
+				  		 <li><i class="date"> </i><span class="icon_text">{{post.publish|naturaltime}}</span></li>
+				  		 <li><a href="#"><i class="admin"> </i><span class="icon_text">{{post.author}}</span></a></li>
+				  		 <li class="last"><a href="{{post.get_absolute_url}}"><i class="permalink"> </i><span class="icon_text">Permalink</span></a></li>
+				    </ul>
+					<ul class="links_middle">
+			  		     <li><a href="#"><i class="title-icon"> </i><span class="icon_text">{{post.title}}</span></a></li>
+				  		 <li><i class="tags"> </i><span class="icon_text">Tags</span></li>
+		  		    </ul>
+					<ul class="links_bottom">
+		  		    	<li><a href="#"><i class="comments"> </i><span class="icon_text">{{comments.count}}</span></a></li>
+		  		    </ul>
+			 <div class="comments1">
+								<h4>COMMENTS</h4>
+			  				<div class="comments-main">
+			  					{% for comment in comments %}
+									<div class="col-md-10 cmts-main-right">
+										<h5>{{comment.author.profile.screen_name }}</h5>
+										<p>{{comment.body}}</p>
+										<div class="cmts">
+											<div class="cmnts-left">
+												<p>{{comment.created|naturaltime}}</p>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+
+									<div class="clearfix"></div>
+								{% empty %}
+								<p>&nbsp No comments yet.</p>
+								{% endfor %}
+								</div>
+			  				</div>
+			<div class="lev">
+			<div class="leave">
+				<h4>Leave a comment</h4>
+				</div>
+				<form id="commentform" action="." method="post">
+            {% csrf_token %}
+                <label for="comment">Comment</label>
+                <textarea name="textarea"></textarea>
+             <div class="clearfix"></div>
+               <input type="submit" id="submit" name="submit" value="Send">
+            <div class="clearfix"></div>
+           </form>
+				  </div>
+
+		</div>
+	</div>
+
+{% endblock %}

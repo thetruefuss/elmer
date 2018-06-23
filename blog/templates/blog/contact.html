@@ -1,0 +1,47 @@
+{% extends "blog/index.html" %}
+{% load staticfiles %}
+
+
+
+
+{% block content %}
+<div class="contact-top">
+<div class="container">
+		<h2>Contact</h2>		
+			<div class="contact">
+			<p>There are plenty of ways to contact. One of them is particularly self revealing. Other ways to make a contact is <a href='https://www.twitter.com/aleieiei'>here</a> or <a href='https://web.facebook.com/selfishhelper'>here</a> and <a href='http://www.erebbit.com/u/eon'>here</a>.</p>
+<hr>
+					<div class="contact-down">
+							<div class="contact-right">
+								<div class="col-md-6 contact-left">
+									<h5>CONTACT-INFO</h5>
+										<p>If you have any thoughts to share, any ideas to give feedback or any difference of ideologies to criticize us, just use the given form to contact us. By the way you don't need to have thousand thoughts in your mind to contact us.:) </p>
+									 			<address>
+													<strong>Not registered in any way<br>
+													No offices,<br>
+													No place to crash.</strong><br>
+													Telephone: 090078601<br>
+													FAX: +0 000 000 0000<br>
+													E-mail: <a href="mailto:sundarpichai@gmail.com">sundarpichai@gmail.com<script cf-hash="f9e31" type="text/javascript">
+													/* <![CDATA[ */!function(){try{var t="currentScript"in document?document.currentScript:function(){for(var t=document.getElementsByTagName("script"),e=t.length;e--;)if(t[e].getAttribute("cf-hash"))return t[e]}();if(t&&t.previousSibling){var e,r,n,i,c=t.previousSibling,a=c.getAttribute("data-cfemail");if(a){for(e="",r=parseInt(a.substr(0,2),16),n=2;a.length-n;n+=2)i=parseInt(a.substr(n,2),16)^r,e+=String.fromCharCode(i);e=document.createTextNode(e),c.parentNode.replaceChild(e,c)}}}catch(u){}}();/* ]]> */</script></a><br>
+												</address>
+								</div>
+								<div class="col-md-6 contact-info">
+											<form action="." method="post">
+												{% csrf_token %}
+												<input type="text" name="name" value="NAME" onfocus="this.value='';" onblur="if (this.value == '') {this.value = 'NAME';}">				
+												<input type="text" name="email" value="EMAIL" onfocus="this.value='';" onblur="if (this.value == '') {this.value = 'EMAIL';}">
+												<textarea cols="70" rows="5" name="message" onfocus="this.value='';" onblur="if (this.value == '') {this.value = 'MESSAGE';}" >MESSAGE </textarea>
+												<div class="clearfix"> </div>
+												<input type="submit"value="SEND" />
+												
+											</form>					
+								</div>
+								<div class="clearfix"> </div>
+								</div>
+			</div>
+</div>	
+	</div>
+</div>
+
+{% endblock %}

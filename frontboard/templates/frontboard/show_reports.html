@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load frontboard_tags %}
+{% load humanize %}
+{% block title %}<title>Reports | Erebbit</title>{% endblock %}
+
+{% block content %}
+
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Reports</span></h1>
+<p class="text-muted text-center">Keep your board safe and fun.<br/> Delete / Ban unwanted Subjects & Comments / Authors & Commenters from the board.</p>
+
+{% for report in reports %}
+<div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
+  <div class="card-body" style="padding:10px;">
+    {% if report.subject %}
+      <h5 style="font-size:16px;"><a href="{{ report.subject.get_absolute_url }}" title="view subject">{{report}}</a></h5>
+      <br><a href="{% url 'deactivate_subject' report.subject.slug %}" class="btn btn-outline-primary btn-sm" title="Click to delete this subject.">Delete</a>
+      <a href="{% url 'ban_user' report.subject.board.slug report.subject.author.id %}" class="btn btn-outline-danger btn-sm" title="Click to ban author from the board.">Ban Author</a>
+
+    {% else %}
+      <h5 style="font-size:16px;"><a href="{{ report.comment.subject.get_absolute_url }}" title="view comment">{{report}}</a></h5>
+      <br><a href="{% url 'deactivate_comment' report.comment.id %}" class="btn btn-outline-primary btn-sm" title="Click to delete this comment.">Delete</a>
+      <a href="{% url 'ban_user' report.comment.subject.board.slug report.comment.commenter.id %}" class="btn btn-outline-danger btn-sm" title="Click to ban commenter from the board.">Ban Commenter</a>
+    {% endif %}
+
+    <div style="float:right;">
+      <p class="text-muted">Reported <span title="{{report.created|date:"D d M Y"}} | {{report.created|time:"H:i:s"}}">{{report.created|naturaltime}}</span> by <a href="{% url 'user_profile' report.reporter.username %}" title="view profile">{{report.reporter.profile.screen_name}}</a></p>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}<title>Edit Subject | Erebbit</title>{% endblock %}
+
+{% block form_content %}
+
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Edit Subject</span></h1>
+
+<form action="." method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ subject_form|crispy }}
+
+  <button type="submit" class="btn btn-primary btn-block" id="submit_subject">Submit</button>
+</form>
+
+
+<script type="text/javascript">
+// Check file size
+$(document).ready(function(){
+  $("input#id_photo").on("change", function () {
+    var file_size = this.files[0].size;
+    if (file_size > 2097152) {
+      alert("Image size should be less than 2 megabytes.")
+      $("button#submit_subject").prop('disabled', true);
+    } else {
+        $("button#submit_subject").prop('disabled', false);
+    }
+  });
+});
+</script>
+{% endblock %}

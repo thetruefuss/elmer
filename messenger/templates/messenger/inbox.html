@@ -1,0 +1,63 @@
+{% extends 'messenger/base_messages.html' %}
+{% block title %}<title>Messages | Erebbit</title>{% endblock %}
+
+{% block container %}
+  <div class="conversation">
+
+    {% if chat_msgs %}
+    <ul id="msg-container" style="padding:0px;">
+      {% for chat_msg in chat_msgs %}
+        {% include 'messenger/includes/partial_message.html' %}
+      {% endfor %}
+    </ul>
+
+    <script type="text/javascript">
+    // Load new messages
+    $(document).ready(function(){
+      function load_new_messages() {
+        var $last_message_id=$("#msg-container li:last-child").attr('message-id');
+        var msg_container = $("#msg-container");
+        $.ajax({
+          url: '{% url "load_new_messages" %}',
+          data: {
+            'username': '{{ active }}',
+            'last_message_id': $last_message_id,
+          },
+          cache: false,
+          success: function (data) {
+            $(msg_container).append(data);
+            $('.conversation').scrollTop($('.conversation')[0].scrollHeight);
+          },
+          complete: function () {
+            window.setTimeout(load_new_messages, 2000); // refresh after 2 seconds
+          }
+        });
+      };
+      load_new_messages();
+    });
+    </script>
+    {% else %}
+
+    <div class="jumbotron" id="message_jumbotron">
+      <h2>Start a new conversation.</h2>
+      <p class="lead">Keep your chat short &amp; concise.</p>
+      <hr class="my-4">
+      <p>If you don't have any contacts, click the button below to send message requests to network users.</p>
+      <p class="lead">
+        <a class="btn btn-primary btn-sm" href="{% url 'view_all_users' %}" role="button">Send Requests <i class="fa fa-send-o"></i></a>
+      </p>
+    </div>
+    <ul id="msg-container" style="padding:0px;"></ul>
+    {% endif %}
+
+    <script type="text/javascript">window.onload = $('.conversation').scrollTop($('.conversation')[0].scrollHeight);</script>
+  </div>
+  <div class="chat-box">
+    <img src="{{ user.profile.get_picture }}" class="picture">
+    <form role="form" method="post" action="{% url 'send_message' %}" id="send">
+      {% csrf_token %}
+      <input type="hidden" name="to" value="{{ active }}">
+      <input class="form-control" type="text" name="message" placeholder="Type a message here" maxlength="1000" autocomplete="off" {% if never_send_msg %}disabled{% endif %}>
+    </form>
+  </div>
+{% endblock container %}

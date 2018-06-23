@@ -1,0 +1,41 @@
+{% extends "blog/index.html" %}
+{% load staticfiles %}
+
+
+
+{% block content %}
+<!-- header -->
+<div class="about">
+<div class="container">
+		<h2>About</h2>		
+<div class="biography">
+		<div class="biographys">
+			<div class="col-md-4 biography-info">
+				<img src="{{me.profile.get_picture}}" class="img-responsive" alt=""/>
+			</div>
+			<div class="col-md-8 biography-into">
+				<h4>Usman Ali</h4>
+				<p>The best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the who knows.</p>
+				<a href="{% url 'user_profile' me.username %}" class="link">Profile</a>
+			</div>
+					<div class="clearfix"> </div>
+	</div>
+		<div class="biographys">
+			<div class="col-md-8 biography-into">
+				<h4>Ali Saleh</h4>
+				<p>The best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the best of the who knows.</p>
+				<a href="{% url 'user_profile' ali.username %}" class="link">Profile</a>
+			</div>
+			<div class="col-md-4 biography-info">
+				<img src="{{ali.profile.get_picture}}" class="img-responsive" alt=""/>
+			</div>
+				<div class="clearfix"> </div>
+		</div>
+
+					<div class="clearfix"> </div>
+		</div>
+</div>
+	</div>
+	</div>
+
+{% endblock %}

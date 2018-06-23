@@ -1,0 +1,41 @@
+<style>
+    #boards_container {
+      text-align: center;
+      line-height: 50px;
+      background-color:white; box-shadow:0 0 2px 1px #e6e1e2; padding:30px; margin-top:15px;
+    }
+    #boards_container a{
+    border-radius: 100px;
+    padding: 4px 15px;
+    margin: 5px;
+    border: 1px solid #d6d6d6;
+    text-decoration: none;
+    }
+    #boards_container a:hover{
+    border: 1px solid #3f51b5;
+    }
+</style>
+<div class="container" id="boards_container">
+  <h3 class="text-muted">Subscribed Boards</h3>
+  {% for board in boards_list %}
+    <a href="{{ board.get_absolute_url }}">{{ board.title }}</a>
+  {% empty %}
+    <h5>You have not <b>subscribed</b> any boards yet.</h5>
+  {% endfor %}
+  <p>
+  <a href="{% url 'view_all_boards' %}" class="btn btn-sm btn-primary">Discover boards</a>
+  <a href="{% url 'user_created_boards' user.username %}" class="btn btn-sm btn-primary">My boards</a>
+  </p>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#boards_container").hide();
+
+  $("#boards_container_trigger").click(function(){
+    $("#boards_container").slideToggle("slow", function() {
+      // Animation complete.
+    });
+  });
+});
+</script>

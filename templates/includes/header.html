@@ -1,0 +1,65 @@
+{% load static %}
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-expand-md navbar-light extra_navbar_styling">
+  <div class="container">
+    <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/erebbit_logo.png' %}?lastmod=1" alt="Erebbit" height="30px" style="position:relative;top:-3px;"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar" aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="topNavbar">
+
+      <ul class="navbar-nav mr-auto">
+        <form class="form-inline" {% if not bv %}action="{% url 'search' %}"{% else %}action="{% url 'board_search' board.slug %}"{% endif %} method="get">
+          <div class="form-group">
+            <label for="search" class="sr-only">Search</label>
+            <input type="text" class="form-control form-control-sm" id="search" name="query" {% if not bv %}placeholder="Search Erebbit"{% else %}placeholder='Search "{{board.title}}"'{% endif %} style="width:360px;border-radius: 3rem;text-indent:10px;margin:0px 15px;">
+          </div>
+        </form>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/?trending=True">Trending</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% if request.user.is_authenticated %}#{% else %}{% url 'view_all_boards' %}{% endif %}" id="boards_container_trigger">Boards</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/blog">Blog</a>
+        </li>
+      </ul>
+
+      {% if request.user.is_authenticated %}
+      <!-- USER LINKS -->
+      <a href="{% url 'inbox' %}" style="margin-right:15px; position:relative;" id="check_messages" title="Inbox"><i class="fa fa-inbox fa-lg" aria-hidden="true"></i><span id="messages_count"></span></a>
+      <a href="{% url 'activities' %}" style="margin-right:15px; position:relative;" id="check_activities" title="Notifications"><i class="fa fa-bell-o fa-lg" aria-hidden="true"></i><span id="activities_count"></span></a>
+      <div class="dropdown">
+        <a href="#" role="button" id="user_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Profile and settings"><img src="{{request.user.profile.get_picture}}" style="width:36px; height:36px; border-radius:50px;"></a>
+
+        <div class="dropdown-menu" aria-labelledby="user_dropdown" style="right:0; left:auto;">
+          <a class="dropdown-item font-weight-bold" href="{% url 'user_profile' request.user.username %}" title="{{ request.user.profile.screen_name }}">{{ request.user.profile.screen_name|truncatechars:20 }}</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'user_profile' request.user.username %}">View profile</a>
+          <a class="dropdown-item" href="{% url 'view_following' %}">Following</a>
+          <a class="dropdown-item" href="{% url 'user_subscription_list' request.user.username %}">Subscriptions</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'new_board' %}">Create Board</a>
+          <a class="dropdown-item" href="{% url 'user_created_boards' request.user.username %}">Your Boards</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="{% url 'profile_edit' %}">Account settings</a>
+          <a class="dropdown-item font-weight-light" href="{% url 'contact_form' %}">Send Feedback</a>
+          <a class="dropdown-item" href="{% url 'logout' %}">Sign out</a>
+        </div>
+      </div>
+
+      <a href="{% url 'new_subject' %}" class="btn btn-primary btn-sm new_post_btn" role="button" title="Post a new subject">New Post</a>
+
+      {% else %}
+
+      <a href="{% url 'login' %}" class="btn btn-primary btn-sm login_btn" role="button" title="Login to post subjects">Login</a>
+      <a href="{% url 'signup' %}" class="btn btn-success btn-sm signup_btn" role="button" title="Create an account">Sign Up</a>
+
+      {% endif %}
+    </div>
+  </div>
+</nav>

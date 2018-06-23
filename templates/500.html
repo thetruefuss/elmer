@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% load staticfiles %}
+{% block title %}<title>Error 500 | Erebbit</title>{% endblock %}
+
+{% block content %}
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Error 500</span></h1>
+<div class="card">
+  <div class="card-body text-center">
+    <h1 class="card-title">500. Unexpected Server Error</h1>
+    <h6>Ooops! Something went wrong. Why not try refreshing you page? Or <a href="{% url 'contact_form' %}">contact our support</a></h6>
+    <br><img src="{% static 'img/500.gif' %}">
+  </div>
+</div>
+{% endblock %}

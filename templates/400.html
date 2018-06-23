@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% load staticfiles %}
+{% block title %}<title>Error 400 | Erebbit</title>{% endblock %}
+
+{% block content %}
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Error 400</span></h1>
+<div class="card">
+  <div class="card-body text-center">
+    <h1 class="card-title">400. Page Not Found</h1>
+    <h6>It's not you, it's this link (it appears to be broken)</h6>
+    <br><img src="{% static 'img/400.jpg' %}">
+  </div>
+</div>
+{% endblock %}

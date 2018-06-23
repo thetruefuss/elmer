@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Compose new post | Erebbit</title>{% endblock %}
+
+{% block form_content %}
+<style>
+#subject_form #id_description, #subject_form #id_title, #subject_form #id_cover {
+    background-color: #f8f9fa;
+}
+#subject_form #id_description:focus, #subject_form #id_title:focus, #subject_form #id_cover:focus {
+    background-color: #fff;
+}
+span#required_inp {
+    color:red;
+}
+label {
+    font-weight:bold;
+}
+</style>
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Compose new post</span></h1>
+<form action="." method="post" enctype="multipart/form-data" id="subject_form">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="id_title"><span id="required_inp">*</span>Title</label>
+    <input type="text" class="form-control" id="id_title" maxlength="150" name="title" required>
+    <small class="form-text text-muted">
+  You can <b>u/mention</b> other members in your post anywhere.
+    </small>
+  </div>
+  <div class="form-group">
+    <label for="id_description">Description</label>
+    <textarea class="form-control" cols="40" rows="4" id="id_description" name="body" maxlength="2000" placeholder="Describe your subject verbosely"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="id_photo">Add image</label>
+    <input type="file" class="form-control-file" id="id_photo" name="photo" accept="image/*">
+  </div>
+  <div class="form-group">
+    <label for="id_cover"><span id="required_inp">*</span>Choose a board</label>
+    <select class="form-control" id="id_cover" name="board" required>
+    {% for id, name in subject_form.board.field.choices %}
+      <option value="{{id}}">{{name}}</option>
+    {% endfor %}
+    </select>
+    {% if not request.user.subscribed_boards.all %}
+        <p class="text-muted">You need to <b>subscribe</b> a board, before posting in it.</p>
+    {% endif %}
+  </div>
+  <div class="g-recaptcha" data-sitekey="6LcxazUUAAAAAJstEHfmrSDE5QFqSrPUHqozW9XQ"></div><br>
+
+  <button type="submit" class="btn btn-primary btn-block" id="submit_subject">Submit</button>
+</form>
+<script type="text/javascript">
+// Check file size
+$(document).ready(function(){
+  $("input#id_photo").on("change", function () {
+    var file_size = this.files[0].size;
+    if (file_size > 2097152) {
+      alert("Image size should be less than 2 megabytes.")
+      $("button#submit_subject").prop('disabled', true);
+    } else {
+        $("button#submit_subject").prop('disabled', false);
+    }
+  });
+});
+</script>
+{% endblock %}

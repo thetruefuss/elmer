@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% load staticfiles %}
+
+{% block title %}<title>Error 404 | Erebbit</title>{% endblock %}
+
+{% block content %}
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Error 404</span></h1>
+<div class="card">
+  <div class="card-body text-center">
+    <h1 class="card-title">404. Page Not Found</h1>
+    <h6>Ooops! We can't seem to find the page you are looking for.</h6>
+    <h6>Rare diamond Pepe that only appears once every 15,000 pages. Take a screenshot and share it with 10 friends or something bad will happen.</h6>
+    <br><img src="{% static 'img/404.jpg' %}">
+  </div>
+</div>
+{% endblock %}

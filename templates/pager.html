@@ -1,0 +1,12 @@
+<ul class="pager">
+  {% if paginator.has_previous %}
+    <li class="previous"><a href="?page={{ paginator.previous_page_number }}"><span aria-hidden="true">&larr;</span> Previous</a></li>
+  {% else %}
+    <li class="previous disabled"><a href="#"><span aria-hidden="true">&larr;</span> Previous</a></li>
+  {% endif %}
+  {% if paginator.has_next %}
+    <li class="next"><a href="?page={{ paginator.next_page_number }}">Next <span aria-hidden="true">&rarr;</span></a></li>
+  {% else %}
+    <li class="next disabled"><a href="#">Next <span aria-hidden="true">&rarr;</span></a></li>
+  {% endif %}
+</ul>

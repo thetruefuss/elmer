@@ -1,0 +1,39 @@
+<div class="jumbotron_area" id="welcome_signup_block">
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6" style="color:white;">
+      <h1 class="display-6">Connecting people around the globe to help them share knowledge.</h1>
+      <br><br>
+      <p class="lead">Join this community if you don't wanna get hypnotized.</p>
+    </div>
+    <div class="col-lg-6">
+      <form action="{% url 'signup' %}" method="post" id="welcome_signup_form">{% csrf_token %}
+        <div class="input-group">
+          <span class="input-group-addon"><span id="required_inp">*</span>Username</span>
+          <input type="text" class="form-control" id="id_username" name="username" data-url-validate="{% url "check_username" %}" aria-describedby="username_help" maxlength="30" placeholder="Pick a username" required>
+        </div>
+
+        <div class="input-group">
+          <span class="input-group-addon">Email Address</span>
+          <input type="email" class="form-control" id="id_email" name="email" aria-describedby="email_help" placeholder="you@example.com">
+        </div>
+
+        <div class="input-group">
+          <span class="input-group-addon"><span id="required_inp">*</span>Password</span>
+          <input type="password" class="form-control" id="id_password" name="password" aria-describedby="password_help" placeholder="Create a password" maxlength="150" required>
+        </div>
+
+        <div class="g-recaptcha" data-sitekey="6LcxazUUAAAAAJstEHfmrSDE5QFqSrPUHqozW9XQ"></div><br>
+
+        <button type="submit" class="btn btn-success">Create an account</button>
+        <div style="float:right;"><small style="color:#fff;">By signing up, you agree to our <a href="/legal/terms-of-service/" style="color:#fff;text-decoration:underline;">terms of service</a> &amp; <a href="/legal/privacy-policy/" style="color:#fff;text-decoration:underline;">privacy policy</a>.</small></div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<script type="text/javascript">
+// check username availability
+$(document).ready(function(){$("input#id_username").on("keyup change",function(){var a=$(this),e=a.val(),s=a.attr("data-url-validate");return console.log(e),e.length>0?$.ajax({url:s,type:"GET",data:{wanted_username:e},success:function(e){console.log(e),"good"==e?a.removeClass("is-invalid").addClass("is-valid"):"bad"==e?a.removeClass("is-valid").addClass("is-invalid"):console.log("Unexpected error!")}}):a.removeClass("is-valid").removeClass("is-invalid"),!1})});
+</script>

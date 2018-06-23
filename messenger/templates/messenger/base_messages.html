@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+  <link href="{% static 'css/messages.css' %}" rel="stylesheet">
+  <script src="{% static 'js/messages.js' %}"></script>
+{% endblock head %}
+
+{% block content %}
+  <h1 class="pageHeadingH1"><span class="pageHeadingSpan">Messages</span></h1>
+
+  <div class="row">
+    <div class="col-md-12">
+      {% include 'messenger/includes/partial_conversations.html' with conversations=conversations active=active %}
+    </div>
+  </div>
+
+  <div class="row" style="margin-top: 1em">
+    <div class="col-md-12" id='chat-container'>
+      {% block container %}
+      {% endblock container %}
+    </div>
+    <script src="{% static 'js/box-reziser.js'%}"></script>
+  </div>
+{% endblock %}

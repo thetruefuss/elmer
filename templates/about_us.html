@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}<title>About Us | Erebbit</title>{% endblock %}
+
+{% block content %}
+
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">About Us</span></h1>
+
+<div class="card" style="border:none; margin-bottom:20px;">
+  <div class="container">
+      <h5 class="card-title text-muted">About this site</h5>
+    <p>Erebbit is a social platform where people can share their thoughts, knowledge and ideas. It's a place for communities, linkups, cyber meetings and much more. You can join already existing communities/boards and make new friends or create new ones for yourselves and invite your current friends.</p>
+  </div>
+</div>
+<div class="card" style="border:none; margin-bottom:20px;">
+  <div class="container">
+      <h5 class="card-title text-muted">Our mission</h5>
+    <p>The main idea behind Erebbit is simple: Erebbit is a platform and it will behave as a platform. The main force at its core is "People". We want to empower people so they can share their lettered ideas and feelings at the same time.</p>
+  </div>
+</div>
+<div class="card" style="border:none; margin-bottom:20px;">
+  <div class="container">
+      <h5 class="card-title text-muted">Our team</h5>
+    <p>Erebbit is mainly started by a very small group of students who want to change the way we use social networks. Especially the privacy part, we all know our private information is getting sold to American agencies too cheaply. We also wanted to build a community that will be people driven (not business driven).<p><br>
+    <p>We're still working very hard to improve our ideas and we surely welcome new ideas. If you think you can help us in our mission, or want to give us any feedback related to any aspect of our website (design, features, revenue model), then don't be shy to <a href="{% url 'contact_form' %}">contact us</a>. We appreciate it.</p><br>
+    <style media="screen">.img-thumbnail {margin-left: 25px;}</style>
+    <h5 class="card-title text-muted">The people</h5>
+    <img src="{% static 'img/prime_mover.jpg' %}" class="img-thumbnail float-left" alt="Usman Ali" title="Usman Ali (prime mover)" width="20%">
+    <img src="{% static 'img/destroyer.jpg' %}" class="img-thumbnail float-left" alt="Ali Saleh" title="Ali Saleh (destroyer)" width="20%">
+    <img src="{% static 'img/investor.jpg' %}" class="img-thumbnail float-left" alt="Faraz Fazii" title="Faraz Fazii (investor)" width="20%">
+    <img src="{% static 'img/marketer.jpg' %}" class="img-thumbnail float-left" alt="Syed Azaz Ul Hassan" title="Syed Azaz Ul Hassan (marketer)" width="20%">
+  </div>
+</div>
+
+{% endblock %}

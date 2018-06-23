@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load frontboard_tags %}
+{% load humanize %}
+
+{% block title %}<title>Message Requests | Erebbit</title>{% endblock %}
+
+{% block content %}
+
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Message Requests</span></h1>
+
+{% for user in users %}
+<div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
+  <div class="card-body" style="padding:10px;">
+    <div class="text-center" style="float:left; width:10%;">
+      {% if user.profile.get_picture %}
+      <img src="{{user.profile.get_picture}}" class="rounded" width="50px" height="50px">
+      {% endif %}
+    </div>
+    <div style="float:right; width:90%;">
+      <h5 style="font-size:16px;"><a href="{% url 'user_profile' user.username %}" class="card-link" title="{{user.username}}">{{user.profile.screen_name}}</a>
+        <a href="{% url 'accept_message_request' user.id %}" class="btn btn-outline-primary btn-sm" id="accept_message_request" style="float:right;" title="Confirm to start a conversation with this user">Confirm</a>
+      </h5>
+      <p>{{board.description|markdown|truncatewords_html:50}}</p>
+      <p class="text-muted">Member since <span title="{{user.profile.member_since|date:"D d M Y"}} | {{user.profile.member_since|time:"H:i:s"}}">{{user.profile.member_since|naturaltime}}</span></p>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<script type="text/javascript">
+// Confirm Request
+$(document).ready(function(){
+  $("a#accept_message_request").on("click", function () {
+    {% if not request.user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    var $confirm_btn=$(this);
+    var $confirm_url=$(this).attr("href");
+    $.ajax({
+      url: $confirm_url,
+      type: 'GET',
+      success: function (data) {
+        $confirm_btn.text(data);
+        if ($confirm_btn.hasClass('btn-outline-primary')) {
+          $confirm_btn.removeClass('btn-outline-primary').addClass('btn-primary disabled');
+        }  else { console.log('Unexpected error!'); }
+      }
+    });
+    {% endif %}
+    return false;
+  });
+});
+</script>
+
+{% endblock %}

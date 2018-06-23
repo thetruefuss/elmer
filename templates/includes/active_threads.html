@@ -1,0 +1,13 @@
+{% if threads %}
+<br>
+<div class="card border-light">
+  <div class="card-header text-center font-weight-bold" style="color:#607d8b; border-bottom: 2px solid #1f89de; display: inline-block; font-size: 16px; font-weight: 900; letter-spacing: -.4px; margin: 3px 0; padding-bottom: 0; text-transform: uppercase;">
+    Active Threads
+  </div>
+  <ul class="list-group list-group-flush">
+    {% for thread in threads %}
+    <li class="list-group-item" style="font-size:14px;"><a href="{{thread.get_absolute_url}}" class="card-link">{{thread.title}}</a></li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}

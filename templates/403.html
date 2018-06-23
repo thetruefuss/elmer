@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% load staticfiles %}
+{% block title %}<title>Error 403 | Erebbit</title>{% endblock %}
+
+{% block content %}
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Error 403</span></h1>
+<div class="card">
+  <div class="card-body text-center">
+    <h1 class="card-title">403. Access Denied/Fobidden</h1>
+    <h6>The page or resource you were trying to reach is absolutely forbidden for some reason.</h6>
+    <br><img src="{% static 'img/403.jpg' %}">
+  </div>
+</div>
+{% endblock %}

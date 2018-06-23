@@ -1,0 +1,201 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load frontboard_tags %}
+{% load humanize %}
+
+{% block title %}<title>{{user.profile.screen_name}} | Erebbit</title>{% endblock %}
+
+{% block content %}
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">{% if request.user.username == user.username %}Your profile{% else %}{{user.profile.screen_name}}'s profile{% endif %}</span></h1>
+
+<div class="card" style="width:25%; float:left; border:none;">
+  <img class="card-img-top" src="{{user.profile.get_picture}}">
+</div>
+<div class="card" style="width:75%; float:right; border:none;">
+  <div class="card-body">
+    <h4 class="card-title">
+    {{user.profile.screen_name}} &nbsp;
+    {% ifequal request.user user %}
+    {% else %}
+      {%if not request.user in user.profile.contact_list.all %}
+        {% if request.user in user.profile.pending_list.all %}
+            <a href="{% url 'send_message_request' user.id %}" class="btn btn-primary btn-sm" id="send_message_request" style="margin-right: 10px;" title="Request sent to this users">Request Sent</a>
+        {% else %}
+            <a href="{% url 'send_message_request' user.id %}" class="btn btn-outline-primary btn-sm" id="send_message_request" style="margin-right: 10px;" title="Send request to this user to start conversation">Send Request</a>
+        {% endif %}
+      {% else %}
+            <!-- Block User Trigger -->
+            <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#blockUserModel">Block</button>
+
+            <!-- Block User Modal -->
+            <div class="modal fade" id="blockUserModel" tabindex="-1" role="dialog" aria-labelledby="Block User" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Are you sure?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <h5>Once you block the user, you can not message him again until he accepts your request.</h5><br>
+                    <p>If user is being annoying to you, block him right away.</p>
+
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                    <a href="{% url 'block_spammer' user.id %}" class="btn btn-primary btn-sm" id="block_spammer" style="margin-right: 10px;" title="Block this user">Block</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a href="{% url 'messages' user.username %}" class="btn btn-outline-primary btn-sm" id="send_msg" title="Send message to this user" style="margin-right: 10px;">Message</a>
+      {% endif %}
+    {% endifequal %}
+    {% ifequal request.user user %}
+    {% else %}
+    	{% if request.user in user.profile.followers.all %}
+      		<a href="{% url 'follow_user' user.id %}" class="btn btn-primary btn-sm" id="follow_user">Unfollow</a>
+    	{% else %}
+        	<a href="{% url 'follow_user' user.id %}" class="btn btn-outline-primary btn-sm" id="follow_user">Follow</a>
+    	{% endif %}
+    {% endifequal %}
+    </h4>
+    <p class="card-text"><strong>{{user.inspected_boards.count}}</strong> boards created.</p>
+    <p class="card-text"><strong>{{user.posted_subjects.count}}</strong> subjects posted.</p>
+    <p class="card-text"><strong>{{user.subscribed_boards.count}}</strong> boards subscribed.</p>
+    <p class="card-text">Member since <span title="{{user.profile.member_since|date:"D d M Y"}} | {{user.profile.member_since|time:"H:i:s"}}">{{user.profile.member_since|date:"M d Y"}}</span></p>
+    <br>
+<style>
+    #profile_user_links a{
+    border-radius: 100px;
+    padding: 4px 15px;
+    margin:15px;
+    border: 1px solid #d6d6d6;
+    }
+    #profile_user_links a:hover{
+    border: 1px solid #3f51b5;
+    }
+</style>
+    <p id="profile_user_links" style="text-align:center;"><a href="{% url 'user_subscription_list' user.username %}" class="card-link">View subscription list</a><span> &middot; </span>
+    {% ifequal request.user user %}
+    <a href="{% url 'profile_edit' %}" class="card-link">Edit profile</a><br><br>
+    <a href="{% url 'view_all_followers' %}" class="card-link">Followers</a><span> &middot; </span>
+    <a href="{% url 'view_following' %}" class="card-link">Following</a><br><br>
+    <a href="{% url 'all_message_requests' %}" class="card-link">Message requests</a><span> &middot; </span>
+    <a href="{% url 'all_friends' %}" class="card-link">Contact list</a></p>
+    {% endifequal %}
+  </div>
+</div>
+<div style="clear:both;"></div>
+
+
+<h1 class="pageHeadingH1"><span class="pageHeadingSpan">{% if request.user.username == user.username %}Your{% else %}{{user.profile.screen_name}}'s{% endif %} recent posts</h1>
+{% for subject in subjects %}
+<div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
+  <div class="card-body" style="padding:10px;">
+    <h5><a href="{{ subject.get_absolute_url }}" class="card-link">{{subject.title}}</a></h5>
+
+    <p>{{ subject.linkfy_subject|truncatewords_html:250 }}</p>
+
+    {% if subject.photo %}
+    <p title="Subject contains an attachment.">att. <i class="fa fa-file-photo-o fa-lg" aria-hidden="true"></i></p>
+    {% endif %}
+
+    <div style="float:right;">
+      <p class="text-muted">posted <span title="{{subject.created|date:"D d M Y"}} | {{subject.created|time:"H:i:s"}}">{{subject.created|naturaltime}}</span> by <a href="{% url 'user_profile' subject.author.username %}" title="view profile">{{subject.author.profile.screen_name}}</a> to <a href="{{subject.board.get_absolute_url}}" title="visit board">{{subject.board.slug}}</a> &#8212;
+      <a href="{% url 'like' subject.slug %}" style="text-decoration:none;" title="{{subject.points.count}} points" id="like-subject"><span id="like-count">{{subject.points.count}}</span> {% if subject in user.liked_subjects.all %}<i class="fa fa-star fa-lg" aria-hidden="true"></i>{% else %}<i class="fa fa-star-o fa-lg" aria-hidden="true"></i>{%endif%}</a> &bull;
+      <a href="{{ subject.get_absolute_url }}" style="text-decoration:none;" title="{{subject.comments.count}} comments">{{subject.comments.count}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></a></p>
+    </div>
+  </div>
+</div>
+{% empty %}
+<p class="text-center text-muted">No Posts to display.</p>
+{% endfor %}
+
+
+<script type="text/javascript">
+// Send Request
+$(document).ready(function(){
+  $("a#send_message_request").on("click", function () {
+    {% if not request.user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    var $add_btn=$(this);
+    var $add_url=$(this).attr("href");
+    $.ajax({
+      url: $add_url,
+      type: 'GET',
+      success: function (data) {
+        $add_btn.text(data);
+        if ($add_btn.hasClass('btn-outline-primary')) {
+          $add_btn.removeClass('btn-outline-primary').addClass('btn-primary');
+        } else if ($add_btn.hasClass('btn-primary')) {
+          $add_btn.removeClass('btn-primary').addClass('btn-outline-primary');
+        } else { console.log('Unexpected error!'); }
+      }
+    });
+    {% endif %}
+    return false;
+  });
+});
+</script>
+
+
+
+<script type="text/javascript">
+// Like subjects
+$(document).ready(function(){
+  $("a#like-subject").on("click", function () {
+    {% if not request.user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    var $like_count=$(this).find('span#like-count');
+    var $like_url=$(this).attr("href");
+    var $like_heart=$(this).find('i.fa');
+    $.ajax({
+      url: $like_url,
+      type: 'GET',
+      success: function (data) {
+        $like_count.text(data);
+        if ($like_heart.hasClass('fa-star-o')) {
+          $like_heart.removeClass('fa-star-o').addClass('fa-star');
+        } else if ($like_heart.hasClass('fa-star')) {
+          $like_heart.removeClass('fa-star').addClass('fa-star-o');
+        } else { console.log('Unexpected error!'); }
+      }
+    });
+    {% endif %}
+    return false;
+  });
+});
+</script>
+
+<script>
+// Follow user
+$(document).ready(function(){
+    $("a#follow_user").on("click", function () {
+    {% if not request.user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    var $follow_url=$(this).attr("href");
+    var $follow_btn=$(this);
+    $.ajax({
+      url: $follow_url,
+      type: 'GET',
+      success: function (data) {
+        $follow_btn.text(data);
+        console.log('working')
+        if ($follow_btn.hasClass('btn-outline-primary')) {
+          $follow_btn.removeClass('btn-outline-primary').addClass('btn-primary');
+        } else if ($follow_btn.hasClass('btn-primary')) {
+          $follow_btn.removeClass('btn-primary').addClass('btn-outline-primary');
+        } else { console.log('Unexpected error!'); }
+      }
+    });
+    {% endif %}
+    return false;
+  });
+});
+</script>
+{% endblock %}
