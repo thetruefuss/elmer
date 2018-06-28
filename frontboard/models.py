@@ -101,6 +101,17 @@ class Subject(models.Model):
         subjects = Subject.objects.filter(active=True)
         return subjects
 
+    @staticmethod
+    def search_subjects(query, board=None):
+        if board:
+            search_results = Subject.objects.filter(active=True,
+                                                    title__icontains=query,
+                                                    board=board)
+        else:
+            search_results = Subject.objects.filter(active=True,
+                                                    title__icontains=query)
+        return search_results
+
     def get_points(self):
         return self.points.count()
 

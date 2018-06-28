@@ -80,7 +80,7 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
-  $("#js-star-subject").on("click", function () {
+  $(document).on("click", "#js-star-subject", function () {
     {% if not request.user.is_authenticated %}
     window.location.href = "{% url 'login' %}";
     {% else %}

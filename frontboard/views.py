@@ -649,20 +649,19 @@ def search(request, board_slug=None):
     """
     Handles search functionality for all subjects or within some board.
     """
-    q = request.GET['query']
-
-    if q and len(q) <= 1000:
+    if 'query' in request.GET:
+        q = request.GET.get('query', None)
         if not board_slug:
-            subjects_list = Subject.objects.filter(title__icontains=q)
+            subjects_list = Subject.search_subjects(q)
             bv = False
             board = False
         else:
             board = get_object_or_404(Board,
                                       slug=board_slug)
-            subjects_list = board.submitted_subjects.filter(title__icontains=q)
+            subjects_list = Subject.search_subjects(q, board)
             bv = True
 
-        paginator = Paginator(subjects_list, 20)
+        paginator = Paginator(subjects_list, 15)
         page = request.GET.get('page')
         if paginator.num_pages > 1:
             p = True
@@ -670,10 +669,8 @@ def search(request, board_slug=None):
             p = False
         try:
             subjects = paginator.page(page)
-
         except PageNotAnInteger:
             subjects = paginator.page(1)
-
         except EmptyPage:
             subjects = paginator.page(paginator.num_pages)
 
