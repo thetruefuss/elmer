@@ -96,6 +96,11 @@ class Subject(models.Model):
                        args=[self.board.slug,
                              self.slug])
 
+    @staticmethod
+    def get_subjects():
+        subjects = Subject.objects.filter(active=True)
+        return subjects
+
     def get_points(self):
         return self.points.count()
 

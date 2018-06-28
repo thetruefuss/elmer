@@ -21,15 +21,15 @@ from .utils import check_image_extension
 
 @cache_memoize(60*15)
 def get_trending_subjects():
-    all_subjects = Subject.objects.filter(active=True)
-    for subject in all_subjects:
+    subjects = Subject.get_subjects()
+    for subject in subjects:
         subject.set_rank()
-    return all_subjects.order_by('-rank_score')
+    return subjects.order_by('-rank_score')
 
 
 @cache_memoize(60*15)
-def get_all_subjects():
-    return Subject.objects.filter(active=True)
+def get_home_subjects():
+    return Subject.get_subjects()
 
 
 @throttle(zone='default')
@@ -40,11 +40,11 @@ def home(request):
     user = request.user
     trending_header = False
 
-    if request.GET.get('trending'):
+    if request.GET.get('trending') == 'True':
         all_subjects = get_trending_subjects()
         trending_header = True
     else:
-        all_subjects = get_all_subjects()
+        all_subjects = get_home_subjects()
 
     paginator = Paginator(all_subjects, 15)
     page = request.GET.get('page')
@@ -54,10 +54,8 @@ def home(request):
         p = False
     try:
         subjects = paginator.page(page)
-
     except PageNotAnInteger:
         subjects = paginator.page(1)
-
     except EmptyPage:
         subjects = paginator.page(paginator.num_pages)
 

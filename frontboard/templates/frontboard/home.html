@@ -1,24 +1,27 @@
 {% extends "base.html" %}
+{% load emoticons_tags %}
 {% load frontboard_tags %}
 {% load humanize %}
-{% load emoticons_tags %}
 
 {% block content %}
 
 {% if trending_header %}
-    <h1 class="pageHeadingH1"><span class="pageHeadingSpan">Top Subjects</span></h1>
+    <h1 class="pageHeadingH1">
+      <span class="pageHeadingSpan">Top Subjects</span>
+    </h1>
 {% else %}
-    <h1 class="pageHeadingH1"><span class="pageHeadingSpan">Homepage</span></h1>
+    <h1 class="pageHeadingH1">
+      <span class="pageHeadingSpan">Homepage</span>
+    </h1>
 {% endif %}
 
 <style>
-    .card-styling {border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;}
-    .card-body-styling {padding:10px;}
-    .photo-partition {float:left; width:70%;}
-    .photo-area-styling {float:right; width:30%; max-height:120px; overflow:hidden;}
-    .s-action-area {clear:both; padding-top:10px;}
+    .card-styling { border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px; }
+    .card-body-styling { padding:10px; }
+    .photo-partition { float:left; width:70%; }
+    .photo-area-styling { float:right; width:30%; max-height:120px; overflow:hidden; }
+    .action-area { clear:both; padding-top:10px; }
 </style>
-
 
 
 {% for subject in subjects %}
@@ -26,7 +29,7 @@
   <div class="card-body card-body-styling">
 
     <div{% if subject.photo %} class="photo-partition"{% endif %}>
-      <h5><a href="{{ subject.get_absolute_url }}" class="card-link">{{subject.title|emoticons}}</a></h5>
+      <h5><a href="{{ subject.get_absolute_url }}" class="card-link">{{ subject.title|emoticons }}</a></h5>
       <p>{{ subject.body|truncatewords_html:50|urlize }}</p>
     </div>
 
@@ -39,42 +42,71 @@
     </div>
     {% endif %}
 
-    <div class="text-right s-action-area">
-      <p class="text-muted">posted <span title="{{subject.created|date:"D d M Y"}} | {{subject.created|time:"H:i:s"}}">{{subject.created|naturaltime}}</span> by <a href="{% url 'user_profile' subject.author.username %}" title="view profile" style="text-decoration:none;">{{subject.author.profile.screen_name}}</a> to <a href="{{subject.board.get_absolute_url}}" title="visit board" style="text-decoration:none;">{{subject.board.title}}</a> &#8212;
-      <a href="{% url 'like' subject.slug %}" style="text-decoration:none;" title="{{subject.points.count}} points" id="like-subject"><span id="like-count">{{subject.points.count}}</span> {% if subject in user.liked_subjects.all %}<i class="fa fa-star fa-lg" aria-hidden="true"></i>{% else %}<i class="fa fa-star-o fa-lg" aria-hidden="true"></i>{%endif%}</a> &bull;
-      <a href="{{ subject.get_absolute_url }}" style="text-decoration:none;" title="{{subject.comments.count}} comments">{{subject.comments.count}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></a></p>
+    <div class="text-right action-area">
+      <p class="text-muted">
+        posted <span title="{{ subject.created|date:"D d M Y" }} | {{ subject.created|time:"H:i:s" }}">
+                  {{ subject.created|naturaltime }}
+                </span>
+        by <a href="{% url 'user_profile' subject.author.username %}"
+              title="view profile"
+              style="text-decoration:none;">{{ subject.author.profile.screen_name }}</a>
+        to <a href="{{ subject.board.get_absolute_url }}"
+              title="visit board"
+              style="text-decoration:none;">{{ subject.board.title }}</a> &#8212;
+
+        <a href="{% url 'like' subject.slug %}"
+           style="text-decoration:none;"
+           title="{{ subject.points.count }} points"
+           id="js-star-subject">
+
+           <span id="js-star-count">{{ subject.points.count }}</span>
+
+           {% if subject in user.liked_subjects.all %}
+             <i class="fa fa-star fa-lg" aria-hidden="true"></i>
+           {% else %}
+             <i class="fa fa-star-o fa-lg" aria-hidden="true"></i>
+           {% endif %}
+        </a> &bull;
+        <a href="{{ subject.get_absolute_url }}"
+           style="text-decoration:none;"
+           title="{{ subject.comments.count }} comments">
+           {{ subject.comments.count }} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i>
+        </a>
+      </p>
     </div>
   </div>
 </div>
 {% endfor %}
 
 <script type="text/javascript">
-// Like subjects
 $(document).ready(function(){
-  $("a#like-subject").on("click", function () {
+  $("#js-star-subject").on("click", function () {
     {% if not request.user.is_authenticated %}
     window.location.href = "{% url 'login' %}";
     {% else %}
-    var $like_count=$(this).find('span#like-count');
-    var $like_url=$(this).attr("href");
-    var $like_heart=$(this).find('i.fa');
+    var $star_count = $(this).find('#js-star-count');
+    var $star_url = $(this).attr("href");
+    var $star_icon = $(this).find('i.fa');
     $.ajax({
-      url: $like_url,
+      url: $star_url,
       type: 'GET',
       success: function (data) {
-        $like_count.text(data);
-        if ($like_heart.hasClass('fa-star-o')) {
-          $like_heart.removeClass('fa-star-o').addClass('fa-star');
-        } else if ($like_heart.hasClass('fa-star')) {
-          $like_heart.removeClass('fa-star').addClass('fa-star-o');
-        } else { console.log('Unexpected error!'); }
+        $star_count.text(data);
+
+        if ($star_icon.hasClass('fa-star-o')) {
+          $star_icon.removeClass('fa-star-o').addClass('fa-star');
+        }
+        else if ($star_icon.hasClass('fa-star')) {
+          $star_icon.removeClass('fa-star').addClass('fa-star-o');
+        } else {
+          console.log('Unexpected error!');
+        }
       }
     });
     {% endif %}
     return false;
   });
-
 });
 </script>
 
-{% endblock %}
+{% endblock content %}
