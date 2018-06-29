@@ -2,26 +2,50 @@
 {% load staticfiles %}
 {% load frontboard_tags %}
 {% load humanize %}
+{% load emoticons_tags %}
 
 {% block title %}<title>{{user.profile.screen_name}} | Erebbit</title>{% endblock %}
 
 {% block content %}
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">{% if request.user.username == user.username %}Your profile{% else %}{{user.profile.screen_name}}'s profile{% endif %}</span></h1>
+
+<h1 class="pageHeadingH1">
+  <span class="pageHeadingSpan">
+    {% if request.user.username == user.username %}
+      Your profile
+    {% else %}
+      {{ user.profile.screen_name }}'s profile
+    {% endif %}
+  </span>
+</h1>
+
+<style>
+#profile_user_links a { border-radius: 100px; padding: 4px 15px; margin:15px; border: 1px solid #d6d6d6; }
+#profile_user_links a:hover { border: 1px solid #3f51b5; }
+</style>
 
 <div class="card" style="width:25%; float:left; border:none;">
-  <img class="card-img-top" src="{{user.profile.get_picture}}">
+  <img class="card-img-top" src="{{ user.profile.get_picture }}">
 </div>
+
 <div class="card" style="width:75%; float:right; border:none;">
   <div class="card-body">
     <h4 class="card-title">
-    {{user.profile.screen_name}} &nbsp;
+    {{ user.profile.screen_name }} &nbsp;
     {% ifequal request.user user %}
     {% else %}
-      {%if not request.user in user.profile.contact_list.all %}
+      {% if not request.user in user.profile.contact_list.all %}
         {% if request.user in user.profile.pending_list.all %}
-            <a href="{% url 'send_message_request' user.id %}" class="btn btn-primary btn-sm" id="send_message_request" style="margin-right: 10px;" title="Request sent to this users">Request Sent</a>
+            <a href="{% url 'send_message_request' user.id %}"
+               class="btn btn-primary btn-sm"
+               id="send_message_request"
+               style="margin-right: 10px;"
+               title="Request sent to this users">Request Sent</a>
         {% else %}
-            <a href="{% url 'send_message_request' user.id %}" class="btn btn-outline-primary btn-sm" id="send_message_request" style="margin-right: 10px;" title="Send request to this user to start conversation">Send Request</a>
+            <a href="{% url 'send_message_request' user.id %}"
+               class="btn btn-outline-primary btn-sm"
+               id="send_message_request"
+               style="margin-right: 10px;"
+               title="Send request to this user to start conversation">Send Request</a>
         {% endif %}
       {% else %}
             <!-- Block User Trigger -->
@@ -52,6 +76,7 @@
             <a href="{% url 'messages' user.username %}" class="btn btn-outline-primary btn-sm" id="send_msg" title="Send message to this user" style="margin-right: 10px;">Message</a>
       {% endif %}
     {% endifequal %}
+
     {% ifequal request.user user %}
     {% else %}
     	{% if request.user in user.profile.followers.all %}
@@ -60,23 +85,13 @@
         	<a href="{% url 'follow_user' user.id %}" class="btn btn-outline-primary btn-sm" id="follow_user">Follow</a>
     	{% endif %}
     {% endifequal %}
+
     </h4>
     <p class="card-text"><strong>{{user.inspected_boards.count}}</strong> boards created.</p>
     <p class="card-text"><strong>{{user.posted_subjects.count}}</strong> subjects posted.</p>
     <p class="card-text"><strong>{{user.subscribed_boards.count}}</strong> boards subscribed.</p>
-    <p class="card-text">Member since <span title="{{user.profile.member_since|date:"D d M Y"}} | {{user.profile.member_since|time:"H:i:s"}}">{{user.profile.member_since|date:"M d Y"}}</span></p>
+    <p class="card-text">Member since <span title="{{ user.profile.member_since|date:"D d M Y" }} | {{ user.profile.member_since|time:"H:i:s" }}">{{ user.profile.member_since|date:"M d Y" }}</span></p>
     <br>
-<style>
-    #profile_user_links a{
-    border-radius: 100px;
-    padding: 4px 15px;
-    margin:15px;
-    border: 1px solid #d6d6d6;
-    }
-    #profile_user_links a:hover{
-    border: 1px solid #3f51b5;
-    }
-</style>
     <p id="profile_user_links" style="text-align:center;"><a href="{% url 'user_subscription_list' user.username %}" class="card-link">View subscription list</a><span> &middot; </span>
     {% ifequal request.user user %}
     <a href="{% url 'profile_edit' %}" class="card-link">Edit profile</a><br><br>
@@ -87,25 +102,77 @@
     {% endifequal %}
   </div>
 </div>
+
 <div style="clear:both;"></div>
 
+<h1 class="pageHeadingH1">
+  <span class="pageHeadingSpan">
+    {% if request.user.username == user.username %}
+    Your recent posts
+    {% else %}
+    {{ user.profile.screen_name }}'s recent posts
+    {% endif %}
+  </span>
+</h1>
 
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">{% if request.user.username == user.username %}Your{% else %}{{user.profile.screen_name}}'s{% endif %} recent posts</h1>
+<style>
+    .card-styling { border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px; }
+    .card-body-styling { padding:10px; }
+    .photo-partition { float:left; width:70%; }
+    .photo-area-styling { float:right; width:30%; max-height:120px; overflow:hidden; }
+    .action-area { clear:both; padding-top:10px; }
+</style>
+
+
 {% for subject in subjects %}
-<div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
-  <div class="card-body" style="padding:10px;">
-    <h5><a href="{{ subject.get_absolute_url }}" class="card-link">{{subject.title}}</a></h5>
+<div class="card card-styling">
+  <div class="card-body card-body-styling">
 
-    <p>{{ subject.linkfy_subject|truncatewords_html:250 }}</p>
+    <div{% if subject.photo %} class="photo-partition"{% endif %}>
+      <h5><a href="{{ subject.get_absolute_url }}" class="card-link">{{ subject.title|emoticons }}</a></h5>
+      <p>{{ subject.body|truncatewords_html:50|urlize }}</p>
+    </div>
 
     {% if subject.photo %}
-    <p title="Subject contains an attachment.">att. <i class="fa fa-file-photo-o fa-lg" aria-hidden="true"></i></p>
+    <div class="photo-area-styling">
+    {% load thumbnail %}
+    {% thumbnail subject.photo "100" as im %}
+          <img src="{{ im.url }}" width="90%" style="margin-left:5px;">
+    {% endthumbnail %}
+    </div>
     {% endif %}
 
-    <div style="float:right;">
-      <p class="text-muted">posted <span title="{{subject.created|date:"D d M Y"}} | {{subject.created|time:"H:i:s"}}">{{subject.created|naturaltime}}</span> by <a href="{% url 'user_profile' subject.author.username %}" title="view profile">{{subject.author.profile.screen_name}}</a> to <a href="{{subject.board.get_absolute_url}}" title="visit board">{{subject.board.slug}}</a> &#8212;
-      <a href="{% url 'like' subject.slug %}" style="text-decoration:none;" title="{{subject.points.count}} points" id="like-subject"><span id="like-count">{{subject.points.count}}</span> {% if subject in user.liked_subjects.all %}<i class="fa fa-star fa-lg" aria-hidden="true"></i>{% else %}<i class="fa fa-star-o fa-lg" aria-hidden="true"></i>{%endif%}</a> &bull;
-      <a href="{{ subject.get_absolute_url }}" style="text-decoration:none;" title="{{subject.comments.count}} comments">{{subject.comments.count}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></a></p>
+    <div class="text-right action-area">
+      <p class="text-muted">
+        posted <span title="{{ subject.created|date:"D d M Y" }} | {{ subject.created|time:"H:i:s" }}">
+                  {{ subject.created|naturaltime }}
+                </span>
+        by <a href="{% url 'user_profile' subject.author.username %}"
+              title="view profile"
+              style="text-decoration:none;">{{ subject.author.profile.screen_name }}</a>
+        to <a href="{{ subject.board.get_absolute_url }}"
+              title="visit board"
+              style="text-decoration:none;">{{ subject.board.title }}</a> &#8212;
+
+        <a href="{% url 'like' subject.slug %}"
+           style="text-decoration:none;"
+           title="{{ subject.points.count }} points"
+           id="js-star-subject">
+
+           <span id="js-star-count">{{ subject.points.count }}</span>
+
+           {% if subject in user.liked_subjects.all %}
+             <i class="fa fa-star fa-lg" aria-hidden="true"></i>
+           {% else %}
+             <i class="fa fa-star-o fa-lg" aria-hidden="true"></i>
+           {% endif %}
+        </a> &bull;
+        <a href="{{ subject.get_absolute_url }}"
+           style="text-decoration:none;"
+           title="{{ subject.comments.count }} comments">
+           {{ subject.comments.count }} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i>
+        </a>
+      </p>
     </div>
   </div>
 </div>
@@ -121,18 +188,23 @@ $(document).ready(function(){
     {% if not request.user.is_authenticated %}
     window.location.href = "{% url 'login' %}";
     {% else %}
-    var $add_btn=$(this);
-    var $add_url=$(this).attr("href");
+    var $add_btn = $(this);
+    var $add_url = $(this).attr("href");
     $.ajax({
       url: $add_url,
       type: 'GET',
       success: function (data) {
         $add_btn.text(data);
+
         if ($add_btn.hasClass('btn-outline-primary')) {
           $add_btn.removeClass('btn-outline-primary').addClass('btn-primary');
-        } else if ($add_btn.hasClass('btn-primary')) {
+        }
+        else if ($add_btn.hasClass('btn-primary')) {
           $add_btn.removeClass('btn-primary').addClass('btn-outline-primary');
-        } else { console.log('Unexpected error!'); }
+        }
+        else {
+          console.log('Unexpected error!');
+        }
       }
     });
     {% endif %}
@@ -141,28 +213,29 @@ $(document).ready(function(){
 });
 </script>
 
-
-
 <script type="text/javascript">
-// Like subjects
 $(document).ready(function(){
-  $("a#like-subject").on("click", function () {
+  $(document).on("click", "#js-star-subject", function () {
     {% if not request.user.is_authenticated %}
     window.location.href = "{% url 'login' %}";
     {% else %}
-    var $like_count=$(this).find('span#like-count');
-    var $like_url=$(this).attr("href");
-    var $like_heart=$(this).find('i.fa');
+    var $star_count = $(this).find('#js-star-count');
+    var $star_url = $(this).attr("href");
+    var $star_icon = $(this).find('i.fa');
     $.ajax({
-      url: $like_url,
+      url: $star_url,
       type: 'GET',
       success: function (data) {
-        $like_count.text(data);
-        if ($like_heart.hasClass('fa-star-o')) {
-          $like_heart.removeClass('fa-star-o').addClass('fa-star');
-        } else if ($like_heart.hasClass('fa-star')) {
-          $like_heart.removeClass('fa-star').addClass('fa-star-o');
-        } else { console.log('Unexpected error!'); }
+        $star_count.text(data);
+
+        if ($star_icon.hasClass('fa-star-o')) {
+          $star_icon.removeClass('fa-star-o').addClass('fa-star');
+        }
+        else if ($star_icon.hasClass('fa-star')) {
+          $star_icon.removeClass('fa-star').addClass('fa-star-o');
+        } else {
+          console.log('Unexpected error!');
+        }
       }
     });
     {% endif %}
@@ -178,19 +251,23 @@ $(document).ready(function(){
     {% if not request.user.is_authenticated %}
     window.location.href = "{% url 'login' %}";
     {% else %}
-    var $follow_url=$(this).attr("href");
-    var $follow_btn=$(this);
+    var $follow_btn = $(this);
+    var $follow_url = $(this).attr("href");
     $.ajax({
       url: $follow_url,
       type: 'GET',
       success: function (data) {
         $follow_btn.text(data);
-        console.log('working')
+
         if ($follow_btn.hasClass('btn-outline-primary')) {
           $follow_btn.removeClass('btn-outline-primary').addClass('btn-primary');
-        } else if ($follow_btn.hasClass('btn-primary')) {
+        }
+        else if ($follow_btn.hasClass('btn-primary')) {
           $follow_btn.removeClass('btn-primary').addClass('btn-outline-primary');
-        } else { console.log('Unexpected error!'); }
+        }
+        else {
+          console.log('Unexpected error!');
+        }
       }
     });
     {% endif %}

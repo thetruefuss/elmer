@@ -14,6 +14,7 @@ from django.utils.http import is_safe_url, urlsafe_base64_decode
 
 import requests
 from frontboard.utils import check_image_extension
+from frontboard.models import Subject
 from throttle.decorators import throttle
 
 from mysite.decorators import ajax_required
@@ -309,10 +310,9 @@ def user_profile(request, username):
     """
     user = get_object_or_404(User,
                              username=username)
-    posted_subjects = user.posted_subjects.all()
-    subscribed_boards = user.subscribed_boards.all()
+    posted_subjects = Subject.get_subjects(user)
 
-    paginator = Paginator(posted_subjects, 20)
+    paginator = Paginator(posted_subjects, 15)
     page = request.GET.get('page')
     if paginator.num_pages > 1:
         p = True
@@ -320,19 +320,19 @@ def user_profile(request, username):
         p = False
     try:
         subjects = paginator.page(page)
-
     except PageNotAnInteger:
         subjects = paginator.page(1)
-
     except EmptyPage:
         subjects = paginator.page(paginator.num_pages)
 
+    p_obj = subjects
+
     return render(request, 'user_accounts/profile.html', {
         'subjects': subjects,
+        'user': user,
         'page': page,
         'p': p,
-        'subscribed_boards': subscribed_boards,
-        'user': user
+        'p_obj': p_obj
     })
 
 

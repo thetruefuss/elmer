@@ -97,8 +97,12 @@ class Subject(models.Model):
                              self.slug])
 
     @staticmethod
-    def get_subjects():
-        subjects = Subject.objects.filter(active=True)
+    def get_subjects(user=None):
+        if user:
+            subjects = Subject.objects.filter(active=True,
+                                              author=user)
+        else:
+            subjects = Subject.objects.filter(active=True)
         return subjects
 
     @staticmethod
