@@ -1,0 +1,96 @@
+{% load emoticons_tags %}
+{% load humanize %}
+
+<style>
+    .card-styling { border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px; }
+    .card-body-styling { padding:10px; }
+    .photo-partition { float:left; width:70%; }
+    .photo-area-styling { float:right; width:30%; max-height:120px; overflow:hidden; }
+    .action-area { clear:both; padding-top:10px; }
+</style>
+
+
+{% for subject in subjects %}
+<div class="card card-styling">
+  <div class="card-body card-body-styling">
+
+    <div{% if subject.photo %} class="photo-partition"{% endif %}>
+      <h5><a href="{{ subject.get_absolute_url }}" class="card-link">{{ subject.title|emoticons }}</a></h5>
+      <p>{{ subject.body|truncatewords_html:50|urlize }}</p>
+    </div>
+
+    {% if subject.photo %}
+    <div class="photo-area-styling">
+    {% load thumbnail %}
+    {% thumbnail subject.photo "100" as im %}
+          <img src="{{ im.url }}" width="90%" style="margin-left:5px;">
+    {% endthumbnail %}
+    </div>
+    {% endif %}
+
+    <div class="text-right action-area">
+      <p class="text-muted">
+        posted <span title="{{ subject.created|date:"D d M Y" }} | {{ subject.created|time:"H:i:s" }}">
+                  {{ subject.created|naturaltime }}
+                </span>
+        by <a href="{% url 'user_profile' subject.author.username %}"
+              title="view profile"
+              style="text-decoration:none;">{{ subject.author.profile.screen_name }}</a>
+        to <a href="{{ subject.board.get_absolute_url }}"
+              title="visit board"
+              style="text-decoration:none;">{{ subject.board.title }}</a> &#8212;
+
+        <a href="{% url 'like' subject.slug %}"
+           style="text-decoration:none;"
+           title="{{ subject.points.count }} points"
+           id="js-star-subject">
+
+           <span id="js-star-count">{{ subject.points.count }}</span>
+
+           {% if subject in user.liked_subjects.all %}
+             <i class="fa fa-star fa-lg" aria-hidden="true"></i>
+           {% else %}
+             <i class="fa fa-star-o fa-lg" aria-hidden="true"></i>
+           {% endif %}
+        </a> &bull;
+        <a href="{{ subject.get_absolute_url }}"
+           style="text-decoration:none;"
+           title="{{ subject.comments.count }} comments">
+           {{ subject.comments.count }} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i>
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+  $(document).on("click", "#js-star-subject", function () {
+    {% if not request.user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    var $star_count = $(this).find('#js-star-count');
+    var $star_url = $(this).attr("href");
+    var $star_icon = $(this).find('i.fa');
+    $.ajax({
+      url: $star_url,
+      type: 'GET',
+      success: function (data) {
+        $star_count.text(data);
+
+        if ($star_icon.hasClass('fa-star-o')) {
+          $star_icon.removeClass('fa-star-o').addClass('fa-star');
+        }
+        else if ($star_icon.hasClass('fa-star')) {
+          $star_icon.removeClass('fa-star').addClass('fa-star-o');
+        } else {
+          console.log('Unexpected error!');
+        }
+      }
+    });
+    {% endif %}
+    return false;
+  });
+});
+</script>

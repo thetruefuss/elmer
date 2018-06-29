@@ -1,65 +1,22 @@
 {% extends "base.html" %}
-{% load frontboard_tags %}
-{% load humanize %}
-{% load emoticons_tags %}
+
 {% block title %}<title>{{ board.title }} | Erebbit</title>{% endblock %}
 
 {% block content %}
 
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">{{ board.title|upper }}</span></h1>
+<h1 class="pageHeadingH1">
+  <span class="pageHeadingSpan">{{ board.title|upper }}</span>
+</h1>
 
-{% for subject in subjects %}
-<div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
-  <div class="card-body" style="padding:10px;">
-
-    <div {% if subject.photo %}style="float:left;width:70%{% endif %}">
-      <h5><a href="{{ subject.get_absolute_url }}" class="card-link">{{subject.title|emoticons}}</a></h5>
-
-      <p>{{ subject.body|truncatewords_html:50|urlize }}</p>
-    </div>
-    {% if subject.photo %}
-    <div style="float:right;width:30%;max-height:120px;overflow:hidden;">
-      {% load thumbnail %}
-      {% thumbnail subject.photo "100" as im %}
-          <img src="{{ im.url }}" width="90%" style="margin-left:5px;">
-    {% endthumbnail %}
-    </div>
-    {% endif %}
-    <div class="text-right" style="clear:both; padding-top:10px;">
-      <p class="text-muted">posted <span title="{{subject.created|date:"D d M Y"}} | {{subject.created|time:"H:i:s"}}">{{subject.created|naturaltime}}</span> by <a href="{% url 'user_profile' subject.author.username %}" title="view profile">{{subject.author.profile.screen_name}}</a> to <a href="{{subject.board.get_absolute_url}}" title="visit board">{{subject.board.slug}}</a> &#8212;
-      <a href="{% url 'like' subject.slug %}" style="text-decoration:none;" title="{{subject.points.count}} points" id="like-subject"><span id="like-count">{{subject.points.count}}</span> {% if subject in user.liked_subjects.all %}<i class="fa fa-star fa-lg" aria-hidden="true"></i>{% else %}<i class="fa fa-star-o fa-lg" aria-hidden="true"></i>{%endif%}</a> &bull;
-      <a href="{{ subject.get_absolute_url }}" style="text-decoration:none;" title="{{subject.comments.count}} comments">{{subject.comments.count}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></a></p>
+{% if subjects %}
+  {% include "frontboard/includes/partial_subject.html" with subjects=subjects %}
+{% else %}
+  <div class="card" style="margin:15px 0px; padding:10px;">
+    <h6 class="text-center">No subjects found</b></h6>
+    <div style="margin:0 auto;">
+    <p class="text-muted">Be the first one to post a subject in this board.</p>
     </div>
   </div>
-</div>
-{% endfor %}
-
-<script type="text/javascript">
-// Like subjects
-$(document).ready(function(){
-  $("a#like-subject").on("click", function () {
-    {% if not request.user.is_authenticated %}
-    window.location.href = "{% url 'login' %}";
-    {% else %}
-    var $like_count=$(this).find('span#like-count');
-    var $like_url=$(this).attr("href");
-    var $like_heart=$(this).find('i.fa');
-    $.ajax({
-      url: $like_url,
-      type: 'GET',
-      success: function (data) {
-        $like_count.text(data);
-        if ($like_heart.hasClass('fa-star-o')) {
-          $like_heart.removeClass('fa-star-o').addClass('fa-star');
-        } else if ($like_heart.hasClass('fa-star')) {
-          $like_heart.removeClass('fa-star').addClass('fa-star-o');
-        } else { console.log('Unexpected error!'); }
-      }
-    });
-    {% endif %}
-    return false;
-  });
-});
-</script>
+{% endif %}
 
 {% endblock %}
