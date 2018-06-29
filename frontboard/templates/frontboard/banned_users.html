@@ -7,7 +7,10 @@
 
 {% block content %}
 
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">{{board.title}} | Banned Users</span></h1>
+<h1 class="pageHeadingH1">
+  <span class="pageHeadingSpan">{{ board.title }} | Banned Users</span>
+</h1>
+
 {% if users %}
 <p class="text-muted text-center">Unban user if they were banned by mistake from board.</p>
 {% endif %}
@@ -15,13 +18,21 @@
 {% for user in users %}
 <div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
   <div class="card-body" style="padding:10px;">
+
     <div class="text-center" style="float:left; width:10%;">
       {% if user.profile.get_picture %}
       <img src="{{user.profile.get_picture}}" class="rounded" width="50px" height="50px">
       {% endif %}
     </div>
+
     <div style="float:right; width:90%;">
-      <h5 style="font-size:16px;"><a href="{% url 'user_profile' user.username %}" class="card-link" title="{{user.username}}">{{user.profile.screen_name}}</a> &nbsp; &nbsp; &nbsp;<a href="{% url 'ban_user' board.slug user.id %}" class="btn btn-outline-secondary btn-sm">Unban User</a></h5>
+      <h5 style="font-size:16px;">
+        <a href="{% url 'user_profile' user.username %}"
+           class="card-link"
+           title="{{ user.username }}">{{ user.profile.screen_name }}</a> &nbsp; &nbsp; &nbsp;
+        <a href="{% url 'ban_user' board.slug user.id %}"
+           class="btn btn-outline-secondary btn-sm">Unban User</a>
+      </h5>
     </div>
   </div>
 </div>
@@ -29,4 +40,4 @@
 <p class="text-muted text-center">No User Banned</p>
 {% endfor %}
 
-{% endblock %}
+{% endblock content %}

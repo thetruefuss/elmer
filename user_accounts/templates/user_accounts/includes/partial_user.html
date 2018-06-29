@@ -1,0 +1,152 @@
+{% load humanize %}
+
+{% for user in users %}
+<div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
+  <div class="card-body" style="padding:10px;">
+
+    <div class="text-center" style="float:left; width:10%;">
+      {% if user.profile.get_picture %}
+      <img src="{{ user.profile.get_picture }}" class="rounded" width="50px" height="50px">
+      {% endif %}
+    </div>
+
+    <div style="float:right; width:90%;">
+      <h5 style="font-size:16px;">
+        <a href="{% url 'user_profile' user.username %}"
+           class="card-link"
+           title="{{user.username}}">{{ user.profile.screen_name }}</a>
+
+        {% ifequal request.user user %}
+        {% else %}
+          {% if not request.user in user.profile.contact_list.all %}
+            {% if request.user in user.profile.pending_list.all %}
+                <a href="{% url 'send_message_request' user.id %}"
+                   class="btn btn-primary btn-sm"
+                   id="send_message_request"
+                   style="float:right; margin-right:10px;"
+                   title="Request sent to this users">Request Sent</a>
+            {% else %}
+                <a href="{% url 'send_message_request' user.id %}"
+                   class="btn btn-outline-primary btn-sm"
+                   id="send_message_request"
+                   style="float:right; margin-right:10px;"
+                   title="Send request to this user to start conversation">Send Request</a>
+            {% endif %}
+          {% else %}
+                <!-- Block User Trigger -->
+                <button type="button" class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#blockUserModel" style="float:right; margin-right:10px;">Block</button>
+
+                <!-- Block User Modal -->
+                <div class="modal fade" id="blockUserModel" tabindex="-1" role="dialog" aria-labelledby="Block User" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Are you sure?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                        <h5>Once you block the user, you can not message him again until he accepts your request.</h5><br>
+                        <p>If user is being annoying to you, block him right away.</p>
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                        <a href="{% url 'block_spammer' user.id %}" class="btn btn-primary btn-sm" id="block_spammer" style="margin-right: 10px;" title="Block this user">Block</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <a href="{% url 'messages' user.username %}"
+                   class="btn btn-outline-primary btn-sm"
+                   title="Send message to this user"
+                   style="float:right; margin-right:10px;">Message</a>
+          {% endif %}
+        {% endifequal %}
+
+        {% ifequal request.user user %}
+        {% else %}
+        	{% if request.user in user.profile.followers.all %}
+          		<a href="{% url 'follow_user' user.id %}"
+                 class="btn btn-primary btn-sm"
+                 id="follow_user"
+                 style="float:right; margin-right:10px;">Unfollow</a>
+        	{% else %}
+            	<a href="{% url 'follow_user' user.id %}"
+                 class="btn btn-outline-primary btn-sm"
+                 id="follow_user"
+                 style="float:right; margin-right:10px;">Follow</a>
+        	{% endif %}
+        {% endifequal %}
+     </h5>
+      <p class="text-muted">Member since <span title="{{user.profile.member_since|date:"D d M Y"}} | {{user.profile.member_since|time:"H:i:s"}}">{{user.profile.member_since|naturaltime}}</span></p>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<script type="text/javascript">
+// Send Request
+$(document).ready(function(){
+  $("a#send_message_request").on("click", function () {
+    {% if not request.user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    var $add_btn = $(this);
+    var $add_url = $(this).attr("href");
+    $.ajax({
+      url: $add_url,
+      type: 'GET',
+      success: function (data) {
+        $add_btn.text(data);
+
+        if ($add_btn.hasClass('btn-outline-primary')) {
+          $add_btn.removeClass('btn-outline-primary').addClass('btn-primary');
+        }
+        else if ($add_btn.hasClass('btn-primary')) {
+          $add_btn.removeClass('btn-primary').addClass('btn-outline-primary');
+        }
+        else {
+          console.log('Unexpected error!');
+        }
+      }
+    });
+    {% endif %}
+    return false;
+  });
+});
+</script>
+
+<script>
+// Follow user
+$(document).ready(function(){
+    $("a#follow_user").on("click", function () {
+    {% if not request.user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    var $follow_btn = $(this);
+    var $follow_url = $(this).attr("href");
+    $.ajax({
+      url: $follow_url,
+      type: 'GET',
+      success: function (data) {
+        $follow_btn.text(data);
+
+        if ($follow_btn.hasClass('btn-outline-primary')) {
+          $follow_btn.removeClass('btn-outline-primary').addClass('btn-primary');
+        }
+        else if ($follow_btn.hasClass('btn-primary')) {
+          $follow_btn.removeClass('btn-primary').addClass('btn-outline-primary');
+        }
+        else {
+          console.log('Unexpected error!');
+        }
+      }
+    });
+    {% endif %}
+    return false;
+  });
+});
+</script>

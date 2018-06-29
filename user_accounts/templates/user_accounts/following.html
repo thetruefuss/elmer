@@ -7,20 +7,35 @@
 
 {% block content %}
 
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Following</span></h1>
+<h1 class="pageHeadingH1">
+  <span class="pageHeadingSpan">Following</span>
+</h1>
 
 {% for profile in profiles %}
 <div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
   <div class="card-body" style="padding:10px;">
+
     <div class="text-center" style="float:left; width:10%;">
       {% if profile.user.profile.get_picture %}
-      <img src="{{profile.user.profile.get_picture}}" class="rounded" width="50px" height="50px">
+      <img src="{{ profile.user.profile.get_picture }}" class="rounded" width="50px" height="50px">
       {% endif %}
     </div>
+
     <div style="float:right; width:90%;">
-      <h5 style="font-size:16px;"><a href="{% url 'user_profile' profile.user.username %}" class="card-link" title="{{profile.user.username}}">{{profile.screen_name}}</a></h5>
-      <p class="text-muted">Member since <span title="{{profile.member_since|date:"D d M Y"}} | {{profile.member_since|time:"H:i:s"}}">{{profile.member_since|naturaltime}}</span></p>
+      <h5 style="font-size:16px;">
+        <a href="{% url 'user_profile' profile.user.username %}"
+           class="card-link"
+           title="{{ profile.user.username }}">{{ profile.screen_name }}</a>
+         </h5>
+      <p class="text-muted">Member since <span title="{{ profile.member_since|date:"D d M Y" }} | {{ profile.member_since|time:"H:i:s" }}">{{ profile.member_since|naturaltime }}</span></p>
     </div>
+  </div>
+</div>
+{% empty %}
+<div class="card" style="margin:15px 0px; padding:10px;">
+  <h6 class="text-center">No following found</h6>
+  <div style="margin:0 auto;">
+  <p class="text-muted">You don't have any following right now.</p>
   </div>
 </div>
 {% endfor %}

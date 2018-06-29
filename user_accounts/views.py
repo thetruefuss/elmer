@@ -144,9 +144,9 @@ def view_all_users(request):
     p_obj = users
 
     return render(request, 'user_accounts/view_all_users.html', {
+        'users': users,
         'page': page,
         'p': p,
-        'users': users,
         'p_obj': p_obj
     })
 
@@ -177,9 +177,9 @@ def view_all_followers(request):
     p_obj = users
 
     return render(request, 'user_accounts/followers.html', {
+        'users': users,
         'page': page,
         'p': p,
-        'users': users,
         'p_obj': p_obj
     })
 
@@ -210,9 +210,9 @@ def view_following(request):
     p_obj = profiles
 
     return render(request, 'user_accounts/following.html', {
+        'profiles': profiles,
         'page': page,
         'p': p,
-        'profiles': profiles,
         'p_obj': p_obj
     })
 
@@ -449,9 +449,9 @@ def all_message_requests(request):
     p_obj = users
 
     return render(request, 'user_accounts/view_all_message_requests.html', {
+        'users': users,
         'page': page,
         'p': p,
-        'users': users,
         'p_obj': p_obj
     })
 
@@ -482,8 +482,8 @@ def all_friends(request):
     p_obj = users
 
     return render(request, 'user_accounts/view_all_contacts.html', {
+        'users': users,
         'page': page,
         'p': p,
-        'users': users,
         'p_obj': p_obj
     })
