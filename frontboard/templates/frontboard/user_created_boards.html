@@ -1,33 +1,23 @@
 {% extends "base.html" %}
-{% load frontboard_tags %}
-{% load humanize %}
-{% block title %}<title>Subscription List | Erebbit</title>{% endblock %}
+
+{% block title %}<title>Your boards | Erebbit</title>{% endblock %}
 
 {% block content %}
 
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Your Boards</span></h1>
+<h1 class="pageHeadingH1">
+  <span class="pageHeadingSpan">Your Boards</span>
+</h1>
 
-{% for board in user_boards %}
-<div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
-  <div class="card-body" style="padding:10px;">
-    <div style="float:left; width:80%;">
-      <h5 style="font-size:16px;"><a href="{{ board.get_absolute_url }}" class="card-link">{{board.title}}</a></h5>
-      <p>{{board.description|markdown|truncatewords_html:50}}</p>
-      <p class="text-muted"><span title="{{board.subscribers.count}}">{{board.subscribers.count}} subscribers</span>, created <span title="{{board.created|date:"D d M Y"}} | {{board.created|time:"H:i:s"}}">{{board.created|naturaltime}}</span> &bull;
-      <a href="#" class="text-muted" title="report this board">report</a></p>
-    </div>
-    <div class="text-center" style="float:right; width:20%;">
-      {% if board in request.user.subscribed_boards.all %}
-        <a href="{% url 'subscribe' board.slug %}" class="btn btn-secondary btn-sm" id="subscribe_board">Unsubscribe</a>
-      {% else %}
-          <a href="{% url 'subscribe' board.slug %}" class="btn btn-primary btn-sm" id="subscribe_board">Subscribe</a>
-      {% endif %}
+{% if user_boards %}
+  {% include "frontboard/includes/partial_board.html" with boards=user_boards %}
+{% else %}
+  <div class="card" style="margin:15px 0px; padding:10px;">
+    <h6 class="text-center">No boards found</h6>
+    <div style="margin:0 auto;">
+    <p class="text-muted">You have not created any boards created yet.</p>
     </div>
   </div>
-</div>
-{% empty %}
-<p class="text-muted text-center">No board created yet!</p>
-{% endfor %}
+{% endif %}
 
 
 <script type="text/javascript">
