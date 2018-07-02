@@ -5,7 +5,6 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps.views import sitemap
 
-import blog.views as blog_views
 import frontboard.views as frontboard_views
 import user_accounts.views as useraccounts_views
 from frontboard.sitemaps import SubjectSitemap
@@ -15,7 +14,6 @@ from rest_framework_jwt.views import (obtain_jwt_token, refresh_jwt_token,
 sitemaps = {
     'subjects': SubjectSitemap,
 }
-
 
 urlpatterns = [
     url(r'^$',frontboard_views.home, name='home'),
@@ -145,15 +143,6 @@ urlpatterns = [
         frontboard_views.deactivate_comment,
         name='deactivate_comment'),
     url(r'^messages/', include('messenger.urls')),
-
-
-    #blog
-    url(r'^blog/$',blog_views.post_list,name='post_list'),
-    url(r'^blog/post/(?P<slug>[-\w]+)/$',blog_views.post_detail,
-        name='post_detail'),
-    url(r'^blog/about/$',blog_views.about,name='blog_about'),
-    url(r'^blog/photos/$',blog_views.photos,name='blog_photos'),
-    url(r'^blog/contact/$',blog_views.contact,name='blog_contact'),
 
     # api urls
     url(r'^api/auth/token/obtain/', obtain_jwt_token),

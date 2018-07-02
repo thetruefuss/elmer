@@ -38,7 +38,6 @@ SITE_ID = 1
 
 INSTALLED_APPS = (
     'throttle',
-    'blog',
     'frontboard',
     'user_accounts',
     'django.contrib.humanize',
