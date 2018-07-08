@@ -150,6 +150,7 @@ urlpatterns = [
     url(r'^api/auth/token/verify/', verify_jwt_token),
     url(r'^api/frontboard/', include('frontboard.api.urls', namespace='frontboard-api')),
     url(r'^api/users/', include('user_accounts.api.urls', namespace='users-api')),
+    url(r'^api/messages/', include('messenger.api.urls', namespace='messages-api')),
 ]
 
 if True:
