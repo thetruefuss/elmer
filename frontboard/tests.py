@@ -1,11 +1,16 @@
-from django.core.urlresolvers import reverse, resolve
+from django.contrib.auth import get_user_model
+from django.core.urlresolvers import resolve, reverse
 from django.test import TestCase
 
-from .views import home, board
-from .models import Board
+from .models import Board, Comment, Subject
+from .views import board, home
 
-# test for home view
-class HomeTests(TestCase):
+
+class TestHomeView(TestCase):
+    """
+    TestCase class to test the home view functionality
+    """
+
     def test_home_view_status_code(self):
         url = reverse('home')
         response = self.client.get(url)
@@ -16,10 +21,13 @@ class HomeTests(TestCase):
         self.assertEqual(view.func, home)
 
 
-# test for board view & model
-class BoardTests(TestCase):
+class TestBoardModel(TestCase):
+    """
+    TestCase class to test the board model functionality
+    """
+
     def setUp(self):
-        Board.objects.create(
+        self.board = Board.objects.create(
             title='test title',
             description='some random words'
         )
@@ -37,3 +45,82 @@ class BoardTests(TestCase):
     def test_board_url_resolve_board_view(self):
         view = resolve('/b/test-title/')
         self.assertEqual(view.func, board)
+
+    def test_instance_values(self):
+        self.assertTrue(isinstance(self.board, Board))
+
+    def test_board_return_value(self):
+        self.assertEqual(str(self.board), 'test title')
+
+
+class TestSubjectModel(TestCase):
+    """
+    TestCase class to test the subject model functionality
+    """
+
+    def setUp(self):
+        self.user = get_user_model().objects.create(
+            username='test_user',
+            email='test@gmail.com',
+            password='top_secret'
+        )
+        self.other_user = get_user_model().objects.create(
+            username='other_test_user',
+            email='other_test@gmail.com',
+            password='top_secret'
+        )
+        self.board = Board.objects.create(
+            title='test title',
+            description='some random words'
+        )
+        self.subject = Subject.objects.create(
+            title='test title',
+            body='some random words',
+            author=self.user,
+            board=self.board
+        )
+
+    def test_instance_values(self):
+        self.assertTrue(isinstance(self.subject, Subject))
+
+    def test_subject_return_value(self):
+        self.assertEqual(str(self.subject), 'test title')
+
+
+class TestCommentModel(TestCase):
+    """
+    TestCase class to test the comment model functionality
+    """
+
+    def setUp(self):
+        self.user = get_user_model().objects.create(
+            username='test_user',
+            email='test@gmail.com',
+            password='top_secret'
+        )
+        self.other_user = get_user_model().objects.create(
+            username='other_test_user',
+            email='other_test@gmail.com',
+            password='top_secret'
+        )
+        self.board = Board.objects.create(
+            title='test title',
+            description='some random words'
+        )
+        self.subject = Subject.objects.create(
+            title='test title',
+            body='some random words',
+            author=self.user,
+            board=self.board
+        )
+        self.comment = Comment.objects.create(
+            body='some random words',
+            commenter=self.user,
+            subject=self.subject
+        )
+
+    def test_instance_values(self):
+        self.assertTrue(isinstance(self.comment, Comment))
+
+    def test_comment_return_value(self):
+        self.assertEqual(str(self.comment), 'some random words')
