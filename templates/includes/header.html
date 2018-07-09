@@ -30,6 +30,7 @@
       <!-- USER LINKS -->
       <a href="{% url 'inbox' %}" style="margin-right:15px; position:relative;" id="check_messages" title="Inbox"><i class="fa fa-inbox fa-lg" aria-hidden="true"></i><span id="messages_count"></span></a>
       <a href="{% url 'activities' %}" style="margin-right:15px; position:relative;" id="check_activities" title="Notifications"><i class="fa fa-bell-o fa-lg" aria-hidden="true"></i><span id="activities_count"></span></a>
+      <a href="{% url 'new_subject' %}" style="margin-right:15px; position:relative;" title="Post a new subject"><i class="fa fa-pencil fa-lg" aria-hidden="true"></i></a>
       <div class="dropdown">
         <a href="#" role="button" id="user_dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Profile and settings"><img src="{{request.user.profile.get_picture}}" style="width:36px; height:36px; border-radius:50px;"></a>
 
@@ -48,8 +49,6 @@
           <a class="dropdown-item" href="{% url 'logout' %}">Sign out</a>
         </div>
       </div>
-
-      <a href="{% url 'new_subject' %}" class="btn btn-primary btn-sm new_post_btn" role="button" title="Post a new subject">New Post</a>
 
       {% else %}
 

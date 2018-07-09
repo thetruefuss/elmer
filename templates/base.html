@@ -70,6 +70,8 @@
           <div class="col-lg-4 col-md-4">
           {% if bv %}
                 {% include "includes/board_info.html" %}
+          {% else %}
+                <a href="{% url 'new_subject' %}" class="btn btn-primary btn-block mt-4" role="button" title="Create new post" style="font-weight:bold;letter-spacing:0.8px;">CREATE NEW POST</a>
           {% endif %}
           {% if request.user.is_authenticated %}
             {% if not bv %}
