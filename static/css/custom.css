@@ -1,6 +1,6 @@
 body {
 	background-color: #f8f9fa;
-	font-family: Ubuntu, sans-serif
+	font-family: 'Noto Sans', sans-serif;
 }
 #topNavbar .nav-link,
 .navbar-brand {
@@ -71,8 +71,8 @@ a {
 }
 .pageHeadingSpan {
 	background: linear-gradient(to right, #00BCD4 0, #2196F3 100%);
-	font-size: 16px;
-	padding: 17px;
+	font-size: 15px;
+	padding: 15px;
 	color: #fff
 }
 .content_block,
