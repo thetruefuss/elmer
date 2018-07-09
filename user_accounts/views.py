@@ -51,7 +51,6 @@ def register_user(request):
                 new_user = user_form.save(commit=False)
                 new_user.set_password(user_form.cleaned_data['password'])
                 new_user.save()
-                profile = Profile.objects.create(user=new_user)
                 auth = authenticate(
                     username=user_form.cleaned_data['username'],
                     password=user_form.cleaned_data['password'],
