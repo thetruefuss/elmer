@@ -57,10 +57,7 @@
 
       {% if subject.photo %}
       <div class="card-photo-stlying">
-      {% load thumbnail %}
-      {% thumbnail subject.photo "400" as im %}
-            <img src="{{ im.url }}">
-      {% endthumbnail %}
+        <img src="{{ subject.photo.url }}" width="80%">
       </div>
       {% endif %}
 
