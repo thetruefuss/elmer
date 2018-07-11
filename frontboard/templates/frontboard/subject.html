@@ -2,144 +2,319 @@
 {% load frontboard_tags %}
 {% load humanize %}
 {% load emoticons_tags %}
+{% load static %}
 
 {% block title %}<title>{{ subject.title }} | Erebbit</title>{% endblock %}
 
 {% block meta_description %}{{ subject.body }}{% endblock %}
 
 {% block content %}
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">{{ subject.title|upper|truncatechars:60 }}</span></h1>
+<style>
+    .card-styling { margin-bottom:10px; }
+    .card-body-styling { padding:10px; }
+    .star-partition { float:left; width:10%; text-align:center; padding-top:10px; }
+    .body-partition { float:right; width:90%; }
+    .card-photo-stlying { text-align:center; padding:5px; }
+    .card-bottom-area { padding-top:10px; font-weight:600; font-size:12px; }
+    .card-bottom-area a { text-decoration:none; }
+    i#star_icon.fa-lg { font-size:1.6em; }
+    span#js-star-count { font-weight:600; }
+    .board-link { text-decoration:none; font-weight:600; }
+    .profile-link { text-decoration:none; }
+    .post-info { font-size:11px; }
+</style>
+<div class="card card-styling mt-4" style="border:0;">
+  <div class="card-body card-body-styling">
 
-<div style="border-bottom:1px solid #dcd7d7; padding:10px; overflow:hidden;">
-  {{ subject.linkfy_subject|markdown|truncatewords_html:5000|linebreaks }}
+    <div class="star-partition">
+      <a href="{% url 'like' subject.slug %}"
+         style="text-decoration:none;"
+         title="{{ subject.points.count }} points"
+         id="js-star-subject">
 
-  {% if subject.photo %}
-  <div class="text-center" style="margin:10px;">
-    <img src="{{subject.photo.url}}" class="rounded" width="60%">
-  </div>
-  {% endif %}
+         {% if subject in user.liked_subjects.all %}
+           <i class="fa fa-star fa-lg" aria-hidden="true" id="star_icon"></i>
+         {% else %}
+           <i class="fa fa-star-o fa-lg" aria-hidden="true" id="star_icon"></i>
+         {% endif %}
+         <br>
 
-  <div style="float:right;">
-    <p class="text-muted">posted <span title="{{subject.created|date:"D d M Y"}} | {{subject.created|time:"H:i:s"}}">{{subject.created|naturaltime}}</span> by <a href="{% url 'user_profile' subject.author.username %}" title="view profile">{{subject.author.profile.screen_name}}</a> to <a href="{{subject.board.get_absolute_url}}" title="visit board">{{subject.board.slug}}</a> &#8212;
-    <a href="{% url 'like' subject.slug %}" style="text-decoration:none;" title="{{subject.points.count}} points" id="like-subject"><span id="like-count">{{subject.points.count}}</span> {% if subject in user.liked_subjects.all %}<i class="fa fa-star fa-lg" aria-hidden="true"></i>{% else %}<i class="fa fa-star-o fa-lg" aria-hidden="true"></i>{%endif%}</a> &bull;
-    <a href="{{ subject.get_absolute_url }}" style="text-decoration:none;" title="{{subject.comments.count}} comments">{{subject.comments.count}} <i class="fa fa-comments-o fa-lg" aria-hidden="true"></i></a></p>
-  </div>
+         <span id="js-star-count">{{ subject.points.count }}</span>
+      </a>
+    </div>
 
-  {% ifequal subject.author request.user %}
-  <div>
-      <a href="{% url 'edit_subject' subject.slug %}" style="text-decoration:none;" title="edit subject"><i class="fa fa-edit fa-lg"></i></a>
-      <a href="{% url 'delete_subject' subject.slug %}" style="text-decoration:none;" title="delete subject" id="delete_subject"><i class="fa fa-trash-o fa-lg"></i></a>
+    <div class="body-partition">
+      <p class="post-info text-muted">
+        <a href="{{ subject.board.get_absolute_url }}"
+           title="visit board"
+           class="board-link">b/{{ subject.board.slug }}</a> &bull;
+        Posted by
+        <a href="{% url 'user_profile' subject.author.username %}"
+           title="view profile"
+           class="profile-link">{{ subject.author.profile.screen_name }}</a>
+        <span title="{{ subject.created|date:"D d M Y" }} | {{ subject.created|time:"H:i:s" }}">
+           {{ subject.created|naturaltime }}
+        </span>
+      </p>
+      <h5><a href="{{ subject.get_absolute_url }}" class="card-link">{{ subject.title|emoticons }}</a></h5>
+      <p>{{ subject.body|urlize }}</p>
+
+      {% if subject.photo %}
+      <div class="card-photo-stlying">
+        <img src="{{ subject.photo.url }}" width="80%">
+      </div>
+      {% endif %}
+
+      <div class="card-bottom-area text-muted">
+        <a href="{{ subject.get_absolute_url }}"
+           title="{{ subject.comments.count }} comments">
+           <i class="fa fa-comment fa-md" aria-hidden="true"></i> {{ subject.comments.count }} Comments
+        </a> &bull;
+        <a href="#" class="share_link" data-clipboard-text="{{ request.get_host }}{{ subject.get_absolute_url }}">
+           <i class="fa fa-share fa-md" aria-hidden="true"></i> Share
+        </a>
+        <div style="float:right;">
+          {% ifequal subject.author request.user %}
+            <a href="{% url 'edit_subject' subject.slug %}"
+               title="edit subject">
+               <i class="fa fa-edit fa-lg"></i> Edit</a> &bull;
+            <a href="{% url 'delete_subject' subject.slug %}"
+               title="delete subject"
+               id="delete_subject">
+               <i class="fa fa-trash-o fa-lg"></i> Delete</a>
+          {% else %}
+            <a href="{% url 'report_subject' subject.slug %}"
+               title="report this subject"
+               id="report_link">
+               <i class="fa fa-flag-o fa-lg"></i> Report</a>
+          {% endifequal %}
+        </div>
+      </div>
+    </div>
   </div>
-  {% else %}
-  <div>
-    <a href="{% url 'report_subject' subject.slug %}" style="text-decoration:none;" title="report this subject" id="report_link"><i class="fa fa-flag-o fa-lg"></i></a>
-  </div>
-  {% endifequal %}
 </div>
 
 
 <script type="text/javascript">
-// Like subjects
 $(document).ready(function(){
-  $("#show_msg").hide();
-  $("a#like-subject").on("click", function () {
+  // Star or unstar a post
+  $(document).on("click", "#js-star-subject", function () {
     {% if not request.user.is_authenticated %}
     window.location.href = "{% url 'login' %}";
     {% else %}
-    var $like_count=$(this).find('span#like-count');
-    var $like_url=$(this).attr("href");
-    var $like_heart=$(this).find('i.fa');
+    var $star_count = $(this).find('#js-star-count');
+    var $star_url = $(this).attr("href");
+    var $star_icon = $(this).find('i.fa');
     $.ajax({
-      url: $like_url,
+      url: $star_url,
       type: 'GET',
       success: function (data) {
-        $like_count.text(data);
-        if ($like_heart.hasClass('fa-star-o')) {
-          $like_heart.removeClass('fa-star-o').addClass('fa-star');
-        } else if ($like_heart.hasClass('fa-star')) {
-          $like_heart.removeClass('fa-star').addClass('fa-star-o');
-        } else { console.log('Unexpected error!'); }
+        $star_count.text(data);
+
+        if ($star_icon.hasClass('fa-star-o')) {
+          $star_icon.removeClass('fa-star-o').addClass('fa-star');
+        }
+        else if ($star_icon.hasClass('fa-star')) {
+          $star_icon.removeClass('fa-star').addClass('fa-star-o');
+        } else {
+          console.log('Unexpected error!');
+        }
       }
     });
     {% endif %}
     return false;
   });
 
+  // Show tooltip on click for 1 sec
+  $('.share_link').on('click', function(e) {
+    e.preventDefault();
+    var elm = $(this);
+    elm.tooltip({
+      trigger: 'click',
+      placement: 'bottom',
+      title: 'Copied permalink!'
+    });
+    setTimeout(function(){
+        elm.tooltip('hide');
+    }, 1000);
+  });
+
+  // Report the subject
   $(document).on("click", "a#report_link",function () {
     {% if not request.user.is_authenticated %}
     window.location.href = "{% url 'login' %}";
     {% else %}
-    var $report_url=$(this).attr("href");
-    var $report_flag=$(this).find('i.fa');
+    var $report_url = $(this).attr("href");
+    var $report_flag = $(this).find('i.fa');
     $.ajax({
       url: $report_url,
       type: 'GET',
       success: function (data) {
-        // $like_count.text(data);
-        console.log(data)
         if ($report_flag.hasClass('fa-flag-o')) {
           $report_flag.removeClass('fa-flag-o').addClass('fa-flag');
-        } else { console.log('Unexpected error!'); }
+        }
+        else {
+          console.log('Unexpected error!');
+        }
       }
     });
     {% endif %}
     return false;
   });
 
-
+  // Delete the subject
   $("a#delete_subject").on("click", function () {
     {% if not request.user.is_authenticated %}
     window.location.href = "{% url 'login' %}";
     {% else %}
-    var $element=$(this);
-    var $delete_url=$(this).attr("href");
-    var $delete_trash=$(this).find('i.fa');
+    var $element = $(this);
+    var $delete_url = $(this).attr("href");
+    var $delete_trash = $(this).find('i.fa');
     $.ajax({
       url: $delete_url,
       type: 'GET',
       success: function (data) {
-        // $like_count.text(data);
-        console.log(data)
         if ($delete_trash.hasClass('fa-trash-o')) {
           $delete_trash.removeClass('fa-trash-o').addClass('fa-trash');
           $('body').fadeOut("slow", "swing");
           window.location.replace('/');
-
-        } else { console.log('Unexpected error!'); }
+        }
+        else {
+          console.log('Unexpected error!');
+        }
       }
     });
     {% endif %}
     return false;
   });
 
-
+  // Delete a comment
   $(document).on("click", "a#delete_comment",function () {
     {% if not request.user.is_authenticated %}
     window.location.href = "{% url 'login' %}";
     {% else %}
-    var $element=$(this);
-    var $delete_url=$(this).attr("href");
-    var $delete_trash=$(this).find('i.fa');
+    var $element = $(this);
+    var $delete_url = $(this).attr("href");
+    var $delete_trash = $(this).find('i.fa');
     $.ajax({
       url: $delete_url,
       type: 'GET',
       success: function (data) {
-        // $like_count.text(data);
-        console.log(data)
         if ($delete_trash.hasClass('fa-trash-o')) {
           $delete_trash.removeClass('fa-trash-o').addClass('fa-trash');
           $element.closest("li.list-group-item").fadeOut();
-
-        } else { console.log('Unexpected error!'); }
+        }
+        else {
+          console.log('Unexpected error!');
+        }
       }
     });
     {% endif %}
     return false;
   });
+
+  // Load new comments
+  function load_new_comments() {
+    var $last_comment_id = $("#comments_container li:last-child").attr('comment-id');
+    $.ajax({
+      url: '/load_new_comments/',
+      data: {
+        'subject':'{{subject.slug}}',
+        'board':'{{board.slug}}',
+        'last_comment_id': $last_comment_id,
+      },
+      cache: false,
+      success: function (data) {
+        $(comments_container).find("#no_comments").fadeOut(100);
+        $(comments_container).append(data);
+      },
+      complete: function () {
+        window.setTimeout(load_new_comments, 15000); // refresh after 15 seconds
+      }
+    });
+  };
+  load_new_comments();
+
+  // Comment via ajax
+  {% if request.user.is_authenticated %}
+  $("#comment_form textarea").on("keydown", function (evt) {
+    var keyCode = evt.which?evt.which:evt.keyCode;
+    if (keyCode == 13) {
+      var form = $("#comment_form");
+      var comments_container = $("#comments_container");
+      var input = $(this);
+      $.ajax({
+        data: $(form).serialize(),
+        type: 'post',
+        cache: false,
+        beforeSend: function () {
+          $(input).val("");
+        },
+        success: function (data) {
+          $(comments_container).find("#no_comments").fadeOut();
+          $(comments_container).append(data);
+          $('html, body').stop().animate( {
+            'scrollTop': input.offset().top-40
+          }, 500, 'swing');
+          input.focus();
+        }
+      });
+      return false;
+    }
+  });
+  {% else %}
+  $("#comment_form textarea").on("focus", function() {
+    $( this ).fadeOut( 500 );
+    $("#comment_form").html('<div style="margin:10px;" id="login-first"><h6 class="text-center">Login required to comment this subject.</h6><a href="/login/" class="btn btn-block btn-primary"><b>Login</b></a></div>').fadeIn( 1000 );
+    $('html, body').stop().animate( {
+      'scrollTop': $("#login-first").offset().top-40
+    }, 1000, 'swing');
+  });
+  {% endif %}
+
+  // Reply to comment
+  $(document).on("click", "#comments_container #reply_comment",function (e) {
+    {% if not request.user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    e.preventDefault();
+    var $target = $(this).parent().find("a#commenter");
+    var $target_id = $target.text();
+    var $input_area = $("#comment_form textarea");
+    $('html, body').stop().animate( {
+      'scrollTop': $input_area.offset().top
+    }, 500, 'swing');
+    $input_area.focus();
+    $input_area.val("u/"+$target_id+" :: ");
+    {% endif %}
+    return false;
+  });
+
 });
 </script>
 
+<script src="{% static 'js/clipboard.min.js' %}"></script>
+<script type="text/javascript">
+new ClipboardJS('.share_link');
+</script>
 
+
+<style>
+#comments_container li a#commenter {
+    border-radius: 100px;
+    padding: 1px 10px;
+    border: 1px solid #d6d6d6;
+}
+#comments_container li a#commenter:hover {
+    border: 1px solid #3f51b5;
+}
+#comment_form #comment_text {
+    background-color: #f8f9fa;
+}
+#comment_form #comment_text:focus {
+    background-color: #fff;
+}
+</style>
 
 {% if comments %}
 <div class="card" style="margin:15px 0px;">
@@ -175,120 +350,20 @@ $(document).ready(function(){
   </ul>
 </div>
 {% endif %}
-<style>
-#comments_container li a#commenter {
-    border-radius: 100px;
-    padding: 1px 10px;
-    border: 1px solid #d6d6d6;
-}
-#comments_container li a#commenter:hover {
-    border: 1px solid #3f51b5;
-}
-#comment_form #comment_text {
-    background-color: #f8f9fa;
-}
-#comment_form #comment_text:focus {
-    background-color: #fff;
-}
-</style>
 
 <!-- Comment form -->
+<p class="text-muted">
+  {% if request.user.is_authenticated %}
+  Comment as <a href="{% url 'user_profile' request.user.username %}"
+                class="font-weight-bold">{{ request.user.profile.screen_name }}</a>
+  {% else %}
+  <a href="{% url 'login' %}"
+     class="font-weight-bold">Login</a> to comment
+  {% endif %}
+</p>
 <form role="form" method="post" onsubmit="return false" id="comment_form">
   {% csrf_token %}
   <textarea class="form-control" id="comment_text" rows="3" name="body" maxlength="2000" placeholder="Leave a comment"></textarea>
 </form><br>
-
-
-
-<!-- hidden form to load new comments -->
-<!-- <form action="" method="post" onsubmit="return false" id="load_new_comments">
-  <input type="hidden" name="comment_id">
-  <input type="hidden" name="subject" value="{{subject.slug}}">
-  <input type="hidden" name="board" value="{{board.slug}}">
-</form> -->
-
-
-<script type="text/javascript">
-$(document).ready(function(){
-  {% if request.user.is_authenticated %}
-  $("#comment_form textarea").on("keydown", function (evt) {
-    var keyCode = evt.which?evt.which:evt.keyCode;
-    if (keyCode == 13) {
-      var form = $("#comment_form");
-      var comments_container = $("#comments_container");
-      var input = $(this);
-      $.ajax({
-        data: $(form).serialize(),
-        type: 'post',
-        cache: false,
-        beforeSend: function () {
-          $(input).val("");
-        },
-        success: function (data) {
-          console.log("working");
-          $(comments_container).find("#no_comments").fadeOut();
-          $(comments_container).append(data);
-          $('html, body').stop().animate( {
-            'scrollTop': input.offset().top-40
-          }, 500, 'swing');
-          input.focus();
-        }
-      });
-      return false;
-    }
-  });
-  {% else %}
-  $("#comment_form textarea").on("focus", function() {
-  $( this ).fadeOut( 500 );
-  $("#comment_form").html('<div style="margin:10px;" id="login-first"><h6 class="text-center">Login required to comment this subject.</h6><a href="/login/" class="btn btn-block btn-primary"><b>Login</b></a></div>').fadeIn( 1000 );
-  $('html, body').stop().animate( {
-    'scrollTop': $("#login-first").offset().top-40
-  }, 1000, 'swing');
-});
-  {% endif %}
-
-  $(document).on("click", "#comments_container #reply_comment",function (e) {
-    {% if not request.user.is_authenticated %}
-    window.location.href = "{% url 'login' %}";
-    {% else %}
-    e.preventDefault();
-    var $target=$(this).parent().find("a#commenter");
-    var $target_id=$target.text();
-    console.log($target_id);
-    var $input_area=$("#comment_form textarea");
-    $('html, body').stop().animate( {
-      'scrollTop': $input_area.offset().top
-    }, 500, 'swing');
-    $input_area.focus();
-    $input_area.val("u/"+$target_id+" :: ");
-    {% endif %}
-    return false;
-  });
-
-
-  function load_new_comments() {
-    var $last_comment_id=$("#comments_container li:last-child").attr('comment-id');
-    console.log($last_comment_id);
-    $.ajax({
-      url: '/load_new_comments/',
-      data: {
-        'subject':'{{subject.slug}}',
-        'board':'{{board.slug}}',
-        'last_comment_id': $last_comment_id,
-      },
-      cache: false,
-      success: function (data) {
-        console.log("working");
-        $(comments_container).find("#no_comments").fadeOut(100);
-        $(comments_container).append(data);
-      },
-      complete: function () {
-        window.setTimeout(load_new_comments, 15000); // refresh after 15 seconds
-      }
-    });
-  };
-  load_new_comments();
-});
-</script>
 
 {% endblock %}
