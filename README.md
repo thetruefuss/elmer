@@ -8,7 +8,7 @@ Erebbit is the follow-up of **[Rebbit](https://github.com/thetruefuss/rebbit/)**
 
 Check the website at [http://erebbit.pythonanywhere.com](http://erebbit.pythonanywhere.com/)
 
-![Erebbit Screenshot](https://image.ibb.co/ddEd0T/erebbit_screenshot.jpg "Erebbit Screenshot")
+![Erebbit Screenshot](https://image.ibb.co/eK4VBy/erebbit_screenshot.jpg "Erebbit Screenshot")
 
 ### Technology Stack
 
