@@ -6,7 +6,7 @@ Elmer is a social network inspired by [reddit](https://www.reddit.com/) built wi
 
 Check the website at [https://elmer.pythonanywhere.com](https://elmer.pythonanywhere.com/)
 
-![Elmer Screenshot](https://image.ibb.co/eK4VBy/erebbit_screenshot.jpg "Elmer Screenshot")
+![Elmer Screenshot](https://image.ibb.co/drWiM8/elmer_screenshot.jpg "Elmer Screenshot")
 
 ### Technology Stack
 
