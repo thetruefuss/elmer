@@ -58,7 +58,7 @@ def register_user(request):
                 auth_login(request, auth)
 
                 msg_txt = """
-                    <h4 class="alert-heading">Welcome to erebbit!</h4>
+                    <h4 class="alert-heading">Welcome to elmer!</h4>
                     <p>Thanks for joining our community. Start sharing your ideas by posting <a href="/new_post/" class="alert-link">new subject</a> or just create your own <a href="/new_board/" class="alert-link">new board</a>.</p>
                     <hr>
                     <p class="mb-0">Add your <a href="/profile_edit/" class="alert-link">profile info</a>, so community members know you well.</p>
