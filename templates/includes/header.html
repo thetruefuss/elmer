@@ -2,7 +2,7 @@
 
 <nav class="navbar sticky-top navbar-expand-lg navbar-expand-md navbar-light extra_navbar_styling">
   <div class="container">
-    <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/elmer_logo.png' %}?lastmod=1" alt="Erebbit" height="30px" style="position:relative;top:-3px;"></a>
+    <a class="navbar-brand" href="{% url 'home' %}"><img src="{% static 'img/elmer_logo.png' %}?lastmod=1" alt="Elmer" height="30px" style="position:relative;top:-3px;"></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#topNavbar" aria-controls="topNavbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -12,7 +12,7 @@
         <form class="form-inline" {% if not bv %}action="{% url 'search' %}"{% else %}action="{% url 'board_search' board.slug %}"{% endif %} method="get">
           <div class="form-group">
             <label for="search" class="sr-only">Search</label>
-            <input type="text" class="form-control form-control-sm" id="search" name="query" {% if not bv %}placeholder="Search Erebbit"{% else %}placeholder='Search "{{board.title}}"'{% endif %} style="width:360px;border-radius: 3rem;text-indent:10px;margin:0px 15px;">
+            <input type="text" class="form-control form-control-sm" id="search" name="query" {% if not bv %}placeholder="Search Elmer"{% else %}placeholder='Search "{{board.title}}"'{% endif %} style="width:360px;border-radius: 3rem;text-indent:10px;margin:0px 15px;">
           </div>
         </form>
         <li class="nav-item">

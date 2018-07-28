@@ -1,14 +1,12 @@
-# Erebbit
+# Elmer
 
-Erebbit is the follow-up of **[Rebbit](https://github.com/thetruefuss/rebbit/)** stating "Connecting people around the globe to help them share knowledge" built with [Python](https://www.python.org/) using the [Django Web Framework](https://www.djangoproject.com/).
-
-**P.S:** Most of the **design flow** and **features** in this project are inspired by **[reddit](https://github.com/reddit-archive/reddit)**. It has a RESTful API which is implemented using [Django Rest Framework](http://django-rest-framework.org/).
+Elmer is a social network inspired by [reddit](https://www.reddit.com/) built with [Python](https://www.python.org/) using the [Django Web Framework](https://www.djangoproject.com/).
 
 ### Demo
 
-Check the website at [http://erebbit.pythonanywhere.com](http://erebbit.pythonanywhere.com/)
+Check the website at [https://elmer.pythonanywhere.com](https://elmer.pythonanywhere.com/)
 
-![Erebbit Screenshot](https://image.ibb.co/eK4VBy/erebbit_screenshot.jpg "Erebbit Screenshot")
+![Elmer Screenshot](https://image.ibb.co/eK4VBy/erebbit_screenshot.jpg "Elmer Screenshot")
 
 ### Technology Stack
 
@@ -23,7 +21,7 @@ Check the website at [http://erebbit.pythonanywhere.com](http://erebbit.pythonan
 Clone this repository:
 
 ```shell
-$ git clone https://github.com/thetruefuss/erebbit.git
+$ git clone https://github.com/thetruefuss/elmer.git
 ```
 
 Install requirements:
