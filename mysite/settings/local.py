@@ -46,6 +46,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'messenger',
 
+    'corsheaders',
     'rest_framework',
 
     'django.contrib.sites',
@@ -99,6 +100,7 @@ AUTHENTICATION_BACKENDS = (
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -173,6 +175,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 GOOGLE_RECAPTCHA_SECRET_KEY = config('GOOGLE_RECAPTCHA_SECRET_KEY')
 
+CORS_ORIGIN_ALLOW_ALL = True
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
