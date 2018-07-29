@@ -1,4 +1,5 @@
-from frontboard.models import Board, Comment, Subject
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
@@ -6,6 +7,7 @@ from rest_framework.generics import (CreateAPIView, DestroyAPIView,
 from rest_framework.permissions import (AllowAny, IsAdminUser, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 
+from frontboard.models import Board, Comment, Subject
 from .pagination import (BoardLimitOffsetPagination, BoardPageNumberPagination,
                          SubjectLimitOffsetPagination,
                          SubjectPageNumberPagination)
@@ -15,6 +17,18 @@ from .serializers import (BoardCreateUpdateSerializer, BoardListSerializer,
                           CommentCreateUpdateSerializer, CommentListSerializer,
                           SubjectCreateUpdateSerializer, SubjectListSerializer,
                           SubjectRetrieveSerializer)
+
+
+class TrendingBoardsList(APIView):
+
+    def get(self, request, format=None):
+        """
+        Return a list of trending boards.
+        """
+        boards = Board.objects.all()
+        trending_boards = sorted(boards, key=lambda instance:instance.recent_posts(), reverse=True)[:5]
+        trending_boards_list = [{'title': board.title, 'slug': board.slug} for board in trending_boards]
+        return Response(trending_boards_list)
 
 
 class SubjectListAPIView(ListAPIView):
