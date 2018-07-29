@@ -1,5 +1,8 @@
-from frontboard.models import Board, Comment, Subject
+from django.contrib.humanize.templatetags.humanize import naturaltime
+
 from rest_framework import serializers
+
+from frontboard.models import Board, Comment, Subject
 from user_accounts.api.serializers import UserDetailSerializer
 
 
@@ -12,35 +15,46 @@ class SubjectCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class SubjectListSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='frontboard-api:subjects_retrieve',
-        lookup_field='slug'
-    )
+    body_linkified = serializers.SerializerMethodField()
     author = UserDetailSerializer(read_only=True)
     board = serializers.SerializerMethodField()
-    body_linkify = serializers.SerializerMethodField()
-    like_count = serializers.SerializerMethodField()
-    comment_count = serializers.SerializerMethodField()
+    stars_count = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField()
+    is_starred = serializers.SerializerMethodField()
+    created_naturaltime = serializers.SerializerMethodField()
 
     class Meta:
         model = Subject
         fields = [
-            'url', 'title', 'body', 'body_linkify',
-            'photo', 'author', 'board', 'like_count',
-            'comment_count'
+            'title', 'slug', 'body', 'body_linkified',
+            'photo', 'author', 'board', 'stars_count',
+            'comments_count', 'is_starred', 'created',
+            'created_naturaltime',
         ]
+
+    def get_body_linkified(self, obj):
+        return obj.linkfy_subject()
 
     def get_board(self, obj):
         return str(obj.board.slug)
 
-    def get_body_linkify(self, obj):
-        return obj.linkfy_subject()
-
-    def get_like_count(self, obj):
+    def get_stars_count(self, obj):
         return obj.points.all().count()
 
-    def get_comment_count(self, obj):
+    def get_comments_count(self, obj):
         return obj.comments.all().count()
+
+    def get_is_starred(self, obj):
+        user = None
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        if user in obj.points.all():
+            return True
+        return False
+
+    def get_created_naturaltime(self, obj):
+        return naturaltime(obj.created)
 
 
 class SubjectRetrieveSerializer(serializers.ModelSerializer):
@@ -51,14 +65,14 @@ class SubjectRetrieveSerializer(serializers.ModelSerializer):
     points = serializers.SerializerMethodField()
     author = UserDetailSerializer(read_only=True)
     board = serializers.SerializerMethodField()
-    body_linkify = serializers.SerializerMethodField()
+    body_linkified = serializers.SerializerMethodField()
     like_count = serializers.SerializerMethodField()
     comment_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Subject
         fields = [
-            'id', 'title', 'slug', 'body', 'body_linkify',
+            'id', 'title', 'slug', 'body', 'body_linkified',
             'photo', 'author', 'board', 'points',
             'like_count', 'comment_count', 'comments_url'
         ]
@@ -69,7 +83,7 @@ class SubjectRetrieveSerializer(serializers.ModelSerializer):
     def get_board(self, obj):
         return str(obj.board.slug)
 
-    def get_body_linkify(self, obj):
+    def get_body_linkified(self, obj):
         return obj.linkfy_subject()
 
     def get_like_count(self, obj):
