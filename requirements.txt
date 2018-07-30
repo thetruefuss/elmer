@@ -8,6 +8,7 @@ django-appconf==1.0.1
 django-autoslug==1.9.3
 django-cache-memoize==0.1.1
 django-contact-form==1.4.2
+django-cors-headers==2.4.0
 django-crispy-forms==1.7.0
 django-emoticons==1.2
 django-feedback-form2==0.1.8
