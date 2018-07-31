@@ -81,40 +81,24 @@ class UserLoginSerializer(serializers.ModelSerializer):
         return data
 
 
+class UserSerializerWithToken(serializers.ModelSerializer):
 
-class UserCreateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = [
-            'username', 'email', 'password'
-        ]
-        extra_kwargs = {
-            "password": {
-                "write_only": True
-            }
-        }
+    token = serializers.SerializerMethodField()
+    password = serializers.CharField(write_only=True)
 
-    def validate(self, data):
-        # do validation here
-        return data
-
-    def validate_email(self, value):
-        data = self.get_initial()
-        email = data.get('email')
-        user_obj = User.objects.get(email=email)
-        if user_obj.exists():
-            raise ValidationError("A user with this email already exists.")
-        return value
+    def get_token(self, obj):
+        payload = jwt_payload_handler(obj)
+        token = jwt_encode_handler(payload)
+        return token
 
     def create(self, validated_data):
-        username = validated_data['username']
-        email = validated_data['email']
-        password = validated_data['password']
-        user_obj = User(
-            username=username,
-            email=email
-        )
-        user_obj.set_password(password)
-        user_obj.save()
-        profile = Profile.objects.create(user=user_obj)
-        return validated_data
+        password = validated_data.pop('password', None)
+        instance = self.Meta.model(**validated_data)
+        if password is not None:
+            instance.set_password(password)
+        instance.save()
+        return instance
+
+    class Meta:
+        model = User
+        fields = ('token', 'username', 'email', 'password')

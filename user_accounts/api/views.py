@@ -3,12 +3,12 @@ from django.contrib.auth import get_user_model
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import UserCreateSerializer, UserLoginSerializer, CurrentUserDetailSerializer
+from .serializers import UserSerializerWithToken, UserLoginSerializer, CurrentUserDetailSerializer
 
 User = get_user_model()
 
@@ -21,11 +21,18 @@ def current_user(request):
     return Response(serializer.data)
 
 
-# untested view
-class UserCreateAPIView(CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserCreateSerializer
-    permission_classes = [AllowAny]
+class UserSignUpAPIView(APIView):
+    """
+    Create a new user.
+    """
+    permission_classes = (AllowAny,)
+
+    def post(self, request, format=None):
+        serializer = UserSerializerWithToken(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
 
 
 class UserLoginAPIView(APIView):
