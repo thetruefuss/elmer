@@ -12,6 +12,25 @@ jwt_response_payload_handler    = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
 
 User = get_user_model()
 
+class CurrentUserDetailSerializer(serializers.ModelSerializer):
+    screen_name = serializers.SerializerMethodField()
+    profile_picture = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = [
+            'username', 'screen_name', 'profile_picture',
+        ]
+
+    def get_screen_name(self, obj):
+        return str(obj.profile.screen_name())
+
+    def get_profile_picture(self, obj):
+        request = self.context.get('request')
+        profile_picture_url = obj.profile.get_picture()
+        return request.build_absolute_uri(profile_picture_url)
+
+
 class UserDetailSerializer(serializers.ModelSerializer):
     screen_name = serializers.SerializerMethodField()
 

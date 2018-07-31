@@ -5,10 +5,21 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-from .serializers import UserCreateSerializer, UserLoginSerializer
+from .serializers import UserCreateSerializer, UserLoginSerializer, CurrentUserDetailSerializer
 
 User = get_user_model()
+
+@api_view(['GET'])
+def current_user(request):
+    """
+    Determine the current user by their token, and return their data
+    """
+    serializer = CurrentUserDetailSerializer(request.user, context={"request": request})
+    return Response(serializer.data)
+
 
 # untested view
 class UserCreateAPIView(CreateAPIView):
