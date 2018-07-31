@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from django.contrib.messages import constants as messages
@@ -175,7 +176,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 GOOGLE_RECAPTCHA_SECRET_KEY = config('GOOGLE_RECAPTCHA_SECRET_KEY')
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = (
+    'localhost:3000',
+)
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -186,4 +189,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+}
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
 }
