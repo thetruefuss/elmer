@@ -32,20 +32,32 @@ class TrendingBoardsList(APIView):
 
 
 class SubjectListAPIView(ListAPIView):
+    """
+    View that returns subjects list based on rank_score, specific user or board submissions etc.
+    """
     serializer_class = SubjectListSerializer
     pagination_class = SubjectPageNumberPagination
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title']
 
     def get_queryset(self, *args, **kwargs):
-        queryset_list = Subject.objects.all()
+        queryset_list = Subject.get_subjects()
+
         user_query = self.request.GET.get('user', '')
         board_query = self.request.GET.get('board', '')
-        if user_query or board_query:
+        trending_subjects = self.request.GET.get('trending', '')
+        
+        if user_query:
             queryset_list = queryset_list.filter(
                 author__username__icontains=user_query,
+            )
+        if board_query:
+            queryset_list = queryset_list.filter(
                 board__title__icontains=board_query
             )
+        if trending_subjects == "True":
+            queryset_list = queryset_list.order_by('-rank_score')
+
         return queryset_list
 
 

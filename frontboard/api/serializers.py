@@ -118,6 +118,7 @@ class BoardRetrieveSerializer(serializers.ModelSerializer):
     admins = serializers.SerializerMethodField()
     subscribers = serializers.SerializerMethodField()
     subscribers_count = serializers.SerializerMethodField()
+    cover = serializers.SerializerMethodField()
 
     class Meta:
         model = Board
@@ -125,6 +126,11 @@ class BoardRetrieveSerializer(serializers.ModelSerializer):
             'id', 'title', 'slug', 'description', 'cover',
             'admins', 'subscribers', 'subscribers_count', 'created',
         ]
+
+    def get_cover(self, obj):
+        request = self.context.get('request')
+        cover_url = obj.get_picture()
+        return request.build_absolute_uri(cover_url)
 
     def get_admins(self, obj):
         return str(obj.get_admins())
