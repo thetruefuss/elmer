@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 
@@ -621,14 +621,19 @@ def new_board(request):
 @login_required
 @ajax_required
 def like_subject(request, subject):
+    data = dict()
     subject = get_object_or_404(Subject,
                                 slug=subject)
     user = request.user
     if subject in user.liked_subjects.all():
         subject.points.remove(user)
+        data['is_starred'] = False
     else:
         subject.points.add(user)
-    return HttpResponse(subject.points.count())
+        data['is_starred'] = True
+
+    data['total_points'] = subject.points.count()
+    return JsonResponse(data)
 
 
 @login_required

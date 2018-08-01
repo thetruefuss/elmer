@@ -89,7 +89,7 @@ $(document).ready(function(){
       url: $star_url,
       type: 'GET',
       success: function (data) {
-        $star_count.text(data);
+        $star_count.text(data.total_points);
 
         if ($star_icon.hasClass('fa-star-o')) {
           $star_icon.removeClass('fa-star-o').addClass('fa-star');
