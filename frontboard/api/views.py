@@ -148,9 +148,6 @@ class BoardCreateAPIView(CreateAPIView):
     serializer_class = BoardCreateUpdateSerializer
     permission_classes = [IsAuthenticated]
 
-    def perform_create(self, serializer):
-        serializer.save(admins.add(request.user))
-
 
 class CommentListAPIView(ListAPIView):
     serializer_class = CommentListSerializer
