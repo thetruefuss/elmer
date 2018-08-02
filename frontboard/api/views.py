@@ -41,6 +41,18 @@ class TrendingBoardsList(APIView):
         return Response(trending_boards_list)
 
 
+class ActiveThreadsList(APIView):
+
+    def get(self, request, format=None):
+        """
+        Return a list of active threads.
+        """
+        current_user = request.user
+        active_threads = current_user.posted_subjects.all()[:5]
+        active_threads_list = [{'title': thread.title, 'slug': thread.slug, 'board_slug': thread.board.slug} for thread in active_threads]
+        return Response(active_threads_list)
+
+
 class SubjectListAPIView(ListAPIView):
     """
     View that returns subjects list based on rank_score, specific user or board submissions etc.

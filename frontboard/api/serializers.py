@@ -126,17 +126,21 @@ class BoardListSerializer(serializers.ModelSerializer):
 
 
 class BoardRetrieveSerializer(serializers.ModelSerializer):
-    admins = serializers.SerializerMethodField()
-    subscribers = serializers.SerializerMethodField()
+    admins =  UserDetailSerializer(read_only=True, many=True)
+    subscribers = UserDetailSerializer(read_only=True, many=True)
     subscribers_count = serializers.SerializerMethodField()
     cover = serializers.SerializerMethodField()
+    total_posts = serializers.SerializerMethodField()
 
     class Meta:
         model = Board
         fields = [
-            'id', 'title', 'slug', 'description', 'cover',
+            'id', 'title', 'slug', 'description', 'cover', 'total_posts',
             'admins', 'subscribers', 'subscribers_count', 'created',
         ]
+
+    def get_total_posts(self, obj):
+        return str(obj.submitted_subjects.count())
 
     def get_cover(self, obj):
         request = self.context.get('request')

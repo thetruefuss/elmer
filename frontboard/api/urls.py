@@ -2,12 +2,13 @@ from django.conf.urls import url
 
 from .views import (BoardCreateAPIView, BoardDestroyAPIView, BoardListAPIView,
                     BoardRetrieveAPIView, BoardUpdateAPIView, TrendingBoardsList,
-                    SubjectCreateAPIView, SubjectDestroyAPIView,
+                    SubjectCreateAPIView, SubjectDestroyAPIView, ActiveThreadsList,
                     SubjectListAPIView, SubjectRetrieveAPIView, GetSubscribedBoards,
                     SubjectUpdateAPIView, CommentListAPIView, CommentCreateAPIView)
 
 urlpatterns = [
     url(r'^subjects/$', SubjectListAPIView.as_view(), name='subjects_list'),
+    url(r'^subjects/active_threads/$', ActiveThreadsList.as_view(), name='active_threads'),
     url(r'^subjects/create/$', SubjectCreateAPIView.as_view(), name='subjects_create'),
     url(r'^subjects/(?P<slug>[-\w]+)/$', SubjectRetrieveAPIView.as_view(), name='subjects_retrieve'),
     url(r'^subjects/(?P<slug>[-\w]+)/edit/$', SubjectUpdateAPIView.as_view(), name='subjects_update'),
