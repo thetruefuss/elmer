@@ -3,7 +3,7 @@ from django.conf.urls import url
 from .views import (BoardCreateAPIView, BoardDestroyAPIView, BoardListAPIView,
                     BoardRetrieveAPIView, BoardUpdateAPIView, TrendingBoardsList,
                     SubjectCreateAPIView, SubjectDestroyAPIView,
-                    SubjectListAPIView, SubjectRetrieveAPIView,
+                    SubjectListAPIView, SubjectRetrieveAPIView, GetSubscribedBoards,
                     SubjectUpdateAPIView, CommentListAPIView, CommentCreateAPIView)
 
 urlpatterns = [
@@ -15,6 +15,7 @@ urlpatterns = [
 
     url(r'^boards/$', BoardListAPIView.as_view(), name='boards_list'),
     url(r'^boards/trending/$', TrendingBoardsList.as_view(), name='boards_trending'),
+    url(r'^boards/user_subscribed/$', GetSubscribedBoards.as_view(), name='boards_users'),
     url(r'^boards/create/$', BoardCreateAPIView.as_view(), name='boards_create'),
     url(r'^boards/(?P<slug>[-\w]+)/$', BoardRetrieveAPIView.as_view(), name='boards_retrieve'),
     url(r'^boards/(?P<slug>[-\w]+)/edit/$', BoardUpdateAPIView.as_view(), name='boards_update'),

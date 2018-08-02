@@ -18,6 +18,16 @@ from .serializers import (BoardCreateUpdateSerializer, BoardListSerializer,
                           SubjectCreateUpdateSerializer, SubjectListSerializer,
                           SubjectRetrieveSerializer)
 
+class GetSubscribedBoards(APIView):
+
+    def get(self, request, format=None):
+        """
+        Return a list of user subscribed boards.
+        """
+        boards = request.user.subscribed_boards.all()
+        boards_list = [{'id': board.id, 'title': board.title} for board in boards]
+        return Response(boards_list)
+
 
 class TrendingBoardsList(APIView):
 
@@ -46,7 +56,7 @@ class SubjectListAPIView(ListAPIView):
         user_query = self.request.GET.get('user', '')
         board_query = self.request.GET.get('board', '')
         trending_subjects = self.request.GET.get('trending', '')
-        
+
         if user_query:
             queryset_list = queryset_list.filter(
                 author__username__icontains=user_query,
