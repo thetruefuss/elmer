@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
@@ -8,7 +8,8 @@ from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import UserSerializerWithToken, UserLoginSerializer, CurrentUserDetailSerializer
+from .serializers import UserSerializerWithToken, UserLoginSerializer, CurrentUserDetailSerializer, ProfileRetrieveSerializer
+from user_accounts.models import Profile
 
 User = get_user_model()
 
@@ -46,3 +47,10 @@ class UserLoginAPIView(APIView):
             new_data = serializer.data
             return Response(new_data, status=HTTP_200_OK)
         return Response(serializer.errors, status=HTTP_400_BAD_REQUEST)
+
+
+class ProfileRetrieveAPIView(RetrieveAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileRetrieveSerializer
+    lookup_field = 'user__username'
+    lookup_url_kwarg = 'username'

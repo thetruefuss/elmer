@@ -102,3 +102,9 @@ class UserSerializerWithToken(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('token', 'username', 'email', 'password')
+
+
+class ProfileRetrieveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('dp',)
