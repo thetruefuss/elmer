@@ -18,6 +18,26 @@ from .serializers import (BoardCreateUpdateSerializer, BoardListSerializer,
                           SubjectCreateUpdateSerializer, SubjectListSerializer,
                           SubjectRetrieveSerializer)
 
+
+class StarSubjectView(APIView):
+
+    def get(self, request, format=None):
+        data = dict()
+        user = request.user
+        subject_slug = request.GET.get('subject_slug')
+        subject = Subject.objects.get(slug=subject_slug)
+        user = request.user
+        if subject in user.liked_subjects.all():
+            subject.points.remove(user)
+            data['is_starred'] = False
+        else:
+            subject.points.add(user)
+            data['is_starred'] = True
+
+        data['total_points'] = subject.points.count()
+        return Response(data)
+
+
 class GetSubscribedBoards(APIView):
 
     def get(self, request, format=None):
