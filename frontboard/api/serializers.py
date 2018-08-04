@@ -113,16 +113,31 @@ class BoardCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class BoardListSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='frontboard-api:boards_retrieve',
-        lookup_field='slug'
-    )
-
+    subscribers_count = serializers.SerializerMethodField()
+    created_naturaltime = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField()
+    
     class Meta:
         model = Board
         fields = [
-            'url', 'title', 'description',
+            'id', 'title', 'slug', 'description', 'subscribers_count',
+            'created', 'created_naturaltime', 'is_subscribed',
         ]
+
+    def get_subscribers_count(self, obj):
+        return str(obj.subscribers.all().count())
+
+    def get_is_subscribed(self, obj):
+        user = None
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        if user in obj.subscribers.all():
+            return True
+        return False
+
+    def get_created_naturaltime(self, obj):
+        return naturaltime(obj.created)
 
 
 class BoardRetrieveSerializer(serializers.ModelSerializer):
