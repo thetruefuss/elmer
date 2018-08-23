@@ -24,7 +24,7 @@ def current_user(request):
 
 class UserSignUpAPIView(APIView):
     """
-    Create a new user.
+    View that handles user signup and returns username, email & JWT.
     """
     permission_classes = (AllowAny,)
 
@@ -37,6 +37,9 @@ class UserSignUpAPIView(APIView):
 
 
 class UserLoginAPIView(APIView):
+    """
+    View that handles user login and returns username & JWT.
+    """
     permission_classes = [AllowAny]
     serializer_class = UserLoginSerializer
 
@@ -50,6 +53,9 @@ class UserLoginAPIView(APIView):
 
 
 class ProfileRetrieveAPIView(RetrieveAPIView):
+    """
+    View that returns user profile data.
+    """
     queryset = Profile.objects.all()
     serializer_class = ProfileRetrieveSerializer
     lookup_field = 'user__username'
