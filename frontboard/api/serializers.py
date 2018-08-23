@@ -1,8 +1,7 @@
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
-from rest_framework import serializers
-
 from frontboard.models import Board, Comment, Subject
+from rest_framework import serializers
 from user_accounts.api.serializers import UserDetailSerializer
 
 

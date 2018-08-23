@@ -1,11 +1,12 @@
 from django.conf.urls import url
 
-from .views import (BoardCreateAPIView, BoardDestroyAPIView, BoardListAPIView,
-                    BoardRetrieveAPIView, BoardUpdateAPIView, TrendingBoardsList,
-                    SubjectCreateAPIView, SubjectDestroyAPIView, ActiveThreadsList,
-                    SubjectListAPIView, SubjectRetrieveAPIView, GetSubscribedBoards,
-                    SubjectUpdateAPIView, CommentListAPIView, CommentCreateAPIView,
-                    StarSubjectView)
+from .views import (ActiveThreadsList, BoardCreateAPIView, BoardDestroyAPIView,
+                    BoardListAPIView, BoardRetrieveAPIView, BoardUpdateAPIView,
+                    CommentCreateAPIView, CommentListAPIView,
+                    GetSubscribedBoards, StarSubjectView, SubjectCreateAPIView,
+                    SubjectDestroyAPIView, SubjectListAPIView,
+                    SubjectRetrieveAPIView, SubjectUpdateAPIView,
+                    TrendingBoardsList)
 
 urlpatterns = [
     url(r'^subjects/$', SubjectListAPIView.as_view(), name='subjects_list'),
