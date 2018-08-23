@@ -97,7 +97,7 @@ class BoardCreateUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = [
-            'title', 'description', 'cover',
+            'title', 'slug', 'description', 'cover',
         ]
 
     def create(self, validated_data):
@@ -116,7 +116,7 @@ class BoardListSerializer(serializers.ModelSerializer):
     subscribers_count = serializers.SerializerMethodField()
     created_naturaltime = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = Board
         fields = [
