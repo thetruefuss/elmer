@@ -1,13 +1,13 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from frontboard.models import Board, Comment, Subject
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      RetrieveUpdateAPIView, UpdateAPIView)
 from rest_framework.permissions import (AllowAny, IsAdminUser, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from frontboard.models import Board, Comment, Subject
 from .pagination import (BoardLimitOffsetPagination, BoardPageNumberPagination,
                          SubjectLimitOffsetPagination,
                          SubjectPageNumberPagination)
@@ -22,6 +22,9 @@ from .serializers import (BoardCreateUpdateSerializer, BoardListSerializer,
 class StarSubjectView(APIView):
 
     def get(self, request, format=None):
+        """
+        View that star / unstar a subject and returns action status & total points.
+        """
         data = dict()
         user = request.user
         subject_slug = request.GET.get('subject_slug')
@@ -129,8 +132,10 @@ class SubjectDestroyAPIView(DestroyAPIView):
     lookup_url_kwarg = 'slug'
 
 
-# untested view
 class SubjectCreateAPIView(CreateAPIView):
+    """
+    View that handles the creation of subjects & returns data back.
+    """
     queryset = Subject.objects.all()
     serializer_class = SubjectCreateUpdateSerializer
     permission_classes = [IsAuthenticated]
@@ -140,6 +145,9 @@ class SubjectCreateAPIView(CreateAPIView):
 
 
 class BoardListAPIView(ListAPIView):
+    """
+    View that returns a list of boards.
+    """
     queryset = Board.objects.all()
     serializer_class = BoardListSerializer
     pagination_class = BoardPageNumberPagination
@@ -148,6 +156,9 @@ class BoardListAPIView(ListAPIView):
 
 
 class BoardRetrieveAPIView(RetrieveAPIView):
+    """
+    View that returns board details.
+    """
     queryset = Board.objects.all()
     serializer_class = BoardRetrieveSerializer
     lookup_field = 'slug'
@@ -174,8 +185,10 @@ class BoardDestroyAPIView(DestroyAPIView):
     lookup_url_kwarg = 'slug'
 
 
-# untested view
 class BoardCreateAPIView(CreateAPIView):
+    """
+    View that handles the creation of boards & returns data back.
+    """
     queryset = Board.objects.all()
     serializer_class = BoardCreateUpdateSerializer
     permission_classes = [IsAuthenticated]
