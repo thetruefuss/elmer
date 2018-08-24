@@ -57,39 +57,56 @@ class SubjectListSerializer(serializers.ModelSerializer):
 
 
 class SubjectRetrieveSerializer(serializers.ModelSerializer):
-    comments_url = serializers.HyperlinkedIdentityField(
-        view_name='frontboard-api:comments_list',
-        lookup_field='slug'
-    )
-    points = serializers.SerializerMethodField()
+    body_linkified = serializers.SerializerMethodField()
     author = UserDetailSerializer(read_only=True)
     board = serializers.SerializerMethodField()
-    body_linkified = serializers.SerializerMethodField()
-    like_count = serializers.SerializerMethodField()
-    comment_count = serializers.SerializerMethodField()
+    stars_count = serializers.SerializerMethodField()
+    comments_count = serializers.SerializerMethodField()
+    is_starred = serializers.SerializerMethodField()
+    created_naturaltime = serializers.SerializerMethodField()
+    is_author = serializers.SerializerMethodField()
 
     class Meta:
         model = Subject
         fields = [
-            'id', 'title', 'slug', 'body', 'body_linkified',
-            'photo', 'author', 'board', 'points',
-            'like_count', 'comment_count', 'comments_url'
+            'title', 'slug', 'body', 'body_linkified',
+            'photo', 'author', 'board', 'stars_count',
+            'comments_count', 'is_starred', 'created',
+            'created_naturaltime', 'is_author',
         ]
-
-    def get_points(self, obj):
-        return str(obj.points.all())
-
-    def get_board(self, obj):
-        return str(obj.board.slug)
 
     def get_body_linkified(self, obj):
         return obj.linkfy_subject()
 
-    def get_like_count(self, obj):
+    def get_board(self, obj):
+        return str(obj.board.slug)
+
+    def get_stars_count(self, obj):
         return obj.points.all().count()
 
-    def get_comment_count(self, obj):
+    def get_comments_count(self, obj):
         return obj.comments.all().count()
+
+    def get_is_starred(self, obj):
+        user = None
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        if user in obj.points.all():
+            return True
+        return False
+
+    def get_created_naturaltime(self, obj):
+        return naturaltime(obj.created)
+
+    def get_is_author(self, obj):
+        user = None
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        if user == obj.author:
+            return True
+        return False
 
 
 class BoardCreateUpdateSerializer(serializers.ModelSerializer):
