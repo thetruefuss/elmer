@@ -25,7 +25,7 @@ class SubjectListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = [
-            'title', 'slug', 'body', 'body_linkified',
+            'id', 'title', 'slug', 'body', 'body_linkified',
             'photo', 'author', 'board', 'stars_count',
             'comments_count', 'is_starred', 'created',
             'created_naturaltime',
@@ -69,7 +69,7 @@ class SubjectRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = [
-            'title', 'slug', 'body', 'body_linkified',
+            'id', 'title', 'slug', 'body', 'body_linkified',
             'photo', 'author', 'board', 'stars_count',
             'comments_count', 'is_starred', 'created',
             'created_naturaltime', 'is_author',
