@@ -18,6 +18,28 @@ from .serializers import (BoardCreateUpdateSerializer, BoardListSerializer,
                           SubjectRetrieveSerializer)
 
 
+class SubscribeBoardView(APIView):
+
+    def get(self, request, format=None):
+        """
+        View that subscribe / unsubscribe a board and returns action status.
+        """
+        data = dict()
+        user = request.user
+        board_slug = request.GET.get('board_slug')
+        board = Board.objects.get(slug=board_slug)
+        user = request.user
+        if board in user.subscribed_boards.all():
+            board.subscribers.remove(user)
+            data['is_subscribed'] = False
+        else:
+            board.subscribers.add(user)
+            data['is_subscribed'] = True
+
+        data['total_subscribers'] = board.subscribers.count()
+        return Response(data)
+
+
 class StarSubjectView(APIView):
 
     def get(self, request, format=None):
