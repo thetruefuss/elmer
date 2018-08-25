@@ -13,8 +13,7 @@ from .pagination import (BoardLimitOffsetPagination, BoardPageNumberPagination,
                          SubjectPageNumberPagination)
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from .serializers import (BoardCreateUpdateSerializer, BoardListSerializer,
-                          BoardRetrieveSerializer,
-                          CommentCreateUpdateSerializer, CommentListSerializer,
+                          BoardRetrieveSerializer, CommentSerializer,
                           SubjectCreateUpdateSerializer, SubjectListSerializer,
                           SubjectRetrieveSerializer)
 
@@ -107,6 +106,9 @@ class SubjectListAPIView(ListAPIView):
 
 
 class SubjectRetrieveAPIView(RetrieveAPIView):
+    """
+    View that returns data of single subject.
+    """
     queryset = Subject.objects.all()
     serializer_class = SubjectRetrieveSerializer
     lookup_field = 'slug'
@@ -195,7 +197,10 @@ class BoardCreateAPIView(CreateAPIView):
 
 
 class CommentListAPIView(ListAPIView):
-    serializer_class = CommentListSerializer
+    """
+    View that lists the comments on single subject.
+    """
+    serializer_class = CommentSerializer
 
     def get_queryset(self, *args, **kwargs):
         queryset_list = Comment.objects.all()
@@ -207,10 +212,12 @@ class CommentListAPIView(ListAPIView):
         return queryset_list
 
 
-# untested view
 class CommentCreateAPIView(CreateAPIView):
+    """
+    View that handles the creation of comments & return data back.
+    """
     queryset = Comment.objects.all()
-    serializer_class = CommentCreateUpdateSerializer
+    serializer_class = CommentSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):

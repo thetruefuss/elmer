@@ -188,7 +188,7 @@ class BoardRetrieveSerializer(serializers.ModelSerializer):
         return str(obj.subscribers.all().count())
 
 
-class CommentListSerializer(serializers.ModelSerializer):
+class CommentSerializer(serializers.ModelSerializer):
     commenter = UserDetailSerializer(read_only=True)
     is_commenter = serializers.SerializerMethodField()
     created_naturaltime = serializers.SerializerMethodField()
@@ -196,7 +196,7 @@ class CommentListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = [
-            'body', 'commenter', 'is_commenter', 'created', 'created_naturaltime',
+            'body', 'subject', 'commenter', 'is_commenter', 'created', 'created_naturaltime',
         ]
 
     def get_is_commenter(self, obj):
@@ -210,11 +210,3 @@ class CommentListSerializer(serializers.ModelSerializer):
 
     def get_created_naturaltime(self, obj):
         return naturaltime(obj.created)
-
-
-class CommentCreateUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Comment
-        fields = [
-            'body', 'subject'
-        ]
