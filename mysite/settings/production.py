@@ -1,3 +1,4 @@
+import datetime
 import os
 
 from django.contrib.messages import constants as messages
@@ -47,6 +48,7 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'messenger',
 
+    'corsheaders',
     'rest_framework',
 
     'django.contrib.sites',
@@ -90,13 +92,6 @@ THROTTLE_ENABLED = True
 
 #crispy_forms
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
-#custom authentication backends
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'user_accounts.authentication.EmailAuthBackend',
-)
-
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -180,6 +175,9 @@ EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 
+CORS_ORIGIN_WHITELIST = (
+    'localhost:3000',
+)
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
@@ -190,4 +188,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+}
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
 }

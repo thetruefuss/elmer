@@ -92,13 +92,6 @@ THROTTLE_ENABLED = True
 #crispy_forms
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-#custom authentication backends
-AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'user_accounts.authentication.EmailAuthBackend',
-)
-
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
