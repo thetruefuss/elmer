@@ -4,11 +4,19 @@ from .models import Profile, subject_notify
 
 
 class ProfileAdmin(admin.ModelAdmin):
+    """
+    Admin settings for profiles.
+    """
     list_display = ('user', 'dob', 'member_since')
     date_hierarchy = 'member_since'
 admin.site.register(Profile, ProfileAdmin)  # noqa: E305
 
 
-@admin.register(subject_notify)
 class NotifyAdmin(admin.ModelAdmin):
+    """
+    Admin settings for notifications.
+    """
     list_display = ('notif_type', 'Actor', 'Object', 'Target', 'is_read', 'created')
+    list_filter = ('is_read',)
+    date_hierarchy = 'created'
+admin.site.register(subject_notify, NotifyAdmin)  # noqa: E305
