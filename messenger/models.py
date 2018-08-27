@@ -4,11 +4,13 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Max
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.translation import ugettext_lazy as _
 
 
 @python_2_unicode_compatible
 class Message(models.Model):
+    """
+    Model that represents a message.
+    """
 
     user = models.ForeignKey(User, related_name='+')
     message = models.TextField(max_length=1000, blank=True)
@@ -20,16 +22,31 @@ class Message(models.Model):
     is_read = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = _('Message')
-        verbose_name_plural = _('Messages')
         ordering = ('date',)
         db_table = 'messages_message'
 
     def __str__(self):
+        """
+        Unicode representation for a message model.
+
+        :return: string
+        """
         return self.message
 
     @staticmethod
     def send_message(from_user, to_user, message):
+        """
+        Handles the creation of message.
+        It creates two message instances differing with only three fields.
+            :user
+            :conversation
+            :is_read
+
+        :param from_user: Object
+        :param to_user: Object
+        :param message: string
+        :return: Message
+        """
         message = message[:1000]
         current_user_message = Message(from_user=from_user,
                                        message=message,
@@ -38,14 +55,20 @@ class Message(models.Model):
                                        is_read=True)
         current_user_message.save()
         Message(from_user=from_user,
-                conversation=from_user,
                 message=message,
-                user=to_user).save()
+                user=to_user,
+                conversation=from_user).save()
 
         return current_user_message
 
     @staticmethod
     def get_conversations(user):
+        """
+        Returns a list of users having conversation with the "user" passed in.
+
+        :param user: Object
+        :return: list
+        """
         conversations = Message.objects.filter(
             user=user).values('conversation').annotate(
                 last=Max('date')).order_by('-last')
