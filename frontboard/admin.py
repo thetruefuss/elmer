@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Board, Comment, FeaturedPost, Report, Subject
+from .models import Board, Comment, Report, Subject
 
 
 class BoardAdmin(admin.ModelAdmin):
@@ -22,6 +22,4 @@ class SubjectAdmin(admin.ModelAdmin):
 admin.site.register(Board, BoardAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Subject, SubjectAdmin)
-
-admin.site.register(FeaturedPost)
 admin.site.register(Report)

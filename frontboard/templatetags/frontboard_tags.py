@@ -10,7 +10,7 @@ from django.utils.safestring import mark_safe
 import markdown
 from cache_memoize import cache_memoize
 
-from ..models import Board, FeaturedPost
+from ..models import Board
 
 register = template.Library()
 
@@ -42,12 +42,6 @@ def show_active_threads(user):
     current_user = User.objects.get(id=user.id)
     threads = current_user.posted_subjects.all()[:5]
     return {'threads': threads}
-
-
-@register.inclusion_tag('includes/featured_post.html')
-def show_featured_post():
-    featured_post = FeaturedPost.objects.all()[:5]
-    return {'featured_post': featured_post}
 
 
 @register.inclusion_tag('includes/suggested_users.html')
