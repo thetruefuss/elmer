@@ -9,6 +9,9 @@ from frontboard.models import Subject
 
 
 class Profile(models.Model):
+    """
+    Model that represents a profile.
+    """
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile')
     dp = models.ImageField(upload_to='dps/', blank=True, null=True)
@@ -21,14 +24,22 @@ class Profile(models.Model):
     member_since = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        verbose_name = 'Profile'
-        verbose_name_plural = 'Profiles'
         ordering = ('-member_since', )
 
     def __str__(self):
+        """
+        Unicode representation for a profile model.
+
+        :return: string
+        """
         return self.user.username
 
     def screen_name(self):
+        """
+        Returns screen name.
+
+        :return: string
+        """
         try:
             if self.user.get_full_name():
                 return self.user.get_full_name()
@@ -38,6 +49,11 @@ class Profile(models.Model):
             return self.user.username
 
     def get_picture(self):
+        """
+        Returns profile picture url (if any).
+
+        :return: string
+        """
         default_picture = settings.STATIC_URL + 'img/ditto.jpg'
         if self.dp:
             return self.dp.url
@@ -47,12 +63,20 @@ class Profile(models.Model):
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
+    """
+    Signals the Profile about User creation.
+
+    :return:
+    """
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
 
 
 class subject_notify(models.Model):
+    """
+    Model that represents a notification.
+    """
 
     NOTIF_CHOICES = (
         ('subject_mentioned', 'Mentioned in Subject'),
@@ -76,9 +100,14 @@ class subject_notify(models.Model):
     class Meta:
         verbose_name = 'Notification'
         verbose_name_plural = 'Notifications'
-        ordering = ('-created', )
+        ordering = ('-created',)
 
     def __str__(self):
+        """
+        Unicode representation for a notification (subject_notify) model based on notification type.
+
+        :return: string
+        """
         if self.notif_type == 'comment':
             return '{} commented on your subject \"{}\".'.format(
                 self.Actor.profile.screen_name(), self.Object
