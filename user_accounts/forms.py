@@ -5,24 +5,29 @@ from .models import Profile
 
 
 class SignupForm(forms.ModelForm):
-    password = forms.CharField(label='Password',
-                               widget=forms.PasswordInput(attrs={'maxlength': 150}))
-    email = forms.EmailField(required=False)
+    """
+    Form that handles signup data.
+    """
 
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'password')
 
 
 class UserEditForm(forms.ModelForm):
+    """
+    Form that handles user data.
+    """
+
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'email')
 
 
 class ProfileEditForm(forms.ModelForm):
-    dob = forms.CharField(label="Date of Birth", widget=forms.TextInput(attrs={'placeholder': 'y-m-d',
-                                                                               'maxlength': 150}))
+    """
+    Form that handles profile data.
+    """
 
     class Meta:
         model = Profile

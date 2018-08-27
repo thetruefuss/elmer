@@ -4,16 +4,24 @@ from .models import Board, Comment, Subject
 
 
 class SubjectForm(forms.ModelForm):
+    """
+    Form that handles subject data.
+    """
+
     def get_subscribed_boards(self):
+        """
+        Return a list of user's subscribed boards.
+
+        :return: list
+        """
         return self.user.subscribed_boards
 
-    title = forms.CharField(label='Title', widget=forms.TextInput(attrs={'maxlength': 150,
-                                                                         'placeholder': 'Title your subject'}))
-    body = forms.CharField(label='Description', required=False,
-                           widget=forms.Textarea(attrs={'placeholder': 'Describe your subject'}))
-    board = forms.ModelChoiceField(label='Board', queryset=Board.objects.all(), empty_label='Select Board')
+    board = forms.ModelChoiceField(queryset=Board.objects.all())
 
     def __init__(self, *args, **kwargs):
+        """
+        Initialize the form by populating board options with user's subscribed boards.
+        """
         user = kwargs.pop('user', None)
         super(SubjectForm, self).__init__(*args, **kwargs)
         if user is not None:
@@ -25,25 +33,19 @@ class SubjectForm(forms.ModelForm):
 
 
 class CommentForm(forms.ModelForm):
-    body = forms.CharField(label='', widget=forms.Textarea(attrs={'placeholder': 'Type your message here',
-                                                                  'rows': '3'}))
+    """
+    Form that handles comment data.
+    """
 
     class Meta:
         model = Comment
-        fields = {'body'}
-
-
-class ReplyForm(forms.ModelForm):
-    body = forms.CharField(label='', widget=forms.Textarea(attrs={'placeholder': 'Type your reply',
-                                                                  'rows': '3'}))
-
-    class Meta:
-        model = Comment
-        fields = {'body'}
+        fields = ('body',)
 
 
 class BoardForm(forms.ModelForm):
-    title = forms.CharField(widget=forms.TextInput(attrs={'maxlength': 500}))
+    """
+    Form that handles board data.
+    """
 
     class Meta:
         model = Board
