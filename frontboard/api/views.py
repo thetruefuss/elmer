@@ -1,99 +1,15 @@
 from frontboard.models import Board, Comment, Subject
 from rest_framework.filters import OrderingFilter, SearchFilter
-from rest_framework.generics import (CreateAPIView, DestroyAPIView,
-                                     ListAPIView, RetrieveAPIView,
-                                     RetrieveUpdateAPIView, UpdateAPIView,
-                                     ListCreateAPIView, RetrieveUpdateDestroyAPIView)
-from rest_framework.permissions import (AllowAny, IsAdminUser, IsAuthenticated,
-                                        IsAuthenticatedOrReadOnly)
+from rest_framework.generics import (DestroyAPIView, ListCreateAPIView,
+                                     RetrieveUpdateDestroyAPIView)
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .pagination import (BoardLimitOffsetPagination, BoardPageNumberPagination,
-                         SubjectLimitOffsetPagination,
-                         SubjectPageNumberPagination)
-from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly, IsCommenterOrReadOnly
-from .serializers import (BoardSerializer, CommentSerializer,
-                          SubjectSerializer)
-
-
-class SubscribeBoardView(APIView):
-
-    def get(self, request, format=None):
-        """
-        View that subscribe / unsubscribe a board and returns action status.
-        """
-        data = dict()
-        user = request.user
-        board_slug = request.GET.get('board_slug')
-        board = Board.objects.get(slug=board_slug)
-        user = request.user
-        if board in user.subscribed_boards.all():
-            board.subscribers.remove(user)
-            data['is_subscribed'] = False
-        else:
-            board.subscribers.add(user)
-            data['is_subscribed'] = True
-
-        data['total_subscribers'] = board.subscribers.count()
-        return Response(data)
-
-
-class StarSubjectView(APIView):
-
-    def get(self, request, format=None):
-        """
-        View that star / unstar a subject and returns action status & total points.
-        """
-        data = dict()
-        user = request.user
-        subject_slug = request.GET.get('subject_slug')
-        subject = Subject.objects.get(slug=subject_slug)
-        user = request.user
-        if subject in user.liked_subjects.all():
-            subject.points.remove(user)
-            data['is_starred'] = False
-        else:
-            subject.points.add(user)
-            data['is_starred'] = True
-
-        data['total_points'] = subject.points.count()
-        return Response(data)
-
-
-class GetSubscribedBoards(APIView):
-
-    def get(self, request, format=None):
-        """
-        Return a list of user subscribed boards.
-        """
-        boards = request.user.subscribed_boards.all()
-        boards_list = [{'id': board.id, 'title': board.title} for board in boards]
-        return Response(boards_list)
-
-
-class TrendingBoardsList(APIView):
-
-    def get(self, request, format=None):
-        """
-        Return a list of trending boards.
-        """
-        boards = Board.objects.all()
-        trending_boards = sorted(boards, key=lambda instance:instance.recent_posts(), reverse=True)[:5]
-        trending_boards_list = [{'title': board.title, 'slug': board.slug} for board in trending_boards]
-        return Response(trending_boards_list)
-
-
-class ActiveThreadsList(APIView):
-
-    def get(self, request, format=None):
-        """
-        Return a list of active threads.
-        """
-        current_user = request.user
-        active_threads = current_user.posted_subjects.all()[:5]
-        active_threads_list = [{'title': thread.title, 'slug': thread.slug, 'board_slug': thread.board.slug} for thread in active_threads]
-        return Response(active_threads_list)
+from .pagination import BoardPageNumberPagination, SubjectPageNumberPagination
+from .permissions import (IsAdminOrReadOnly, IsAuthorOrReadOnly,
+                          IsCommenterOrReadOnly)
+from .serializers import BoardSerializer, CommentSerializer, SubjectSerializer
 
 
 class SubjectListCreateAPIView(ListCreateAPIView):
@@ -177,8 +93,8 @@ class CommentListCreateAPIView(ListCreateAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self, *args, **kwargs):
-        subject_slug = user_query = self.request.GET.get('subject_slug', '')
-        queryset_list = Comment.get_comments(subject_slug);
+        subject_slug = self.request.GET.get('subject_slug', '')
+        queryset_list = Comment.get_comments(subject_slug)
         return queryset_list
 
     def perform_create(self, serializer):
@@ -194,3 +110,86 @@ class CommentDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsCommenterOrReadOnly]
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
+
+
+class SubscribeBoardView(APIView):
+
+    def get(self, request, format=None):
+        """
+        View that subscribe / unsubscribe a board and returns action status.
+        """
+        data = dict()
+        user = request.user
+        board_slug = request.GET.get('board_slug')
+        board = Board.objects.get(slug=board_slug)
+        user = request.user
+        if board in user.subscribed_boards.all():
+            board.subscribers.remove(user)
+            data['is_subscribed'] = False
+        else:
+            board.subscribers.add(user)
+            data['is_subscribed'] = True
+
+        data['total_subscribers'] = board.subscribers.count()
+        return Response(data)
+
+
+class StarSubjectView(APIView):
+
+    def get(self, request, format=None):
+        """
+        View that star / unstar a subject and returns action status & total points.
+        """
+        data = dict()
+        user = request.user
+        subject_slug = request.GET.get('subject_slug')
+        subject = Subject.objects.get(slug=subject_slug)
+        user = request.user
+        if subject in user.liked_subjects.all():
+            subject.points.remove(user)
+            data['is_starred'] = False
+        else:
+            subject.points.add(user)
+            data['is_starred'] = True
+
+        data['total_points'] = subject.points.count()
+        return Response(data)
+
+
+class GetSubscribedBoards(APIView):
+
+    def get(self, request, format=None):
+        """
+        Return a list of user subscribed boards.
+        """
+        boards = request.user.subscribed_boards.all()
+        boards_list = [{'id': board.id, 'title': board.title} for board in boards]
+        return Response(boards_list)
+
+
+class TrendingBoardsList(APIView):
+
+    def get(self, request, format=None):
+        """
+        Return a list of trending boards.
+        """
+        boards = Board.objects.all()
+        trending_boards = sorted(boards, key=lambda instance: instance.recent_posts(), reverse=True)[:5]
+        trending_boards_list = [{'title': board.title, 'slug': board.slug} for board in trending_boards]
+        return Response(trending_boards_list)
+
+
+class ActiveThreadsList(APIView):
+
+    def get(self, request, format=None):
+        """
+        Return a list of active threads.
+        """
+        current_user = request.user
+        active_threads = current_user.posted_subjects.all()[:5]
+        active_threads_list = [
+            {'title': thread.title,
+             'slug': thread.slug,
+             'board_slug': thread.board.slug} for thread in active_threads
+        ]
+        return Response(active_threads_list)
