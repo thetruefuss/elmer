@@ -4,17 +4,14 @@ from .views import (ActiveThreadsList, BoardCreateAPIView, BoardDestroyAPIView,
                     BoardListAPIView, BoardRetrieveAPIView, BoardUpdateAPIView,
                     CommentCreateAPIView, CommentListAPIView,
                     GetSubscribedBoards, StarSubjectView,
-                    SubjectDestroyAPIView, SubjectListCreateAPIView,
-                    SubjectRetrieveAPIView, SubjectUpdateAPIView, SubscribeBoardView,
+                    SubjectListCreateAPIView, SubjectRetrieveUpdateDestroyAPIView, SubscribeBoardView,
                     TrendingBoardsList)
 
 urlpatterns = [
     url(r'^subjects/$', SubjectListCreateAPIView.as_view(), name='list_or_create'),
     url(r'^subjects/active_threads/$', ActiveThreadsList.as_view(), name='active_threads'),
     url(r'^subjects/star/$', StarSubjectView.as_view(), name='star_subject'),
-    url(r'^subjects/(?P<slug>[-\w]+)/$', SubjectRetrieveAPIView.as_view(), name='subjects_retrieve'),
-    url(r'^subjects/(?P<slug>[-\w]+)/edit/$', SubjectUpdateAPIView.as_view(), name='subjects_update'),
-    url(r'^subjects/(?P<slug>[-\w]+)/delete/$', SubjectDestroyAPIView.as_view(), name='subjects_delete'),
+    url(r'^subjects/(?P<slug>[-\w]+)/$', SubjectRetrieveUpdateDestroyAPIView.as_view(), name='retrieve_or_update_or_destroy'),
 
     url(r'^boards/$', BoardListAPIView.as_view(), name='boards_list'),
     url(r'^boards/subscribe/$', SubscribeBoardView.as_view(), name='subscribe_boards'),

@@ -3,7 +3,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      RetrieveUpdateAPIView, UpdateAPIView,
-                                     ListCreateAPIView)
+                                     ListCreateAPIView, RetrieveUpdateDestroyAPIView)
 from rest_framework.permissions import (AllowAny, IsAdminUser, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -132,17 +132,10 @@ class SubjectListCreateAPIView(ListCreateAPIView):
         serializer.save(author=self.request.user)
 
 
-class SubjectRetrieveAPIView(RetrieveAPIView):
+class SubjectRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     """
-    View that returns data of single subject.
+    View that retrieve, update or delete (if user is the author of) the subject.
     """
-    queryset = Subject.objects.all()
-    serializer_class = SubjectSerializer
-    lookup_field = 'slug'
-    lookup_url_kwarg = 'slug'
-
-
-class SubjectUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
@@ -151,14 +144,6 @@ class SubjectUpdateAPIView(RetrieveUpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save(author=self.request.user)
-
-
-class SubjectDestroyAPIView(DestroyAPIView):
-    queryset = Subject.objects.all()
-    serializer_class = SubjectSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
-    lookup_field = 'slug'
-    lookup_url_kwarg = 'slug'
 
 
 class BoardListAPIView(ListAPIView):
