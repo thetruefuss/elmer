@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from .pagination import (BoardLimitOffsetPagination, BoardPageNumberPagination,
                          SubjectLimitOffsetPagination,
                          SubjectPageNumberPagination)
-from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
+from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly, IsCommenterOrReadOnly
 from .serializers import (BoardSerializer, CommentSerializer,
                           SubjectSerializer)
 
@@ -168,29 +168,29 @@ class BoardRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     lookup_url_kwarg = 'slug'
 
 
-class CommentListAPIView(ListAPIView):
+class CommentListCreateAPIView(ListCreateAPIView):
     """
-    View that lists the comments on single subject.
+    View that returns comments list of a single subject & handles the creation
+    of comments & returns data back.
     """
     serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self, *args, **kwargs):
-        queryset_list = Comment.objects.all()
-        subject_slug = self.kwargs['slug']
-        if subject_slug:
-            queryset_list = queryset_list.filter(
-                subject__slug__icontains=subject_slug
-            )
+        subject_slug = user_query = self.request.GET.get('subject_slug', '')
+        queryset_list = Comment.get_comments(subject_slug);
         return queryset_list
-
-
-class CommentCreateAPIView(CreateAPIView):
-    """
-    View that handles the creation of comments & return data back.
-    """
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
-    permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
         serializer.save(commenter=self.request.user)
+
+
+class CommentDestroyAPIView(DestroyAPIView):
+    """
+    View that delete (if user is the commenter of) the comment.
+    """
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly, IsCommenterOrReadOnly]
+    lookup_field = 'id'
+    lookup_url_kwarg = 'id'

@@ -231,6 +231,21 @@ class Comment(models.Model):
         """
         return self.body
 
+    @staticmethod
+    def get_comments(subject_slug=None):
+        """
+        Returns comments.
+
+        :param subject_slug: string
+        :return: list
+        """
+        if subject_slug:
+            comments = Comment.objects.filter(active=True,
+                                              subject__slug__icontains=subject_slug)
+        else:
+            comments = Comment.objects.filter(active=True)
+        return comments
+
 
 class Report(models.Model):
     """

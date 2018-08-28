@@ -1,10 +1,10 @@
 from django.conf.urls import url
 
 from .views import (ActiveThreadsList, BoardListCreateAPIView, BoardRetrieveUpdateDestroyAPIView,
-                    CommentCreateAPIView, CommentListAPIView,
+                    CommentListCreateAPIView,
                     GetSubscribedBoards, StarSubjectView,
                     SubjectListCreateAPIView, SubjectRetrieveUpdateDestroyAPIView, SubscribeBoardView,
-                    TrendingBoardsList)
+                    TrendingBoardsList, CommentDestroyAPIView)
 
 urlpatterns = [
     url(r'^subjects/$', SubjectListCreateAPIView.as_view(), name='list_or_create_subjects'),
@@ -18,6 +18,6 @@ urlpatterns = [
     url(r'^boards/user_subscribed/$', GetSubscribedBoards.as_view(), name='boards_users'),
     url(r'^boards/(?P<slug>[-\w]+)/$', BoardRetrieveUpdateDestroyAPIView.as_view(), name='retrieve_or_update_or_destroy_boards'),
 
-    url(r'^comments/create/$', CommentCreateAPIView.as_view(), name='comments_create'),
-    url(r'^comments/(?P<slug>[-\w]+)/$', CommentListAPIView.as_view(), name='comments_list'),
+    url(r'^comments/$', CommentListCreateAPIView.as_view(), name='list_or_create_comments'),
+    url(r'^comments/(?P<id>\d+)/$', CommentDestroyAPIView.as_view(), name='destroy_comments'),
 ]

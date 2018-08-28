@@ -209,6 +209,10 @@ class BoardSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    """
+    Serializer that represents a comment.
+    """
+
     commenter = UserDetailSerializer(read_only=True)
     is_commenter = serializers.SerializerMethodField()
     created_naturaltime = serializers.SerializerMethodField()
@@ -216,10 +220,16 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = [
-            'body', 'subject', 'commenter', 'is_commenter', 'created', 'created_naturaltime',
+            'id', 'body', 'subject', 'commenter', 'is_commenter',
+            'created', 'created_naturaltime',
         ]
 
     def get_is_commenter(self, obj):
+        """
+        Checks if user is the commenter.
+
+        :return: boolean
+        """
         user = None
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
@@ -229,4 +239,9 @@ class CommentSerializer(serializers.ModelSerializer):
         return False
 
     def get_created_naturaltime(self, obj):
+        """
+        Returns human readable time.
+
+        :return: string
+        """
         return naturaltime(obj.created)
