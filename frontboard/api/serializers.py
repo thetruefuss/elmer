@@ -98,41 +98,68 @@ class SubjectSerializer(serializers.ModelSerializer):
         return False
 
 
-class BoardCreateUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Board
-        fields = [
-            'title', 'slug', 'description', 'cover',
-        ]
+class BoardSerializer(serializers.ModelSerializer):
+    """
+    Serializer that represents a board.
+    """
 
-    def create(self, validated_data):
-        instance = self.Meta.model(**validated_data)
-        request = self.context.get('request')
-        if request and hasattr(request, 'user'):
-            user = request.user
-        instance.save()
-        instance.admins.add(user)
-        instance.subscribers.add(user)
-        instance.save()
-        return instance
-
-
-class BoardListSerializer(serializers.ModelSerializer):
+    admins = UserDetailSerializer(read_only=True, many=True)
     subscribers_count = serializers.SerializerMethodField()
+    created = serializers.DateTimeField(read_only=True)
     created_naturaltime = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
+    cover_url = serializers.SerializerMethodField()
+    total_posts = serializers.SerializerMethodField()
+    is_admin = serializers.SerializerMethodField()
 
     class Meta:
         model = Board
         fields = [
-            'id', 'title', 'slug', 'description', 'subscribers_count',
-            'created', 'created_naturaltime', 'is_subscribed',
+            'id', 'title', 'slug', 'description', 'cover', 'cover_url',
+            'total_posts', 'admins', 'subscribers_count', 'created',
+            'created_naturaltime', 'is_subscribed', 'is_admin',
         ]
 
+    def get_admins(self, obj):
+        """
+        Returns a list of admins.
+
+        :return: list.
+        """
+        return obj.get_admins()
+
+    def get_total_posts(self, obj):
+        """
+        Calculates number of total posts in a board.
+
+        :return: integer
+        """
+        return obj.submitted_subjects.count()
+
+    def get_cover_url(self, obj):
+        """
+        Returns board cover url.
+
+        :return: string
+        """
+        request = self.context.get('request')
+        cover_url = obj.get_picture()
+        return request.build_absolute_uri(cover_url)
+
     def get_subscribers_count(self, obj):
-        return str(obj.subscribers.all().count())
+        """
+        Calculates number of subscribers.
+
+        :return: integer
+        """
+        return obj.subscribers.all().count()
 
     def get_is_subscribed(self, obj):
+        """
+        Checks if user is subscribed to the board.
+
+        :return: boolean
+        """
         user = None
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
@@ -142,39 +169,43 @@ class BoardListSerializer(serializers.ModelSerializer):
         return False
 
     def get_created_naturaltime(self, obj):
+        """
+        Returns human readable time.
+
+        :return: string
+        """
         return naturaltime(obj.created)
 
+    def get_is_admin(self, obj):
+        """
+        Checks if user is admin.
 
-class BoardRetrieveSerializer(serializers.ModelSerializer):
-    admins =  UserDetailSerializer(read_only=True, many=True)
-    subscribers = UserDetailSerializer(read_only=True, many=True)
-    subscribers_count = serializers.SerializerMethodField()
-    cover = serializers.SerializerMethodField()
-    total_posts = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Board
-        fields = [
-            'id', 'title', 'slug', 'description', 'cover', 'total_posts',
-            'admins', 'subscribers', 'subscribers_count', 'created',
-        ]
-
-    def get_total_posts(self, obj):
-        return str(obj.submitted_subjects.count())
-
-    def get_cover(self, obj):
+        :return: boolean
+        """
+        user = None
         request = self.context.get('request')
-        cover_url = obj.get_picture()
-        return request.build_absolute_uri(cover_url)
+        if request and hasattr(request, 'user'):
+            user = request.user
+        if user in obj.admins.all():
+            return True
+        return False
 
-    def get_admins(self, obj):
-        return str(obj.get_admins())
+    def create(self, validated_data):
+        """
+        Handles the creation of board.
 
-    def get_subscribers(self, obj):
-        return str(obj.subscribers.all())
-
-    def get_subscribers_count(self, obj):
-        return str(obj.subscribers.all().count())
+        :params validated_data: dict
+        :return: string
+        """
+        instance = self.Meta.model(**validated_data)
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        instance.save()
+        instance.admins.add(user)
+        instance.subscribers.add(user)
+        instance.save()
+        return instance
 
 
 class CommentSerializer(serializers.ModelSerializer):

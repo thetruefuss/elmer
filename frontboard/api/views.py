@@ -13,8 +13,7 @@ from .pagination import (BoardLimitOffsetPagination, BoardPageNumberPagination,
                          SubjectLimitOffsetPagination,
                          SubjectPageNumberPagination)
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
-from .serializers import (BoardCreateUpdateSerializer, BoardListSerializer,
-                          BoardRetrieveSerializer, CommentSerializer,
+from .serializers import (BoardSerializer, CommentSerializer,
                           SubjectSerializer)
 
 
@@ -146,54 +145,27 @@ class SubjectRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
         serializer.save(author=self.request.user)
 
 
-class BoardListAPIView(ListAPIView):
+class BoardListCreateAPIView(ListCreateAPIView):
     """
-    View that returns a list of boards.
+    View that returns a list of boards & handles the creation of boards & returns data back.
     """
     queryset = Board.objects.all()
-    serializer_class = BoardListSerializer
+    serializer_class = BoardSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = BoardPageNumberPagination
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title']
 
 
-class BoardRetrieveAPIView(RetrieveAPIView):
+class BoardRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     """
-    View that returns board details.
+    View that retrieve, update or delete (if user is the admin of) the board.
     """
     queryset = Board.objects.all()
-    serializer_class = BoardRetrieveSerializer
-    lookup_field = 'slug'
-    lookup_url_kwarg = 'slug'
-
-
-# untested view
-class BoardUpdateAPIView(RetrieveUpdateAPIView):
-    queryset = Board.objects.all()
-    serializer_class = BoardCreateUpdateSerializer
+    serializer_class = BoardSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
     lookup_field = 'slug'
     lookup_url_kwarg = 'slug'
-
-    def perform_update(self, serializer):
-        serializer.save(admins.add(request.user))
-
-
-class BoardDestroyAPIView(DestroyAPIView):
-    queryset = Board.objects.all()
-    serializer_class = BoardRetrieveSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsAdminOrReadOnly]
-    lookup_field = 'slug'
-    lookup_url_kwarg = 'slug'
-
-
-class BoardCreateAPIView(CreateAPIView):
-    """
-    View that handles the creation of boards & returns data back.
-    """
-    queryset = Board.objects.all()
-    serializer_class = BoardCreateUpdateSerializer
-    permission_classes = [IsAuthenticated]
 
 
 class CommentListAPIView(ListAPIView):
