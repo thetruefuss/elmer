@@ -2,7 +2,8 @@ from frontboard.models import Board, Comment, Subject
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
-                                     RetrieveUpdateAPIView, UpdateAPIView)
+                                     RetrieveUpdateAPIView, UpdateAPIView,
+                                     ListCreateAPIView)
 from rest_framework.permissions import (AllowAny, IsAdminUser, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -14,8 +15,7 @@ from .pagination import (BoardLimitOffsetPagination, BoardPageNumberPagination,
 from .permissions import IsAdminOrReadOnly, IsAuthorOrReadOnly
 from .serializers import (BoardCreateUpdateSerializer, BoardListSerializer,
                           BoardRetrieveSerializer, CommentSerializer,
-                          SubjectCreateUpdateSerializer, SubjectListSerializer,
-                          SubjectRetrieveSerializer)
+                          SubjectSerializer)
 
 
 class SubscribeBoardView(APIView):
@@ -97,11 +97,13 @@ class ActiveThreadsList(APIView):
         return Response(active_threads_list)
 
 
-class SubjectListAPIView(ListAPIView):
+class SubjectListCreateAPIView(ListCreateAPIView):
     """
-    View that returns subjects list based on rank_score, specific user or board submissions etc.
+    View that returns subjects list based on rank_score, specific user or
+    board submissions etc & handles the creation of subjects & returns data back.
     """
-    serializer_class = SubjectListSerializer
+    serializer_class = SubjectSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
     pagination_class = SubjectPageNumberPagination
     filter_backends = [SearchFilter, OrderingFilter]
     search_fields = ['title']
@@ -126,20 +128,23 @@ class SubjectListAPIView(ListAPIView):
 
         return queryset_list
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
 
 class SubjectRetrieveAPIView(RetrieveAPIView):
     """
     View that returns data of single subject.
     """
     queryset = Subject.objects.all()
-    serializer_class = SubjectRetrieveSerializer
+    serializer_class = SubjectSerializer
     lookup_field = 'slug'
     lookup_url_kwarg = 'slug'
 
 
 class SubjectUpdateAPIView(RetrieveUpdateAPIView):
     queryset = Subject.objects.all()
-    serializer_class = SubjectCreateUpdateSerializer
+    serializer_class = SubjectSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     lookup_field = 'slug'
     lookup_url_kwarg = 'slug'
@@ -150,22 +155,10 @@ class SubjectUpdateAPIView(RetrieveUpdateAPIView):
 
 class SubjectDestroyAPIView(DestroyAPIView):
     queryset = Subject.objects.all()
-    serializer_class = SubjectRetrieveSerializer
+    serializer_class = SubjectSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthorOrReadOnly]
     lookup_field = 'slug'
     lookup_url_kwarg = 'slug'
-
-
-class SubjectCreateAPIView(CreateAPIView):
-    """
-    View that handles the creation of subjects & returns data back.
-    """
-    queryset = Subject.objects.all()
-    serializer_class = SubjectCreateUpdateSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
 
 
 class BoardListAPIView(ListAPIView):

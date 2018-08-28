@@ -5,64 +5,18 @@ from rest_framework import serializers
 from user_accounts.api.serializers import UserDetailSerializer
 
 
-class SubjectCreateUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Subject
-        fields = [
-            'title', 'body', 'photo', 'board',
-        ]
+class SubjectSerializer(serializers.ModelSerializer):
+    """
+    Serializer that represents a subject.
+    """
 
-
-class SubjectListSerializer(serializers.ModelSerializer):
     body_linkified = serializers.SerializerMethodField()
     author = UserDetailSerializer(read_only=True)
-    board = serializers.SerializerMethodField()
+    board_slug = serializers.SerializerMethodField()
     stars_count = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
     is_starred = serializers.SerializerMethodField()
-    created_naturaltime = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Subject
-        fields = [
-            'id', 'title', 'slug', 'body', 'body_linkified',
-            'photo', 'author', 'board', 'stars_count',
-            'comments_count', 'is_starred', 'created',
-            'created_naturaltime',
-        ]
-
-    def get_body_linkified(self, obj):
-        return obj.linkfy_subject()
-
-    def get_board(self, obj):
-        return str(obj.board.slug)
-
-    def get_stars_count(self, obj):
-        return obj.points.all().count()
-
-    def get_comments_count(self, obj):
-        return obj.comments.all().count()
-
-    def get_is_starred(self, obj):
-        user = None
-        request = self.context.get('request')
-        if request and hasattr(request, 'user'):
-            user = request.user
-        if user in obj.points.all():
-            return True
-        return False
-
-    def get_created_naturaltime(self, obj):
-        return naturaltime(obj.created)
-
-
-class SubjectRetrieveSerializer(serializers.ModelSerializer):
-    body_linkified = serializers.SerializerMethodField()
-    author = UserDetailSerializer(read_only=True)
-    board = serializers.SerializerMethodField()
-    stars_count = serializers.SerializerMethodField()
-    comments_count = serializers.SerializerMethodField()
-    is_starred = serializers.SerializerMethodField()
+    created = serializers.DateTimeField(read_only=True)
     created_naturaltime = serializers.SerializerMethodField()
     is_author = serializers.SerializerMethodField()
 
@@ -70,24 +24,49 @@ class SubjectRetrieveSerializer(serializers.ModelSerializer):
         model = Subject
         fields = [
             'id', 'title', 'slug', 'body', 'body_linkified',
-            'photo', 'author', 'board', 'stars_count',
+            'photo', 'author', 'board', 'board_slug', 'stars_count',
             'comments_count', 'is_starred', 'created',
             'created_naturaltime', 'is_author',
         ]
 
     def get_body_linkified(self, obj):
+        """
+        Linkifies the body.
+
+        :return: string
+        """
         return obj.linkfy_subject()
 
-    def get_board(self, obj):
-        return str(obj.board.slug)
+    def get_board_slug(self, obj):
+        """
+        Returns board slug.
+
+        :return: string
+        """
+        return obj.board.slug
 
     def get_stars_count(self, obj):
+        """
+        Counts stars on subject.
+
+        :return: integer
+        """
         return obj.points.all().count()
 
     def get_comments_count(self, obj):
+        """
+        Counts comments on subject.
+
+        :return: integer
+        """
         return obj.comments.all().count()
 
     def get_is_starred(self, obj):
+        """
+        Check if user has starred subject.
+
+        :return: boolean
+        """
         user = None
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
@@ -97,9 +76,19 @@ class SubjectRetrieveSerializer(serializers.ModelSerializer):
         return False
 
     def get_created_naturaltime(self, obj):
+        """
+        Returns human readable time.
+
+        :return: string
+        """
         return naturaltime(obj.created)
 
     def get_is_author(self, obj):
+        """
+        Checks if user is the author of the subject.
+
+        :return: boolean
+        """
         user = None
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
