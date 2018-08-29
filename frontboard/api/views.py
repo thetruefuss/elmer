@@ -1,15 +1,17 @@
-from frontboard.models import Board, Comment, Subject, Report
+from frontboard.models import Board, Comment, Report, Subject
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import (DestroyAPIView, ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView)
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .pagination import BoardPageNumberPagination, SubjectPageNumberPagination
 from .permissions import (IsAdminOrReadOnly, IsAuthorOrReadOnly,
                           IsCommenterOrReadOnly)
-from .serializers import BoardSerializer, CommentSerializer, SubjectSerializer, ReportSerializer
+from .serializers import (BoardSerializer, CommentSerializer, ReportSerializer,
+                          SubjectSerializer)
 
 
 class SubjectListCreateAPIView(ListCreateAPIView):

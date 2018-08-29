@@ -3,9 +3,10 @@ from django.conf.urls import url
 from .views import (ActiveThreadsList, BoardListCreateAPIView,
                     BoardRetrieveUpdateDestroyAPIView, CommentDestroyAPIView,
                     CommentListCreateAPIView, GetSubscribedBoards,
-                    StarSubjectView, SubjectListCreateAPIView,
+                    ReportListCreateAPIView, StarSubjectView,
+                    SubjectListCreateAPIView,
                     SubjectRetrieveUpdateDestroyAPIView, SubscribeBoardView,
-                    TrendingBoardsList, ReportListCreateAPIView)
+                    TrendingBoardsList)
 
 urlpatterns = [
     url(r'^subjects/$', SubjectListCreateAPIView.as_view(), name='list_or_create_subjects'),
