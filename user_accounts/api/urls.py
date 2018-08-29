@@ -1,6 +1,7 @@
 from django.conf.urls import url
 
-from .views import UserSignUpAPIView, UserLoginAPIView, current_user, ProfileRetrieveAPIView, NotificationListAPIView
+from .views import (NotificationListAPIView, ProfileRetrieveAPIView,
+                    UserLoginAPIView, UserSignUpAPIView, current_user)
 
 urlpatterns = [
     url(r'^login/', UserLoginAPIView.as_view(), name='users_login'),

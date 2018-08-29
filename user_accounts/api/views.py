@@ -1,17 +1,20 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView
+from rest_framework.decorators import api_view
+from rest_framework.generics import ListAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
+from rest_framework.status import (HTTP_200_OK, HTTP_201_CREATED,
+                                   HTTP_400_BAD_REQUEST)
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from user_accounts.models import Notification, Profile
 
-from .serializers import UserSerializerWithToken, UserLoginSerializer, CurrentUserDetailSerializer, ProfileRetrieveSerializer, NotificationSerializer
-from user_accounts.models import Profile, Notification
+from .serializers import (CurrentUserDetailSerializer, NotificationSerializer,
+                          ProfileRetrieveSerializer, UserLoginSerializer,
+                          UserSerializerWithToken)
 
 User = get_user_model()
+
 
 @api_view(['GET'])
 def current_user(request):
@@ -26,7 +29,7 @@ class UserSignUpAPIView(APIView):
     """
     View that handles user signup and returns username, email & JWT.
     """
-    permission_classes = (AllowAny,)
+    permission_classes = [AllowAny]
 
     def post(self, request, format=None):
         serializer = UserSerializerWithToken(data=request.data)

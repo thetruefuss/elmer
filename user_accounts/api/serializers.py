@@ -1,19 +1,24 @@
-from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.contrib.auth import get_user_model
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db.models import Q
 
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
-from user_accounts.models import Profile, Notification
+from user_accounts.models import Notification, Profile
 
-jwt_payload_handler             = api_settings.JWT_PAYLOAD_HANDLER
-jwt_encode_handler              = api_settings.JWT_ENCODE_HANDLER
-jwt_response_payload_handler    = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
+jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
+jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
 
 
 User = get_user_model()
 
+
 class CurrentUserDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer that represents a current user details.
+    """
+
     screen_name = serializers.SerializerMethodField()
     profile_picture = serializers.SerializerMethodField()
 
@@ -24,15 +29,29 @@ class CurrentUserDetailSerializer(serializers.ModelSerializer):
         ]
 
     def get_screen_name(self, obj):
-        return str(obj.profile.screen_name())
+        """
+        Returns user screen name.
+
+        :return: string
+        """
+        return obj.profile.screen_name()
 
     def get_profile_picture(self, obj):
+        """
+        Returns user's profile picture link.
+
+        :return: string
+        """
         request = self.context.get('request')
         profile_picture_url = obj.profile.get_picture()
         return request.build_absolute_uri(profile_picture_url)
 
 
 class UserDetailSerializer(serializers.ModelSerializer):
+    """
+    Serializer that represents a user details.
+    """
+
     screen_name = serializers.SerializerMethodField()
 
     class Meta:
@@ -42,10 +61,19 @@ class UserDetailSerializer(serializers.ModelSerializer):
         ]
 
     def get_screen_name(self, obj):
-        return str(obj.profile.screen_name())
+        """
+        Returns user screen name.
+
+        :return: string
+        """
+        return obj.profile.screen_name()
 
 
 class UserLoginSerializer(serializers.ModelSerializer):
+    """
+    Serializer that represents a user login process.
+    """
+
     token = serializers.CharField(allow_blank=True, read_only=True)
     username = serializers.CharField()
 
@@ -62,10 +90,16 @@ class UserLoginSerializer(serializers.ModelSerializer):
         }
 
     def validate(self, data):
+        """
+        Validates user data & returns token in case provided credentials are correct.
+
+        :params data: dict
+        :return: dict
+        """
         username = data['username']
         password = data['password']
         user_qs = User.objects.filter(
-            Q(username__iexact=username)|
+            Q(username__iexact=username) |
             Q(email__iexact=username)
         ).distinct()
         if user_qs.exists() and user_qs.count() == 1:
@@ -83,16 +117,30 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
 
 class UserSerializerWithToken(serializers.ModelSerializer):
+    """
+    Serializer that represents a user registration.
+    """
 
     token = serializers.SerializerMethodField()
     password = serializers.CharField(write_only=True)
 
     def get_token(self, obj):
+        """
+        Generates JWT.
+
+        :return: string
+        """
         payload = jwt_payload_handler(obj)
         token = jwt_encode_handler(payload)
         return token
 
     def create(self, validated_data):
+        """
+        Handles the creation of user.
+
+        :params validated_data: dict
+        :return: string
+        """
         password = validated_data.pop('password', None)
         instance = self.Meta.model(**validated_data)
         if password is not None:
@@ -102,13 +150,21 @@ class UserSerializerWithToken(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('token', 'username', 'email', 'password')
+        fields = [
+            'token', 'username', 'email', 'password',
+        ]
 
 
 class ProfileRetrieveSerializer(serializers.ModelSerializer):
+    """
+    Serializer that represents a profile.
+    """
+
     class Meta:
         model = Profile
-        fields = ('dp',)
+        fields = [
+            'dp', 'dob', 'member_since'
+        ]
 
 
 class NotificationSerializer(serializers.ModelSerializer):
