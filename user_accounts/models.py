@@ -132,3 +132,16 @@ class Notification(models.Model):
             return '{} mentioned you in his comment on subject \"{}\".'.format(
                 self.Actor.profile.screen_name(), self.Object
             )
+
+    @staticmethod
+    def get_user_notification(user):
+        """
+        Returns user notifications.
+
+        :param user: Object
+        :return: list
+        """
+        if user:
+            notifications = Notification.objects.filter(Target=user).exclude(Actor=user)
+            return notifications
+        return []

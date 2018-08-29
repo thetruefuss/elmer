@@ -1,9 +1,10 @@
+from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
 from rest_framework import serializers
 from rest_framework_jwt.settings import api_settings
-from user_accounts.models import Profile
+from user_accounts.models import Profile, Notification
 
 jwt_payload_handler             = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler              = api_settings.JWT_ENCODE_HANDLER
@@ -108,3 +109,50 @@ class ProfileRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('dp',)
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    """
+    Serializer that represents a report.
+    """
+
+    Actor = UserDetailSerializer(read_only=True)
+    notification_string = serializers.SerializerMethodField()
+    created_naturaltime = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Notification
+        fields = [
+            'id', 'notification_string', 'Actor', 'Object', 'is_read',
+            'created', 'created_naturaltime',
+        ]
+
+    def get_notification_string(self, obj):
+        """
+        Returns string representation of notification.
+
+        :return: string
+        """
+        return str(obj)
+
+    def get_is_commenter(self, obj):
+        """
+        Checks if user is the commenter.
+
+        :return: boolean
+        """
+        user = None
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        if user == obj.commenter:
+            return True
+        return False
+
+    def get_created_naturaltime(self, obj):
+        """
+        Returns human readable time.
+
+        :return: string
+        """
+        return naturaltime(obj.created)

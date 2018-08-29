@@ -1,15 +1,15 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework.generics import CreateAPIView, RetrieveAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.generics import CreateAPIView, RetrieveAPIView, ListAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .serializers import UserSerializerWithToken, UserLoginSerializer, CurrentUserDetailSerializer, ProfileRetrieveSerializer
-from user_accounts.models import Profile
+from .serializers import UserSerializerWithToken, UserLoginSerializer, CurrentUserDetailSerializer, ProfileRetrieveSerializer, NotificationSerializer
+from user_accounts.models import Profile, Notification
 
 User = get_user_model()
 
@@ -60,3 +60,21 @@ class ProfileRetrieveAPIView(RetrieveAPIView):
     serializer_class = ProfileRetrieveSerializer
     lookup_field = 'user__username'
     lookup_url_kwarg = 'username'
+
+
+class NotificationListAPIView(ListAPIView):
+    """
+    View that returns notification list of a single user.
+    """
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self, *args, **kwargs):
+        queryset_list = Notification.get_user_notification(self.request.user)
+        unread_notifications = queryset_list.filter(is_read=False)
+        # Add celery or something to alter the is_read flag in background
+        # So this flag could be used in front end for styling purposes
+        for notification in unread_notifications:
+            notification.is_read = True
+            notification.save()
+        return queryset_list
