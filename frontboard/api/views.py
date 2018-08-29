@@ -1,15 +1,15 @@
-from frontboard.models import Board, Comment, Subject
+from frontboard.models import Board, Comment, Subject, Report
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import (DestroyAPIView, ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView)
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .pagination import BoardPageNumberPagination, SubjectPageNumberPagination
 from .permissions import (IsAdminOrReadOnly, IsAuthorOrReadOnly,
                           IsCommenterOrReadOnly)
-from .serializers import BoardSerializer, CommentSerializer, SubjectSerializer
+from .serializers import BoardSerializer, CommentSerializer, SubjectSerializer, ReportSerializer
 
 
 class SubjectListCreateAPIView(ListCreateAPIView):
@@ -110,6 +110,31 @@ class CommentDestroyAPIView(DestroyAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsCommenterOrReadOnly]
     lookup_field = 'id'
     lookup_url_kwarg = 'id'
+
+
+class ReportListCreateAPIView(ListCreateAPIView):
+    """
+    View that returns reports list of a single board & handles the creation
+    of reports & returns data back.
+    """
+    serializer_class = ReportSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self, *args, **kwargs):
+        """
+        Only admins of the board can see the reports.
+        """
+        current_user = self.request.user
+        boards_slug = self.request.GET.get('boards_slug', '')
+        board = Board.objects.get(slug=boards_slug)
+        if board:
+            if current_user in board.admins.all():
+                queryset_list = Report.get_reports(boards_slug)
+                return queryset_list
+        return []
+
+    def perform_create(self, serializer):
+        serializer.save(reporter=self.request.user)
 
 
 class SubscribeBoardView(APIView):

@@ -5,7 +5,7 @@ from .views import (ActiveThreadsList, BoardListCreateAPIView,
                     CommentListCreateAPIView, GetSubscribedBoards,
                     StarSubjectView, SubjectListCreateAPIView,
                     SubjectRetrieveUpdateDestroyAPIView, SubscribeBoardView,
-                    TrendingBoardsList)
+                    TrendingBoardsList, ReportListCreateAPIView)
 
 urlpatterns = [
     url(r'^subjects/$', SubjectListCreateAPIView.as_view(), name='list_or_create_subjects'),
@@ -20,6 +20,8 @@ urlpatterns = [
 
     url(r'^comments/$', CommentListCreateAPIView.as_view(), name='list_or_create_comments'),
     url(r'^comments/(?P<id>\d+)/$', CommentDestroyAPIView.as_view(), name='destroy_comments'),
+
+    url(r'^reports/$', ReportListCreateAPIView.as_view(), name='list_or_create_reports'),
 
     url(r'^actions/star/$', StarSubjectView.as_view()),
     url(r'^actions/subscribe/$', SubscribeBoardView.as_view()),

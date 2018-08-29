@@ -282,3 +282,18 @@ class Report(models.Model):
                 self.reporter.profile.screen_name(),
                 self.subject, self.subject.author
             )
+
+    @staticmethod
+    def get_reports(boards_slug=None):
+        """
+        Returns reports.
+
+        :param boards_slug: string
+        :return: list
+        """
+        if boards_slug:
+            reports = Report.objects.filter(active=True,
+                                            board__slug__icontains=boards_slug)
+        else:
+            reports = Report.objects.filter(active=True)
+        return reports
