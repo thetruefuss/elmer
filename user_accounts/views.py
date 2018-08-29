@@ -20,7 +20,7 @@ from throttle.decorators import throttle
 from mysite.decorators import ajax_required
 
 from .forms import ProfileEditForm, SignupForm, UserEditForm
-from .models import Profile, subject_notify
+from .models import Profile, Notification
 
 
 @throttle(zone='full_strict')
@@ -226,7 +226,7 @@ def follow_user(request, user_id):
         text = 'Follow'
     else:
         user.profile.followers.add(request.user)
-        subject_notify.objects.create(
+        Notification.objects.create(
             Actor=request.user,
             Target=user,
             notif_type='follow'
@@ -341,7 +341,7 @@ def activities(request):
     """
     Displays a activities list of users.
     """
-    subject_events = subject_notify.objects.filter(Target=request.user).exclude(Actor=request.user)
+    subject_events = Notification.objects.filter(Target=request.user).exclude(Actor=request.user)
     unread_subject_events = subject_events.filter(is_read=False)
 
     for notification in unread_subject_events:
@@ -372,7 +372,7 @@ def activities(request):
 @login_required
 @ajax_required
 def check_activities(request):
-    subject_events = subject_notify.objects.filter(Target=request.user, is_read=False).exclude(Actor=request.user)
+    subject_events = Notification.objects.filter(Target=request.user, is_read=False).exclude(Actor=request.user)
     return HttpResponse(len(subject_events))
 
 
@@ -387,7 +387,7 @@ def send_message_request(request, user_id):
         text = 'Send Request'
     else:
         receiver.profile.pending_list.add(contacter)
-        subject_notify.objects.create(Actor=contacter, Target=receiver, notif_type='sent_msg_request')
+        Notification.objects.create(Actor=contacter, Target=receiver, notif_type='sent_msg_request')
         text = 'Request Sent'
     return HttpResponse(text)
 
@@ -402,7 +402,7 @@ def accept_message_request(request, user_id):
         acceptor.profile.pending_list.remove(sender)
         acceptor.profile.contact_list.add(sender)
         sender.profile.contact_list.add(acceptor)
-        subject_notify.objects.create(Actor=acceptor, Target=sender, notif_type='confirmed_msg_request')
+        Notification.objects.create(Actor=acceptor, Target=sender, notif_type='confirmed_msg_request')
         text = 'Added to contact list'
     else:
         text = 'Unexpected error!'

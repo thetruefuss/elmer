@@ -10,7 +10,7 @@ import requests
 from cache_memoize import cache_memoize
 from PIL import Image
 from throttle.decorators import throttle
-from user_accounts.models import subject_notify
+from user_accounts.models import Notification
 
 from mysite.decorators import ajax_required
 
@@ -146,7 +146,7 @@ def subject_detail(request, board, subject):
                     new_comment.save()
 
                     if request.user is not subject.author:
-                        subject_notify.objects.create(
+                        Notification.objects.create(
                             Actor=new_comment.commenter,
                             Object=new_comment.subject,
                             Target=subject.author,
@@ -168,7 +168,7 @@ def subject_detail(request, board, subject):
                                 user = User.objects.get(username=u)
                                 if user not in names_list:
                                     if request.user is not user:
-                                        subject_notify.objects.create(
+                                        Notification.objects.create(
                                             Actor=new_comment.commenter,
                                             Object=new_comment.subject,
                                             Target=user,
@@ -551,7 +551,7 @@ def new_subject(request):
                             if user not in names_list:
                                 new_subject.mentioned.add(user)
                                 if request.user is not user:
-                                    subject_notify.objects.create(
+                                    Notification.objects.create(
                                         Actor=new_subject.author,
                                         Object=new_subject,
                                         Target=user,

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Profile, subject_notify
+from .models import Profile, Notification
 
 
 class ProfileAdmin(admin.ModelAdmin):
@@ -19,4 +19,4 @@ class NotifyAdmin(admin.ModelAdmin):
     list_display = ('notif_type', 'Actor', 'Object', 'Target', 'is_read', 'created')
     list_filter = ('is_read',)
     date_hierarchy = 'created'
-admin.site.register(subject_notify, NotifyAdmin)  # noqa: E305
+admin.site.register(Notification, NotifyAdmin)  # noqa: E305

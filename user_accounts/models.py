@@ -73,7 +73,7 @@ def update_user_profile(sender, instance, created, **kwargs):
     instance.profile.save()
 
 
-class subject_notify(models.Model):
+class Notification(models.Model):
     """
     Model that represents a notification.
     """
@@ -104,7 +104,7 @@ class subject_notify(models.Model):
 
     def __str__(self):
         """
-        Unicode representation for a notification (subject_notify) model based on notification type.
+        Unicode representation for a notification based on notification type.
 
         :return: string
         """
