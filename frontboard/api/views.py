@@ -38,7 +38,7 @@ class SubjectListCreateAPIView(ListCreateAPIView):
             )
         if board_query:
             queryset_list = queryset_list.filter(
-                board__title__icontains=board_query
+                board__slug__icontains=board_query
             )
         if trending_subjects == "True":
             queryset_list = queryset_list.order_by('-rank_score')
