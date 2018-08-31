@@ -1,147 +1,148 @@
 body {
-	background-color: #f8f9fa;
-	font-family: 'Noto Sans', sans-serif;
+  background-color: #f8f9fa;
+  font-family: "Noto Sans", sans-serif;
 }
 #topNavbar .nav-link,
 .navbar-brand {
-	font-weight: 700
+  font-weight: 700;
 }
 .form-control {
-	box-shadow: inset 0 1px 2px #e6e1e2;
-	transition: border-color ease-in-out .15s
+  box-shadow: inset 0 1px 2px #e6e1e2;
+  transition: border-color ease-in-out 0.15s;
 }
 .form-control:focus {
-	box-shadow: 0 0 0 1px rgba(0, 123, 255, .25), inset 0 2px 3px #e6e1e2
+  box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25), inset 0 2px 3px #e6e1e2;
 }
 p {
-	font-size: 14px;
-	margin-bottom: 0
+  font-size: 14px;
+  margin-bottom: 0;
 }
 #nb_btn:hover,
 #ns_btn:hover {
-	color: #005999;
-	background-color: #e6f4ff;
-	border-color: #07c;
-	box-shadow: none
+  color: #005999;
+  background-color: #e6f4ff;
+  border-color: #07c;
+  box-shadow: none;
 }
 .dropdown-item {
-	color: #607d8b
+  color: #607d8b;
 }
 span#activities_count,
 span#messages_count {
-	position: absolute;
-	font-size: 11px;
-	top: -5px;
-	right: -5px;
-	font-weight: 700;
-	background-color: #1f89de;
-	padding: 0 4px;
-	border-radius: 50%;
-	color: #fff
+  position: absolute;
+  font-size: 11px;
+  top: -5px;
+  right: -5px;
+  font-weight: 700;
+  background-color: #1f89de;
+  padding: 0 4px;
+  border-radius: 50%;
+  color: #fff;
 }
 .carousel-item .w-100 {
-	height: 289px
+  height: 289px;
 }
 .carousel-caption h5 {
-	color: #fff;
-	background-color: rgba(0, 0, 0, .5)
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 .fa-star,
 .fa-star-o {
-	color: #ffc107
+  color: #ffc107;
 }
 a {
-	color: #607D8B
+  color: #607d8b;
 }
 .card .card-body .text-right a {
-	text-decoration: underline
+  text-decoration: underline;
 }
 @media only screen and (max-width: 500px) {
-	div.col-lg-4,
-	div.col-md-4 {
-		display: none
-	}
+  div.col-lg-4,
+  div.col-md-4 {
+    display: none;
+  }
 }
 .pageHeadingH1 {
-	border-bottom: 1px solid transparent;
-	border-image: linear-gradient(to right, #00BCD4 0, #2196F3 100%);
-	border-image-slice: 1;
-	padding-bottom: 10px;
-	margin-bottom: 10px
+  border-bottom: 1px solid transparent;
+  border-image: linear-gradient(to right, #00bcd4 0, #2196f3 100%);
+  border-image-slice: 1;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
 }
 .pageHeadingSpan {
-	background: linear-gradient(to right, #00BCD4 0, #2196F3 100%);
-	font-size: 15px;
-	padding: 15px;
-	color: #fff
+  background: linear-gradient(to right, #00bcd4 0, #2196f3 100%);
+  font-size: 15px;
+  padding: 15px;
+  color: #fff;
 }
 .content_block,
 .form_content_block {
-	background-color: #fff;
-	box-shadow: 0 0 2px 1px #e6e1e2;
-	padding-bottom: 50px
+  background-color: #fff;
+  box-shadow: 0 0 2px 1px #e6e1e2;
+  padding-bottom: 50px;
 }
 .form_content_block {
-	margin: 15px auto 0
+  margin: 15px auto 0;
 }
 .content_block {
-	margin-top: 15px
+  margin-top: 15px;
 }
 .login_btn,
 .new_post_btn {
-	background-color: #1f89de
+  background-color: #1f89de;
 }
 .login_btn,
 .new_post_btn,
 .signup_btn {
-	padding: 5px 15px;
-	border-radius: 100px
+  padding: 5px 15px;
+  border-radius: 100px;
 }
 .login_btn {
-	margin-right: 15px
+  margin-right: 15px;
 }
 .new_post_btn {
-	margin-left: 15px
+  margin-left: 15px;
 }
 .extra_navbar_styling {
-	background: #fff;
-	border-top: 2px solid #1f89de;
-	box-shadow: 0 1px 0 rgba(12, 13, 14, .1), 0 1px 3px rgba(12, 13, 14, .1), 0 4px 20px rgba(12, 13, 14, .035), 0 1px 1px rgba(12, 13, 14, .025)
+  background: #fff;
+  border-top: 2px solid #1f89de;
+  box-shadow: 0 1px 0 rgba(12, 13, 14, 0.1), 0 1px 3px rgba(12, 13, 14, 0.1),
+    0 4px 20px rgba(12, 13, 14, 0.035), 0 1px 1px rgba(12, 13, 14, 0.025);
 }
 #search {
-	background: url(/static/img/search_icon.png) 10px 6px no-repeat;
-	padding-left: 25px;
-	background-size: 17px
+  background: url(/static/img/search_icon.png) 10px 6px no-repeat;
+  padding-left: 25px;
+  background-size: 17px;
 }
 #welcome_signup_block {
-	padding: 50px;
-	background-image: url(/static/img/form_bg.jpg);
-	background-repeat: no-repeat;
-	background-size: cover
+  padding: 50px;
+  background-image: url(/static/img/form_bg.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 #welcome_signup_block .input-group {
-	margin-bottom: 5px
+  margin-bottom: 5px;
 }
 #welcome_signup_block .input-group-addon {
-	width: 150px;
-	padding: 10px
+  width: 150px;
+  padding: 10px;
 }
 span#required_inp {
-	color: red
+  color: red;
 }
 #subject_form #id_email,
 #subject_form #id_password,
 #welcome_signup_form #id_username {
-	background-color: #f8f9fa
+  background-color: #f8f9fa;
 }
 #subject_form #id_email:focus,
 #subject_form #id_password:focus,
 #welcome_signup_form #id_username:focus {
-	background-color: #fff
+  background-color: #fff;
 }
 li.list-group-item:nth-child(odd) {
-	background-color: #fbfbfb;
+  background-color: #fbfbfb;
 }
 li.list-group-item {
-	border: none;
+  border: none;
 }
