@@ -1,8 +1,10 @@
+from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
 from frontboard.models import Board, Comment, Report, Subject
 from rest_framework import serializers
 from user_accounts.api.serializers import UserDetailSerializer
+from user_accounts.models import Notification
 
 
 class SubjectSerializer(serializers.ModelSerializer):
@@ -96,6 +98,50 @@ class SubjectSerializer(serializers.ModelSerializer):
         if user == obj.author:
             return True
         return False
+
+    def create(self, validated_data):
+        """
+        Handles the creation of board.
+
+        :params validated_data: dict
+        :return: string
+        """
+        instance = self.Meta.model(**validated_data)
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        instance.save()
+
+        # Use celery to create notifications in the background.
+        title = validated_data['title']
+        body = validated_data['body']
+
+        # Checks if someone is mentioned in the subject
+        words = title + ' ' + body
+        words_list = words.split(" ")
+        names_list = []
+        for word in words_list:
+            """
+            if first two letter of the word is "u/" then the rest of the word
+            will be treated as a username
+            """
+            if word[:2] == "u/":
+                username = word[2:]
+                try:
+                    mentioned_user = User.objects.get(username=username)
+                    if mentioned_user not in names_list:
+                        instance.mentioned.add(user)
+                        if user is not mentioned_user:
+                            Notification.objects.create(
+                                Actor=user,
+                                Object=instance,
+                                Target=mentioned_user,
+                                notif_type='subject_mentioned'
+                            )
+                        names_list.append(user)
+                except:
+                    pass
+        return instance
 
 
 class BoardSerializer(serializers.ModelSerializer):
@@ -245,6 +291,54 @@ class CommentSerializer(serializers.ModelSerializer):
         :return: string
         """
         return naturaltime(obj.created)
+
+    def create(self, validated_data):
+        """
+        Handles the creation of comment.
+
+        :params validated_data: dict
+        :return: string
+        """
+        instance = self.Meta.model(**validated_data)
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        instance.save()
+
+        # Use celery to create notifications in the background.
+        subject = validated_data['subject']
+        if user is not subject.author:
+            Notification.objects.create(
+                Actor=user,
+                Object=subject,
+                Target=subject.author,
+                notif_type='comment'
+            )
+        # Checks if someone is mentioned in the comment
+        body = validated_data['body']
+        words_list = body.split(" ")
+        names_list = []
+        for word in words_list:
+            """
+            if first two letters of the word is "u/" then the rest of the word
+            will be treated as a username
+            """
+            if word[:2] == "u/":
+                username = word[2:]
+                try:
+                    mentioned_user = User.objects.get(username=username)
+                    if mentioned_user not in names_list:
+                        if user is not mentioned_user:
+                            Notification.objects.create(
+                                Actor=user,
+                                Object=subject,
+                                Target=mentioned_user,
+                                notif_type='comment_mentioned'
+                            )
+                        names_list.append(mentioned_user)
+                except:
+                    pass
+        return instance
 
 
 class ReportSerializer(serializers.ModelSerializer):
