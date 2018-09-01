@@ -8,6 +8,9 @@ from .serializers import ContactsListSerializer, MessageListSerializer
 
 
 class ContactsListAPIView(ListAPIView):
+    """
+    View that returns user's contact list.
+    """
     permission_classes = [IsAuthenticated]
     serializer_class = ContactsListSerializer
 
@@ -17,18 +20,24 @@ class ContactsListAPIView(ListAPIView):
 
 
 class MessageListAPIView(ListAPIView):
+    """
+    View that returns coversation between two users.
+    """
     permission_classes = [IsAuthenticated]
     serializer_class = MessageListSerializer
 
     def get_queryset(self, *args, **kwargs):
         username = self.request.GET.get('username', '')
         queryset_list = Message.objects.filter(user=self.request.user,
-                                          conversation__username=username)
+                                               conversation__username=username)
         queryset_list.update(is_read=True)
         return queryset_list
 
-# untested view
+
 class MessageCreateAPIView(APIView):
+    """
+    View that handles the creation of messages.
+    """
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
@@ -41,6 +50,7 @@ class MessageCreateAPIView(APIView):
         if to_user.count() == 1:
             if from_user != to_user:
                 chat_msg = Message.send_message(from_user, to_user, message)
+            # Return data serialized using new MessageSerializer
             return Response({
                 "to": to_user,
                 "message": message
