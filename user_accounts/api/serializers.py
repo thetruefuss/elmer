@@ -1,3 +1,4 @@
+from datetime import date
 from django.contrib.auth import get_user_model
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from django.db.models import Q
@@ -233,7 +234,7 @@ class ProfileRetrieveSerializer(serializers.ModelSerializer):
         return obj.subscribed_boards.count()
 
     def get_member_since(self, obj):
-        return obj.profile.member_since
+        return obj.profile.member_since.date()
 
 
 class NotificationSerializer(serializers.ModelSerializer):
