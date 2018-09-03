@@ -159,12 +159,81 @@ class ProfileRetrieveSerializer(serializers.ModelSerializer):
     """
     Serializer that represents a profile.
     """
+    profile_picture_url = serializers.SerializerMethodField()
+    screen_name = serializers.SerializerMethodField()
+    requester_in_contact_list = serializers.SerializerMethodField()
+    requester_in_pending_list = serializers.SerializerMethodField()
+    has_followed = serializers.SerializerMethodField()
+    is_requesters_profile = serializers.SerializerMethodField()
+    created_boards_count = serializers.SerializerMethodField()
+    posted_subjects_count = serializers.SerializerMethodField()
+    boards_subsribed_count = serializers.SerializerMethodField()
+    member_since = serializers.SerializerMethodField()
 
     class Meta:
-        model = Profile
+        model = User
         fields = [
-            'dp', 'dob', 'member_since'
+            'profile_picture_url', 'screen_name', 'requester_in_contact_list',
+            'requester_in_pending_list', 'has_followed', 'is_requesters_profile',
+            'created_boards_count', 'posted_subjects_count', 'boards_subsribed_count',
+            'member_since',
         ]
+
+    def get_profile_picture_url(self, obj):
+        request = self.context.get('request')
+        profile_picture_url = obj.profile.get_picture()
+        return request.build_absolute_uri(profile_picture_url)
+
+    def get_screen_name(self, obj):
+        return obj.profile.screen_name()
+
+    def get_requester_in_contact_list(self, obj):
+        user = None
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        if user in obj.profile.contact_list.all():
+            return True
+        return False
+
+    def get_requester_in_pending_list(self, obj):
+        user = None
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        if user in obj.profile.pending_list.all():
+            return True
+        return False
+
+    def get_is_requesters_profile(self, obj):
+        user = None
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        if user == obj:
+            return True
+        return False
+
+    def get_has_followed(self, obj):
+        user = None
+        request = self.context.get('request')
+        if request and hasattr(request, 'user'):
+            user = request.user
+        if user in obj.profile.followers.all():
+            return True
+        return False
+
+    def get_created_boards_count(self, obj):
+        return obj.inspected_boards.count()
+
+    def get_posted_subjects_count(self, obj):
+        return obj.posted_subjects.count()
+
+    def get_boards_subsribed_count(self, obj):
+        return obj.subscribed_boards.count()
+
+    def get_member_since(self, obj):
+        return obj.profile.member_since
 
 
 class NotificationSerializer(serializers.ModelSerializer):
