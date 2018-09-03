@@ -59,9 +59,9 @@ class ProfileRetrieveAPIView(RetrieveAPIView):
     """
     View that returns user profile data.
     """
-    queryset = Profile.objects.all()
+    queryset = User.objects.all()
     serializer_class = ProfileRetrieveSerializer
-    lookup_field = 'user__username'
+    lookup_field = 'username'
     lookup_url_kwarg = 'username'
 
 
