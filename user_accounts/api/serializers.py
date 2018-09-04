@@ -181,14 +181,29 @@ class ProfileRetrieveSerializer(serializers.ModelSerializer):
         ]
 
     def get_profile_picture_url(self, obj):
+        """
+        Returns user's profile picture url.
+
+        :return: string
+        """
         request = self.context.get('request')
         profile_picture_url = obj.profile.get_picture()
         return request.build_absolute_uri(profile_picture_url)
 
     def get_screen_name(self, obj):
+        """
+        Returns user's screen name.
+
+        :return: string
+        """
         return obj.profile.screen_name()
 
     def get_requester_in_contact_list(self, obj):
+        """
+        Check if requester is in user's contact list.
+
+        :return: boolean
+        """
         user = None
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
@@ -198,6 +213,11 @@ class ProfileRetrieveSerializer(serializers.ModelSerializer):
         return False
 
     def get_requester_in_pending_list(self, obj):
+        """
+        Check if requester is in user's pending list.
+
+        :return: boolean
+        """
         user = None
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
@@ -207,6 +227,11 @@ class ProfileRetrieveSerializer(serializers.ModelSerializer):
         return False
 
     def get_is_requesters_profile(self, obj):
+        """
+        Check if requester is the user.
+
+        :return: boolean
+        """
         user = None
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
@@ -216,6 +241,11 @@ class ProfileRetrieveSerializer(serializers.ModelSerializer):
         return False
 
     def get_has_followed(self, obj):
+        """
+        Check if requester has followed the user.
+
+        :return: boolean
+        """
         user = None
         request = self.context.get('request')
         if request and hasattr(request, 'user'):
@@ -225,15 +255,35 @@ class ProfileRetrieveSerializer(serializers.ModelSerializer):
         return False
 
     def get_created_boards_count(self, obj):
+        """
+        Counts user's created boards.
+
+        :return: integer
+        """
         return obj.inspected_boards.count()
 
     def get_posted_subjects_count(self, obj):
+        """
+        Counts user's posted subjects.
+
+        :return: integer
+        """
         return obj.posted_subjects.count()
 
     def get_boards_subsribed_count(self, obj):
+        """
+        Counts user's subscribed boards.
+
+        :return: integer
+        """
         return obj.subscribed_boards.count()
 
     def get_member_since(self, obj):
+        """
+        Returns date of user's profile creation.
+
+        :return: string
+        """
         return obj.profile.member_since.date()
 
 
