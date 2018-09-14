@@ -19,7 +19,7 @@
           <a class="nav-link" href="{% url 'home' %}">Home</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="/?trending=True">Trending</a>
+            <a class="nav-link" href="{% url 'trending' %}">Trending</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% if request.user.is_authenticated %}#{% else %}{% url 'view_all_boards' %}{% endif %}" id="boards_container_trigger">Boards</a>

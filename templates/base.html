@@ -62,8 +62,8 @@
             {% block content %}
             {% endblock %}
 
-            {% if p %}
-              {% include "pagination.html" with page=p_obj %}
+            {% if page_obj %}
+              {% include "pagination.html" %}
             {% endif %}
           </div>
 

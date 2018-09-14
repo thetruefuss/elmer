@@ -1,15 +1,18 @@
-<br>
 <nav>
   <ul class="pagination pagination-sm justify-content-end">
-    {% if page.has_previous %}
+    {% if page_obj.has_previous %}
     <li class="page-item">
-      <a class="page-link" href="?page={{page.previous_page_number}}" tabindex="-1"><span aria-hidden="true">&larr;</span> Previous</a>
+      <a class="page-link" href="?page={{ page_obj.previous_page_number }}" tabindex="-1">
+        <span aria-hidden="true">&larr;</span> Previous
+      </a>
     </li>
     {% endif %}
 
-    {% if page.has_next %}
+    {% if page_obj.has_next %}
     <li class="page-item">
-      <a class="page-link" href="?page={{page.next_page_number}}" tabindex="-1">Next <span aria-hidden="true">&rarr;</span></a>
+      <a class="page-link" href="?page={{ page_obj.next_page_number }}" tabindex="-1">
+        Next <span aria-hidden="true">&rarr;</span>
+      </a>
     </li>
     {% endif %}
   </ul>
