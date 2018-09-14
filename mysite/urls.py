@@ -16,7 +16,8 @@ sitemaps = {
 }
 
 urlpatterns = [
-    url(r'^$',frontboard_views.home, name='home'),
+    url(r'^$',frontboard_views.HomePageView.as_view(), name='home'),
+    url(r'^trending/$',frontboard_views.TrendingPageView.as_view(), name='trending'),
     url(r'^s/(?P<board>[-\w]+)/(?P<subject>[-\w]+)/$',
         frontboard_views.subject_detail,
         name='subject_detail'),

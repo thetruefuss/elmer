@@ -5,6 +5,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.views.generic import ListView
 
 import requests
 from cache_memoize import cache_memoize
@@ -32,45 +33,28 @@ def get_home_subjects():
     return Subject.get_subjects()
 
 
-@throttle(zone='default')
-def home(request):
-    """
-    Displays homepage or trending page content.
-    """
-    user = request.user
-    trending_header = False
+class HomePageView(ListView):
+    """Basic ListView implementation to call the latest subjects list."""
+    model = Subject
+    queryset = get_home_subjects()
+    paginate_by = 15
+    template_name = 'frontboard/home.html'
+    context_object_name = 'subjects'
 
-    if request.GET.get('trending') == 'True':
-        all_subjects = get_trending_subjects()
-        trending_header = True
-    else:
-        all_subjects = get_home_subjects()
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Show Sign Up CTA if user is not logged in.
+        context['signup_quote'] = True
+        return context
 
-    paginator = Paginator(all_subjects, 15)
-    page = request.GET.get('page')
-    if paginator.num_pages > 1:
-        p = True
-    else:
-        p = False
-    try:
-        subjects = paginator.page(page)
-    except PageNotAnInteger:
-        subjects = paginator.page(1)
-    except EmptyPage:
-        subjects = paginator.page(paginator.num_pages)
 
-    p_obj = subjects
-    signup_quote = True
-
-    return render(request, 'frontboard/home.html', {
-        'page': page,
-        'p': p,
-        'p_obj': p_obj,
-        'subjects': subjects,
-        'user': user,
-        'trending_header': trending_header,
-        'signup_quote': signup_quote
-    })
+class TrendingPageView(ListView):
+    """Basic ListView implementation to call the trending subjects list."""
+    model = Subject
+    queryset = get_trending_subjects()
+    paginate_by = 15
+    template_name = 'frontboard/trending.html'
+    context_object_name = 'subjects'
 
 
 def _html_comments(comment_id, board, subject):
