@@ -4,6 +4,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.contrib.sitemaps.views import sitemap
+from django.views.generic import TemplateView
 
 import frontboard.views as frontboard_views
 import user_accounts.views as useraccounts_views
@@ -21,9 +22,9 @@ urlpatterns = [
     url(r'^s/(?P<board>[-\w]+)/(?P<subject>[-\w]+)/$',
         frontboard_views.subject_detail,
         name='subject_detail'),
-    url(r'^b/$',frontboard_views.view_all_boards, name='view_all_boards'),
+    url(r'^b/$',frontboard_views.BoardsPageView.as_view(), name='view_all_boards'),
     url(r'^b/(?P<board>[-\w]+)/$',
-        frontboard_views.board,
+        frontboard_views.BoardPageView.as_view(),
         name='board'),
     url(r'^b/ban_user/(?P<board>[-\w]+)/(?P<user_id>\d+)/$',
         frontboard_views.ban_user,
@@ -39,9 +40,9 @@ urlpatterns = [
         name='like'),
     url(r'^load_new_comments/$', frontboard_views.load_new_comments, name='load_new_comments'),
 
-    url(r'^u/(?P<username>[\w.@+-]+)/subscriptions/$', frontboard_views.user_subscription_list,
+    url(r'^u/(?P<username>[\w.@+-]+)/subscriptions/$', frontboard_views.UserSubscriptionListView.as_view(),
         name='user_subscription_list'),
-    url(r'^u/(?P<username>[\w.@+-]+)/boards/$', frontboard_views.user_created_boards,
+    url(r'^u/(?P<username>[\w.@+-]+)/boards/$', frontboard_views.UserCreatedBoardsPageView.as_view(),
         name='user_created_boards'),
     url(r'^new_post/$',frontboard_views.new_subject, name='new_subject'),
     url(r'^delete_post/(?P<subject>[-\w]+)/$',frontboard_views.delete_subject, name='delete_subject'),
@@ -119,10 +120,10 @@ urlpatterns = [
         name='django.contrib.sitemaps.views.sitemap'),
     url(r'^feedback/', include('feedback_form.urls')),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^about-us/$',frontboard_views.about_us, name='about_us'),
-    url(r'^legal/$',frontboard_views.terms_of_service, name='legal'),
-    url(r'^legal/terms-of-service/$',frontboard_views.terms_of_service, name='terms_of_service'),
-    url(r'^legal/privacy-policy/$',frontboard_views.privacy_policy, name='privacy_policy'),
+    url(r'^about-us/$', TemplateView.as_view(template_name='about_us.html'), name='about_us'),
+    url(r'^legal/$', TemplateView.as_view(template_name='terms_of_service.html'), name='legal'),
+    url(r'^legal/terms-of-service/$', TemplateView.as_view(template_name='terms_of_service.html'), name='terms_of_service'),
+    url(r'^legal/privacy-policy/$', TemplateView.as_view(template_name='privacy_policy.html'), name='privacy_policy'),
 
     # report
     url(r'^banned_users/(?P<board>[-\w]+)/$',
