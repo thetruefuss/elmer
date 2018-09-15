@@ -5,6 +5,7 @@ from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView
 
 import requests
@@ -175,36 +176,13 @@ def subject_detail(request, board, subject):
     })
 
 
-@throttle(zone='default')
-def view_all_boards(request):
-    """
-    Displays a list of boards.
-    """
-    all_boards = Board.objects.all()
-
-    paginator = Paginator(all_boards, 20)
-    page = request.GET.get('page')
-    if paginator.num_pages > 1:
-        p = True
-    else:
-        p = False
-    try:
-        boards = paginator.page(page)
-
-    except PageNotAnInteger:
-        boards = paginator.page(1)
-
-    except EmptyPage:
-        boards = paginator.page(paginator.num_pages)
-
-    p_obj = boards
-
-    return render(request, 'frontboard/view_all_boards.html', {
-        'page': page,
-        'p': p,
-        'boards': boards,
-        'p_obj': p_obj
-    })
+class BoardsPageView(ListView):
+    """Basic ListView implementation to call the boards list."""
+    model = Board
+    queryset = Board.objects.all()
+    paginate_by = 20
+    template_name = 'frontboard/view_all_boards.html'
+    context_object_name = 'boards'
 
 
 @throttle(zone='default')
@@ -373,113 +351,58 @@ def deactivate_comment(request, pk):
     return redirect('home')
 
 
-@throttle(zone='default')
-@login_required
-def user_subscription_list(request, username):
-    """
-    Displays a list of subscriptions per user.
-    """
-    user = get_object_or_404(User,
-                             username=username)
-    subscription_list = user.subscribed_boards.all()
+class UserSubscriptionListView(ListView):
+    """Basic ListView implementation to call the subscriptions list per user."""
+    model = Board
+    paginate_by = 10
+    template_name = 'frontboard/user_subscription_list.html'
+    context_object_name = 'subscriptions'
 
-    paginator = Paginator(subscription_list, 4)
-    page = request.GET.get('page')
-    if paginator.num_pages > 1:
-        p = True
-    else:
-        p = False
-    try:
-        subscriptions = paginator.page(page)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
-    except PageNotAnInteger:
-        subscriptions = paginator.page(1)
-
-    except EmptyPage:
-        subscriptions = paginator.page(paginator.num_pages)
-
-    p_obj = subscriptions
-
-    return render(request, 'frontboard/user_subscription_list.html', {
-        'page': page,
-        'p': p,
-        'subscriptions': subscriptions,
-        'p_obj': p_obj
-    })
+    def get_queryset(self, **kwargs):
+        user = get_object_or_404(User,
+                                 username=self.request.user)
+        return user.subscribed_boards.all()
 
 
-@throttle(zone='default')
-@login_required
-def user_created_boards(request, username):
-    """
-    Displays a list of boards created per user.
-    """
-    user = get_object_or_404(User,
-                             username=username)
-    user_boards_list = user.inspected_boards.all()
+class UserCreatedBoardsPageView(ListView):
+    """Basic ListView implementation to call the boards list per user."""
+    model = Board
+    paginate_by = 20
+    template_name = 'frontboard/user_created_boards.html'
+    context_object_name = 'user_boards'
 
-    paginator = Paginator(user_boards_list, 20)
-    page = request.GET.get('page')
-    if paginator.num_pages > 1:
-        p = True
-    else:
-        p = False
-    try:
-        user_boards = paginator.page(page)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
-    except PageNotAnInteger:
-        user_boards = paginator.page(1)
-
-    except EmptyPage:
-        user_boards = paginator.page(paginator.num_pages)
-
-    p_obj = user_boards
-
-    return render(request, 'frontboard/user_created_boards.html', {
-        'page': page,
-        'p': p,
-        'user_boards': user_boards,
-        'p_obj': p_obj
-    })
+    def get_queryset(self, **kwargs):
+        user = get_object_or_404(User,
+                                 username=self.request.user)
+        return user.inspected_boards.all()
 
 
-@throttle(zone='default')
-def board(request, board):
-    """
-    Displays a list of subjects in a board.
-    """
-    board = get_object_or_404(Board,
-                              slug=board)
-    subjects_list = board.submitted_subjects.filter(active=True)
+class BoardPageView(ListView):
+    """Basic ListView implementation to call the subjects list per board."""
+    model = Subject
+    paginate_by = 20
+    template_name = 'frontboard/board.html'
+    context_object_name = 'subjects'
 
-    paginator = Paginator(subjects_list, 20)
-    page = request.GET.get('page')
-    if paginator.num_pages > 1:
-        p = True
-    else:
-        p = False
-    try:
-        subjects = paginator.page(page)
+    def get_queryset(self, **kwargs):
+        self.board = get_object_or_404(Board,
+                                       slug=self.kwargs['board'])
+        return self.board.submitted_subjects.filter(active=True)
 
-    except PageNotAnInteger:
-        subjects = paginator.page(1)
-
-    except EmptyPage:
-        subjects = paginator.page(paginator.num_pages)
-
-    p_obj = subjects
-    bv = True
-    admins = board.admins.all()
-
-    return render(request, 'frontboard/board.html', {
-        'board': board,
-        'bv': bv,
-        'page': page,
-        'p': p,
-        'subjects': subjects,
-        'p_obj': p_obj,
-        'admins': admins
-    })
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["bv"] = True
+        context["admins"] = self.board.admins.all()
+        context["board"] = self.board
+        return context
 
 
 def image_compression(f):
@@ -762,18 +685,3 @@ def edit_subject(request, subject):
     return render(request, 'frontboard/edit_subject.html', {
         'subject_form': subject_form, 'form_filling': form_filling
     })
-
-
-@throttle(zone='default')
-def terms_of_service(request):
-    return render(request, 'terms_of_service.html', {})
-
-
-@throttle(zone='default')
-def privacy_policy(request):
-    return render(request, 'privacy_policy.html', {})
-
-
-@throttle(zone='default')
-def about_us(request):
-    return render(request, 'about_us.html', {})
