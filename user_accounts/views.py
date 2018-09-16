@@ -11,6 +11,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render, resolve_url
 from django.template.response import TemplateResponse
 from django.utils.http import is_safe_url, urlsafe_base64_decode
+from django.utils.decorators import method_decorator
+from django.views.generic import ListView
 
 import requests
 from frontboard.utils import check_image_extension
@@ -118,102 +120,45 @@ def user_logout(request):
     return redirect('/')
 
 
-@throttle(zone='default')
-def view_all_users(request):
-    """
-    Displays a list of all the users.
-    """
-    all_users = User.objects.exclude(username=request.user.username)
+class UsersPageView(ListView):
+    """Basic ListView implementation to call the users list."""
+    model = User
+    paginate_by = 20
+    template_name = 'user_accounts/view_all_users.html'
+    context_object_name = 'users'
 
-    paginator = Paginator(all_users, 20)
-    page = request.GET.get('page')
-    if paginator.num_pages > 1:
-        p = True
-    else:
-        p = False
-    try:
-        users = paginator.page(page)
-
-    except PageNotAnInteger:
-        users = paginator.page(1)
-
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
-
-    p_obj = users
-
-    return render(request, 'user_accounts/view_all_users.html', {
-        'users': users,
-        'page': page,
-        'p': p,
-        'p_obj': p_obj
-    })
+    def get_queryset(self, **kwargs):
+        return User.objects.exclude(username=self.request.user.username)
 
 
-@throttle(zone='default')
-@login_required
-def view_all_followers(request):
-    """
-    Displays a followers list of users.
-    """
-    all_followers = request.user.profile.followers.all()
+class FollowersPageView(ListView):
+    """Basic ListView implementation to call the followers list per user."""
+    model = User
+    paginate_by = 20
+    template_name = 'user_accounts/followers.html'
+    context_object_name = 'users'
 
-    paginator = Paginator(all_followers, 20)
-    page = request.GET.get('page')
-    if paginator.num_pages > 1:
-        p = True
-    else:
-        p = False
-    try:
-        users = paginator.page(page)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
-    except PageNotAnInteger:
-        users = paginator.page(1)
-
-    except EmptyPage:
-        users = paginator.page(paginator.num_pages)
-
-    p_obj = users
-
-    return render(request, 'user_accounts/followers.html', {
-        'users': users,
-        'page': page,
-        'p': p,
-        'p_obj': p_obj
-    })
+    def get_queryset(self, **kwargs):
+        return self.request.user.profile.followers.all()
 
 
-@throttle(zone='default')
-@login_required
-def view_following(request):
-    """
-    Displays a following list of users.
-    """
-    all_following = request.user.following.all()
+class FollowingPageView(ListView):
+    """Basic ListView implementation to call the following list per user."""
+    model = User
+    paginate_by = 20
+    template_name = 'user_accounts/following.html'
+    context_object_name = 'profiles'
 
-    paginator = Paginator(all_following, 20)
-    page = request.GET.get('page')
-    if paginator.num_pages > 1:
-        p = True
-    else:
-        p = False
-    try:
-        profiles = paginator.page(page)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
-    except PageNotAnInteger:
-        profiles = paginator.page(1)
-
-    except EmptyPage:
-        profiles = paginator.page(paginator.num_pages)
-
-    p_obj = profiles
-
-    return render(request, 'user_accounts/following.html', {
-        'profiles': profiles,
-        'page': page,
-        'p': p,
-        'p_obj': p_obj
-    })
+    def get_queryset(self, **kwargs):
+        return self.request.user.following.all()
 
 
 @login_required
@@ -301,72 +246,47 @@ def change_picture(request):
         return render(request, 'user_accounts/change_picture.html', {'profile_form': profile_form})
 
 
-@throttle(zone='default')
-@login_required
-def user_profile(request, username):
-    """
-    Displays a user profile and submitted subjects list.
-    """
-    user = get_object_or_404(User,
-                             username=username)
-    posted_subjects = Subject.get_subjects(user)
+class UserProfilePageView(ListView):
+    """Basic ListView implementation to call the subjects list & profile per user."""
+    model = Subject
+    paginate_by = 15
+    template_name = 'user_accounts/profile.html'
+    context_object_name = 'subjects'
 
-    paginator = Paginator(posted_subjects, 15)
-    page = request.GET.get('page')
-    if paginator.num_pages > 1:
-        p = True
-    else:
-        p = False
-    try:
-        subjects = paginator.page(page)
-    except PageNotAnInteger:
-        subjects = paginator.page(1)
-    except EmptyPage:
-        subjects = paginator.page(paginator.num_pages)
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
-    p_obj = subjects
+    def get_queryset(self, **kwargs):
+        self.user = get_object_or_404(User,
+                                      username=self.kwargs['username'])
+        return Subject.get_subjects(self.user)
 
-    return render(request, 'user_accounts/profile.html', {
-        'subjects': subjects,
-        'user': user,
-        'page': page,
-        'p': p,
-        'p_obj': p_obj
-    })
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context["user"] = self.user
+        return context
 
 
-@throttle(zone='default')
-@login_required
-def activities(request):
-    """
-    Displays a activities list of users.
-    """
-    subject_events = Notification.objects.filter(Target=request.user).exclude(Actor=request.user)
-    unread_subject_events = subject_events.filter(is_read=False)
+class ActivitiesPageView(ListView):
+    """Basic ListView implementation to call the activities list per user."""
+    model = Notification
+    paginate_by = 20
+    template_name = 'user_accounts/activities.html'
+    context_object_name = 'events'
 
-    for notification in unread_subject_events:
-        notification.is_read = True
-        notification.save()
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
-    paginator = Paginator(subject_events, 20)
-    page = request.GET.get('page')
-    if paginator.num_pages > 1:
-        p = True
-    else:
-        p = False
-    try:
-        events = paginator.page(page)
-    except PageNotAnInteger:
-        events = paginator.page(1)
-
-    except EmptyPage:
-        events = paginator.page(paginator.num_pages)
-
-    return render(request, 'user_accounts/activities.html', {
-        'page': page,
-        'p': p,
-        'events': events
-    })
+    def get_queryset(self, **kwargs):
+        subject_events = Notification.objects.filter(Target=self.request.user).exclude(Actor=self.request.user)
+        # Do this with celery.
+        unread_subject_events = subject_events.filter(is_read=False)
+        for notification in unread_subject_events:
+            notification.is_read = True
+            notification.save()
+        return subject_events
 
 
 @login_required
