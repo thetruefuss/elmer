@@ -51,10 +51,10 @@ urlpatterns = [
     url(r'^new_board/$',frontboard_views.new_board, name='new_board'),
 
     # user profiles
-    url(r'^u/$',useraccounts_views.view_all_users, name='view_all_users'),
-    url(r'^u/following/$',useraccounts_views.view_following,name='view_following'),
-    url(r'^u/followers/$',useraccounts_views.view_all_followers,name='view_all_followers'),
-    url(r'^u/(?P<username>[\w.@+-]+)/$', useraccounts_views.user_profile, name='user_profile'),
+    url(r'^u/$', useraccounts_views.UsersPageView.as_view(), name='view_all_users'),
+    url(r'^u/following/$', useraccounts_views.FollowingPageView.as_view(), name='view_following'),
+    url(r'^u/followers/$', useraccounts_views.FollowersPageView.as_view(), name='view_all_followers'),
+    url(r'^u/(?P<username>[\w.@+-]+)/$', useraccounts_views.UserProfilePageView.as_view(), name='user_profile'),
     url(r'^u/follow_user/(?P<user_id>\d+)/$',
         useraccounts_views.follow_user,
         name='follow_user'),
@@ -69,7 +69,7 @@ urlpatterns = [
         name='block_spammer'),
     url(r'^u/friends/all/$', useraccounts_views.all_friends, name='all_friends'),
     url(r'^u/friends/requests/$', useraccounts_views.all_message_requests, name='all_message_requests'),
-    url(r'^activities/$', useraccounts_views.activities, name='activities'),
+    url(r'^activities/$', useraccounts_views.ActivitiesPageView.as_view(), name='activities'),
     url(r'^activities/check/$', useraccounts_views.check_activities, name='check_activities'),
 
     # login/logout urls
