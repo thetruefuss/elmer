@@ -1,0 +1,128 @@
+{% load emoticons_tags %}
+{% load humanize %}
+{% load static %}
+
+<style>
+    .card-styling { margin-bottom:10px; }
+    .card-body-styling { padding:10px; }
+    .star-partition { float:left; width:10%; text-align:center; padding-top:10px; }
+    .body-partition { float:right; width:90%; }
+    .card-photo-stlying { text-align:center; padding:5px; }
+    .card-bottom-area { padding-top:10px; font-weight:600; font-size:12px; }
+    .card-bottom-area a { text-decoration:none; }
+    i#star_icon.fa-lg { font-size:1.6em; }
+    span#js-star-count { font-weight:600; }
+    .board-link { text-decoration:none; font-weight:600; }
+    .profile-link { text-decoration:none; }
+    .post-info { font-size:11px; }
+</style>
+
+
+{% for subject in subjects %}
+<div class="card card-styling">
+  <div class="card-body card-body-styling">
+
+    <div class="star-partition">
+      <a href="{% url 'like' subject.slug %}"
+         style="text-decoration:none;"
+         title="{{ subject.points.count }} points"
+         id="js-star-subject">
+
+         {% if subject in user.liked_subjects.all %}
+           <i class="fa fa-star fa-lg" aria-hidden="true" id="star_icon"></i>
+         {% else %}
+           <i class="fa fa-star-o fa-lg" aria-hidden="true" id="star_icon"></i>
+         {% endif %}
+         <br>
+
+         <span id="js-star-count">{{ subject.points.count }}</span>
+      </a>
+    </div>
+
+    <div class="body-partition">
+      <p class="post-info text-muted">
+        <a href="{{ subject.board.get_absolute_url }}"
+           title="visit board"
+           class="board-link">b/{{ subject.board.slug }}</a> &bull;
+        Posted by
+        <a href="{% url 'user_profile' subject.author.username %}"
+           title="view profile"
+           class="profile-link">{{ subject.author.profile.screen_name }}</a>
+        <span title="{{ subject.created|date:"D d M Y" }} | {{ subject.created|time:"H:i:s" }}">
+           {{ subject.created|naturaltime }}
+        </span>
+      </p>
+      <h5><a href="{{ subject.get_absolute_url }}" class="card-link">{{ subject.title|emoticons }}</a></h5>
+      <p>{{ subject.body|truncatewords_html:50|urlize }}</p>
+
+      {% if subject.photo %}
+      <div class="card-photo-stlying">
+        <img src="{{ subject.photo.url }}" width="80%">
+      </div>
+      {% endif %}
+
+      <div class="card-bottom-area text-muted">
+        <a href="{{ subject.get_absolute_url }}"
+           title="{{ subject.comments.count }} comments">
+           <i class="fa fa-comment fa-md" aria-hidden="true"></i> {{ subject.comments.count }} Comments
+        </a> &bull;
+        <a href="#" class="share_link" data-clipboard-text="{{ request.get_host }}{{ subject.get_absolute_url }}">
+           <i class="fa fa-share fa-md" aria-hidden="true"></i> Share
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+  // Star or unstar a post
+  $(document).on("click", "#js-star-subject", function () {
+    {% if not request.user.is_authenticated %}
+    window.location.href = "{% url 'login' %}";
+    {% else %}
+    var $star_count = $(this).find('#js-star-count');
+    var $star_url = $(this).attr("href");
+    var $star_icon = $(this).find('i.fa');
+    $.ajax({
+      url: $star_url,
+      type: 'GET',
+      success: function (data) {
+        $star_count.text(data.total_points);
+
+        if ($star_icon.hasClass('fa-star-o')) {
+          $star_icon.removeClass('fa-star-o').addClass('fa-star');
+        }
+        else if ($star_icon.hasClass('fa-star')) {
+          $star_icon.removeClass('fa-star').addClass('fa-star-o');
+        } else {
+          console.log('Unexpected error!');
+        }
+      }
+    });
+    {% endif %}
+    return false;
+  });
+
+  // Show tooltip on click for 1 sec
+  $('.share_link').on('click', function(e) {
+    e.preventDefault();
+    var elm = $(this);
+    elm.tooltip({
+      trigger: 'click',
+      placement: 'bottom',
+      title: 'Copied permalink!'
+    });
+    setTimeout(function(){
+        elm.tooltip('hide');
+    }, 1000);
+  });
+
+});
+</script>
+
+<script src="{% static 'js/clipboard.min.js' %}"></script>
+<script type="text/javascript">
+new ClipboardJS('.share_link');
+</script>
