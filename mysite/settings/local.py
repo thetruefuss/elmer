@@ -6,7 +6,6 @@ from django.core.urlresolvers import reverse_lazy
 
 from decouple import Csv, config
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
@@ -37,15 +36,20 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = (
-    'throttle',
-    'frontboard',
-    'user_accounts',
     'django.contrib.humanize',
     'crispy_forms',
     'feedback_form',
     'contact_form',
     'sorl.thumbnail',
+
+    'boards',
+    'comments',
     'messenger',
+    'notifications',
+    'reports',
+    'search',
+    'subjects',
+    'users',
 
     'corsheaders',
     'rest_framework',
@@ -60,33 +64,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'emoticons',
 )
-
-# Throttle
-THROTTLE_ZONES = {
-    'default': {
-        'VARY':'throttle.zones.RemoteIP',
-        'NUM_BUCKETS':2,  # Number of buckets worth of history to keep. Must be at least 2
-        'BUCKET_INTERVAL':40,  # Period of time to enforce limits.
-        'BUCKET_CAPACITY':10,  # Maximum number of requests allowed within BUCKET_INTERVAL
-    },
-    'strict': {
-        'VARY':'throttle.zones.RemoteIP',
-        'NUM_BUCKETS':2,
-        'BUCKET_INTERVAL':40,
-        'BUCKET_CAPACITY':5,
-    },
-    'full_strict': {
-        'VARY':'throttle.zones.RemoteIP',
-        'NUM_BUCKETS':2,
-        'BUCKET_INTERVAL':300,
-        'BUCKET_CAPACITY':10,
-    },
-}
-# Where to store request counts.
-THROTTLE_BACKEND = 'throttle.backends.cache.CacheBackend'
-
-# Force throttling when DEBUG=True
-THROTTLE_ENABLED = True
 
 
 #crispy_forms
