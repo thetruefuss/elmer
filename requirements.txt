@@ -14,7 +14,6 @@ django-emoticons==1.2
 django-feedback-form2==0.1.8
 django-filter==1.1.0
 django-image-cropping==1.1.0
-django-throttle-requests==0.5.4
 django-widget-tweaks==1.4.2
 djangorestframework==3.3.0
 djangorestframework-jwt==1.11.0
