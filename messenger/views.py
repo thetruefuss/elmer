@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 
 from mysite.decorators import ajax_required
+
 from .models import Message
 
 

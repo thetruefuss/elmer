@@ -1,24 +1,17 @@
-from __future__ import unicode_literals
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Max
-from django.utils.encoding import python_2_unicode_compatible
 
 
-@python_2_unicode_compatible
 class Message(models.Model):
     """
     Model that represents a message.
     """
-
     user = models.ForeignKey(User, related_name='+')
     message = models.TextField(max_length=1000, blank=True)
     date = models.DateTimeField(auto_now_add=True)
-
     conversation = models.ForeignKey(User, related_name='+')
     from_user = models.ForeignKey(User, related_name='+')
-
     is_read = models.BooleanField(default=False)
 
     class Meta:
@@ -26,11 +19,7 @@ class Message(models.Model):
         db_table = 'messages_message'
 
     def __str__(self):
-        """
-        Unicode representation for a message model.
-
-        :return: string
-        """
+        """Unicode representation for a message model."""
         return self.message
 
     @staticmethod
@@ -41,11 +30,6 @@ class Message(models.Model):
             :user
             :conversation
             :is_read
-
-        :param from_user: Object
-        :param to_user: Object
-        :param message: string
-        :return: Message
         """
         message = message[:1000]
         current_user_message = Message(from_user=from_user,
@@ -64,10 +48,7 @@ class Message(models.Model):
     @staticmethod
     def get_conversations(user):
         """
-        Returns a list of users having conversation with the "user" passed in.
-
-        :param user: Object
-        :return: list
+        Returns a list of users having conversation with the `user` passed in.
         """
         conversations = Message.objects.filter(
             user=user).values('conversation').annotate(

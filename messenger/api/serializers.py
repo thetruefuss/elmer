@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
-from messenger.models import Message
 from rest_framework import serializers
-from user_accounts.api.serializers import UserDetailSerializer
+
+from messenger.models import Message
+from users.api.serializers import UserDetailSerializer
 
 
 class ContactsListSerializer(serializers.ModelSerializer):

@@ -24,8 +24,6 @@ class Migration(migrations.Migration):
                 ('user', models.ForeignKey(related_name='+', to=settings.AUTH_USER_MODEL)),
             ],
             options={
-                'verbose_name': 'Message',
-                'verbose_name_plural': 'Messages',
                 'db_table': 'messages_message',
                 'ordering': ('date',),
             },

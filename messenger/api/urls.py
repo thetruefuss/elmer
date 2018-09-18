@@ -1,7 +1,8 @@
 from django.conf.urls import url
 
-from .views import (ContactsListAPIView, MessageCreateAPIView,
-                    MessageListAPIView)
+from .views import (
+    ContactsListAPIView, MessageCreateAPIView, MessageListAPIView,
+)
 
 urlpatterns = [
     url(r'^contacts/$', ContactsListAPIView.as_view(), name='list_contacts'),

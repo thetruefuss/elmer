@@ -1,8 +1,11 @@
-from messenger.models import Message
+from django.contrib.auth.models import User
+
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from messenger.models import Message
 
 from .serializers import ContactsListSerializer, MessageListSerializer
 

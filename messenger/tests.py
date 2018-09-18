@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+
 from .models import Message
 
 
@@ -7,7 +8,6 @@ class TestMessageModel(TestCase):
     """
     TestCase class to test the models functionality
     """
-
     def setUp(self):
         self.user = get_user_model().objects.create(
             username='test_user',
