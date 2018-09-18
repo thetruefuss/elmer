@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}<title>Subscribe Boards | Elmer</title>{% endblock %}
+
+{% block content %}
+
+<h1 class="pageHeadingH1">
+  <span class="pageHeadingSpan">Subscribe Boards</span>
+</h1>
+
+<div class="alert alert-light text-center" role="alert">
+  Click the <span class="font-weight-bold">Subscribe</span> button to populate your home feed with interesting board's subjects.
+</div>
+
+{% if boards %}
+  {% include "includes/partial_board.html" with boards=boards %}
+{% else %}
+  <div class="card" style="margin:15px 0px; padding:10px;">
+    <h6 class="text-center">No boards found</h6>
+    <div style="margin:0 auto;">
+    <p class="text-muted">There are no boards created yet.</p>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}
