@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load boards_tags %}
+{% load humanize %}
+
+{% block title %}<title>Users | Elmer</title>{% endblock %}
+
+{% block content %}
+
+<h1 class="pageHeadingH1">
+  <span class="pageHeadingSpan">Users</span>
+</h1>
+
+{% if users %}
+  {% include "user_accounts/includes/partial_user.html" with users=users %}
+{% else %}
+  <div class="card" style="margin:15px 0px; padding:10px;">
+    <h6 class="text-center">No users found</h6>
+    <div style="margin:0 auto;">
+    <p class="text-muted">There are no users right now.</p>
+    </div>
+  </div>
+{% endif %}
+
+{% endblock content %}
