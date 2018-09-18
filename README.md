@@ -10,9 +10,9 @@ Check the website at [https://elmer.pythonanywhere.com](https://elmer.pythonanyw
 
 ### Technology Stack
 
-* Python 3.6
-* Django 1.8
-* Django Rest Framework 3.3
+* Python 3.6.x
+* Django 1.8.x
+* Django Rest Framework 3.3.x
 * Twitter Bootstrap 4
 * jQuery 3
 
