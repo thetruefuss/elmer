@@ -5,7 +5,7 @@ from django.test import Client, TestCase
 from ..models import Board
 
 
-class TestBoardModelAndView(TestCase):
+class TestBoardsViews(TestCase):
     """
     TestCase class to test the boards views.
     """

@@ -3,7 +3,7 @@ from django.test import TestCase
 from ..models import Board
 
 
-class TestBoardModelAndView(TestCase):
+class TestBoardsModels(TestCase):
     """
     TestCase class to test the boards models.
     """
