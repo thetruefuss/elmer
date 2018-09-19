@@ -26,7 +26,7 @@ Pillow==4.3.0
 PyJWT==1.6.1
 python-decouple==3.1
 pytz==2017.2
-requests==2.18.4
+requests==2.19.1
 six==1.11.0
 sorl-thumbnail==12.3
 urllib3==1.22
