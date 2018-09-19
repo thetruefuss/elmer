@@ -3,7 +3,7 @@ bleach==2.1.2
 certifi==2018.1.18
 chardet==3.0.4
 dj-database-url==0.5.0
-Django==1.8
+Django==1.11.15
 django-appconf==1.0.1
 django-autoslug==1.9.3
 django-cache-memoize==0.1.1
