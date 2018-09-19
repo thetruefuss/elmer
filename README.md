@@ -1,5 +1,6 @@
 # Elmer
 
+[![Build Status](https://travis-ci.org/thetruefuss/elmer.svg?branch=master)](https://travis-ci.org/thetruefuss/elmer)
 [![Coverage Status](https://coveralls.io/repos/github/thetruefuss/elmer/badge.svg?branch=master)](https://coveralls.io/github/thetruefuss/elmer?branch=master)
 [![Requirements Status](https://requires.io/github/thetruefuss/elmer/requirements.svg?branch=master)](https://requires.io/github/thetruefuss/elmer/requirements/?branch=master)
 
