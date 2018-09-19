@@ -8,9 +8,9 @@ from subjects.models import Subject
 from ..models import Notification
 
 
-class TestCommentsViews(TestCase):
+class TestNotificationsViews(TestCase):
     """
-    TestCase class to test the comments views.
+    TestCase class to test the notifications views.
     """
     def setUp(self):
         # This client will be logged in, admin & subscriber of the `board`.

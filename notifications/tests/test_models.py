@@ -7,9 +7,9 @@ from subjects.models import Subject
 from ..models import Notification
 
 
-class TestCommentsModels(TestCase):
+class TestNotificationsModels(TestCase):
     """
-    TestCase class to test the comments models.
+    TestCase class to test the notifications models.
     """
     def setUp(self):
         self.user = get_user_model().objects.create(
