@@ -1,5 +1,6 @@
 # Elmer
 
+[![Coverage Status](https://coveralls.io/repos/github/thetruefuss/elmer/badge.svg?branch=master)](https://coveralls.io/github/thetruefuss/elmer?branch=master)
 [![Requirements Status](https://requires.io/github/thetruefuss/elmer/requirements.svg?branch=master)](https://requires.io/github/thetruefuss/elmer/requirements/?branch=master)
 
 Elmer is a social network inspired by [reddit](https://www.reddit.com/) built with [Python](https://www.python.org/) using the [Django Web Framework](https://www.djangoproject.com/).
