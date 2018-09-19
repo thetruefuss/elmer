@@ -1,16 +1,15 @@
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import resolve, reverse
 from django.test import TestCase
 
 from boards.models import Board
 from subjects.models import Subject
 
-from .models import Comment
+from ..models import Comment
 
 
-class TestCommentModel(TestCase):
+class TestCommentsModels(TestCase):
     """
-    TestCase class to test the comment model functionality
+    TestCase class to test the comments models.
     """
     def setUp(self):
         self.user = get_user_model().objects.create(
@@ -44,3 +43,7 @@ class TestCommentModel(TestCase):
 
     def test_comment_return_value(self):
         self.assertEqual(str(self.comment), 'some random words')
+
+    def test_comment_list_count(self):
+        """Test to count comments."""
+        self.assertEqual(Comment.objects.count(), 1)
