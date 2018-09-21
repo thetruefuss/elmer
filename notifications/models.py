@@ -17,9 +17,9 @@ class Notification(models.Model):
         ('confirmed_msg_request', 'Sent a Message Request'),
     )
 
-    Actor = models.ForeignKey(User, related_name='c_acts')
-    Object = models.ForeignKey(Subject, related_name='act_notif', null=True, blank=True)
-    Target = models.ForeignKey(User, related_name='c_notif')
+    Actor = models.ForeignKey(User, related_name='c_acts', on_delete=models.CASCADE)
+    Object = models.ForeignKey(Subject, related_name='act_notif', null=True, blank=True, on_delete=models.SET_NULL)
+    Target = models.ForeignKey(User, related_name='c_notif', on_delete=models.CASCADE)
     notif_type = models.CharField(
         max_length=500, choices=NOTIF_CHOICES, default='Comment on Subject'
     )
