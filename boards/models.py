@@ -3,12 +3,12 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import models
 from django.db.models.signals import m2m_changed
 from django.utils import timezone
 
-from autoslug import AutoSlugField
+# from autoslug import AutoSlugField
 
 
 class Board(models.Model):
@@ -16,7 +16,7 @@ class Board(models.Model):
     Model that represents a board.
     """
     title = models.CharField(max_length=100, unique=True)
-    slug = AutoSlugField(populate_from='title', unique=True)
+    slug = models.SlugField(max_length=100, null=True, blank=True)  # AutoSlugField(populate_from='title', unique=True)
     description = models.TextField(max_length=500)
     cover = models.ImageField(
         upload_to='board_covers/', blank=True, null=True
@@ -33,6 +33,12 @@ class Board(models.Model):
     def __str__(self):
         """Unicode representation for a board model."""
         return self.title
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = f"{self.title}".replace(" ", "-")
+
+        super().save(*args, **kwargs)
 
     def get_absolute_url(self):
         """Return absolute url for a board."""
