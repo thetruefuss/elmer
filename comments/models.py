@@ -8,12 +8,12 @@ class Comment(models.Model):
     """
     Model that represents a comment.
     """
-    subject = models.ForeignKey(Subject, related_name='comments')
-    commenter = models.ForeignKey(User, related_name='posted_comments')
+    subject = models.ForeignKey(Subject, related_name='comments', on_delete=models.CASCADE)
+    commenter = models.ForeignKey(User, related_name='posted_comments', on_delete=models.CASCADE)
     body = models.TextField(max_length=500)
     active = models.BooleanField(default=True)
     reply = models.ForeignKey(
-        "Comment", related_name='comment_reply', null=True, blank=True
+        "Comment", related_name='comment_reply', null=True, blank=True, on_delete=models.SET_NULL
     )
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
