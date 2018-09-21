@@ -10,7 +10,7 @@ class Profile(models.Model):
     """
     Model that represents a profile.
     """
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile')
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile', on_delete=models.CASCADE)
     dp = models.ImageField(upload_to='dps/', blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
     followers = models.ManyToManyField(

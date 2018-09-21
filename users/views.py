@@ -97,34 +97,6 @@ def check_username(request):
         return HttpResponse('bad')
 
 
-def user_login(request, redirect_field_name=REDIRECT_FIELD_NAME):
-    """
-    Displays the login form and handles the login action.
-    """
-    redirect_to = request.POST.get(redirect_field_name,
-                                   request.GET.get(redirect_field_name, ''))
-
-    if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
-        if form.is_valid():
-
-            if not is_safe_url(url=redirect_to, host=request.get_host()):
-                redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
-
-            auth_login(request, form.get_user())
-
-            return HttpResponseRedirect(redirect_to)
-    else:
-        form = AuthenticationForm(request)
-
-    form_filling = True
-    context = {
-        'form': form,
-        'form_filling': form_filling
-    }
-    return TemplateResponse(request, 'registration/login.html', context)
-
-
 @login_required
 def user_logout(request):
     """
