@@ -93,7 +93,7 @@ def subject_detail(request, board, subject):
     admins = board.admins.all()
 
     if request.is_ajax():
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             if request.method == 'POST':
                 comment_form = CommentForm(data=request.POST or None)
 
