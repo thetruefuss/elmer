@@ -1,5 +1,20 @@
+"""mysite URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/2.1/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  path('', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.urls import include, path
+    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+"""
 from django.conf import settings
-from django.conf.urls import include, url
+from django.urls import path, include, re_path
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
@@ -24,146 +39,145 @@ sitemaps = {
 }
 
 urlpatterns = [
-    url(r'^$',subjects_views.HomePageView.as_view(), name='home'),
-    url(r'^trending/$',subjects_views.TrendingPageView.as_view(), name='trending'),
-    url(r'^s/(?P<board>[-\w]+)/(?P<subject>[-\w]+)/$',
+    re_path(r'^$',subjects_views.HomePageView.as_view(), name='home'),
+    re_path(r'^trending/$',subjects_views.TrendingPageView.as_view(), name='trending'),
+    re_path(r'^s/(?P<board>[-\w]+)/(?P<subject>[-\w]+)/$',
         subjects_views.subject_detail,
         name='subject_detail'),
-    url(r'^b/$',boards_views.BoardsPageView.as_view(), name='view_all_boards'),
-    url(r'^b/(?P<board>[-\w]+)/$',
+    re_path(r'^b/$',boards_views.BoardsPageView.as_view(), name='view_all_boards'),
+    re_path(r'^b/(?P<board>[-\w]+)/$',
         boards_views.BoardPageView.as_view(),
         name='board'),
-    url(r'^b/ban_user/(?P<board>[-\w]+)/(?P<user_id>\d+)/$',
+    re_path(r'^b/ban_user/(?P<board>[-\w]+)/(?P<user_id>\d+)/$',
         boards_views.ban_user,
         name='ban_user'),
-    url(r'^b/(?P<board>[-\w]+)/edit_board_cover/$',
+    re_path(r'^b/(?P<board>[-\w]+)/edit_board_cover/$',
         boards_views.edit_board_cover,
         name='edit_board_cover'),
-    url(r'^b/(?P<board>[-\w]+)/subscription/$',
+    re_path(r'^b/(?P<board>[-\w]+)/subscription/$',
         boards_views.subscribe,
         name='subscribe'),
-    url(r'^b/(?P<subject>[-\w]+)/like/$',
+    re_path(r'^b/(?P<subject>[-\w]+)/like/$',
         subjects_views.like_subject,
         name='like'),
-    url(r'^load_new_comments/$', comments_views.load_new_comments, name='load_new_comments'),
+    re_path(r'^load_new_comments/$', comments_views.load_new_comments, name='load_new_comments'),
 
-    url(r'^u/(?P<username>[\w.@+-]+)/subscriptions/$', boards_views.UserSubscriptionListView.as_view(),
+    re_path(r'^u/(?P<username>[\w.@+-]+)/subscriptions/$', boards_views.UserSubscriptionListView.as_view(),
         name='user_subscription_list'),
-    url(r'^u/(?P<username>[\w.@+-]+)/boards/$', boards_views.UserCreatedBoardsPageView.as_view(),
+    re_path(r'^u/(?P<username>[\w.@+-]+)/boards/$', boards_views.UserCreatedBoardsPageView.as_view(),
         name='user_created_boards'),
-    url(r'^new_post/$',subjects_views.new_subject, name='new_subject'),
-    url(r'^delete_post/(?P<subject>[-\w]+)/$',subjects_views.delete_subject, name='delete_subject'),
-    url(r'^edit_subject/(?P<subject>[-\w]+)/$', subjects_views.edit_subject, name='edit_subject'),
-    url(r'^delete_comment/(?P<pk>\d+)/$', comments_views.delete_comment, name='delete_comment'),
-    url(r'^new_board/$',boards_views.new_board, name='new_board'),
+    re_path(r'^new_post/$',subjects_views.new_subject, name='new_subject'),
+    re_path(r'^delete_post/(?P<subject>[-\w]+)/$',subjects_views.delete_subject, name='delete_subject'),
+    re_path(r'^edit_subject/(?P<subject>[-\w]+)/$', subjects_views.edit_subject, name='edit_subject'),
+    re_path(r'^delete_comment/(?P<pk>\d+)/$', comments_views.delete_comment, name='delete_comment'),
+    re_path(r'^new_board/$',boards_views.new_board, name='new_board'),
 
     # user profiles
-    url(r'^u/$', users_views.UsersPageView.as_view(), name='view_all_users'),
-    url(r'^u/following/$', users_views.FollowingPageView.as_view(), name='view_following'),
-    url(r'^u/followers/$', users_views.FollowersPageView.as_view(), name='view_all_followers'),
-    url(r'^u/(?P<username>[\w.@+-]+)/$', users_views.UserProfilePageView.as_view(), name='user_profile'),
-    url(r'^u/follow_user/(?P<user_id>\d+)/$',
+    re_path(r'^u/$', users_views.UsersPageView.as_view(), name='view_all_users'),
+    re_path(r'^u/following/$', users_views.FollowingPageView.as_view(), name='view_following'),
+    re_path(r'^u/followers/$', users_views.FollowersPageView.as_view(), name='view_all_followers'),
+    re_path(r'^u/(?P<username>[\w.@+-]+)/$', users_views.UserProfilePageView.as_view(), name='user_profile'),
+    re_path(r'^u/follow_user/(?P<user_id>\d+)/$',
         users_views.follow_user,
         name='follow_user'),
-    url(r'^u/send_message_request/(?P<user_id>\d+)/$',
+    re_path(r'^u/send_message_request/(?P<user_id>\d+)/$',
         users_views.send_message_request,
         name='send_message_request'),
-    url(r'^u/accept_message_request/(?P<user_id>\d+)/$',
+    re_path(r'^u/accept_message_request/(?P<user_id>\d+)/$',
         users_views.accept_message_request,
         name='accept_message_request'),
-    url(r'^u/block_spammer/(?P<user_id>\d+)/$',
+    re_path(r'^u/block_spammer/(?P<user_id>\d+)/$',
         users_views.block_spammer,
         name='block_spammer'),
-    url(r'^u/friends/all/$', users_views.all_friends, name='all_friends'),
-    url(r'^u/friends/requests/$', users_views.all_message_requests, name='all_message_requests'),
-    url(r'^activities/$', notifications_views.ActivitiesPageView.as_view(), name='activities'),
-    url(r'^activities/check/$', notifications_views.check_activities, name='check_activities'),
+    re_path(r'^u/friends/all/$', users_views.all_friends, name='all_friends'),
+    re_path(r'^u/friends/requests/$', users_views.all_message_requests, name='all_message_requests'),
+    re_path(r'^activities/$', notifications_views.ActivitiesPageView.as_view(), name='activities'),
+    re_path(r'^activities/check/$', notifications_views.check_activities, name='check_activities'),
 
-    # login/logout urls
-    url(r'^login/$',
-        users_views.user_login,
+    # login/logout re_paths
+    re_path(r'^login/$',
+        auth_views.LoginView.as_view(extra_context={'form_filling': True}),
         name='login'),
-    url(r'^logout/$',
+    re_path(r'^logout/$',
         users_views.user_logout,
         name='logout'),
-    url(r'^logout-then-login/$',
-        'django.contrib.auth.views.logout_then_login',
+    re_path(r'^logout-then-login/$',
+        auth_views.logout_then_login,
         name='logout_then_login'),
 
-    # password change urls
-    url(r'^password_change/$',
-        'django.contrib.auth.views.password_change',
+    # password change re_paths
+    re_path(r'^password_change/$',
+        auth_views.PasswordChangeView.as_view(),
         name='password_change'),
-    url(r'^password-change/done/$',
-        'django.contrib.auth.views.password_change_done',
+    re_path(r'^password-change/done/$',
+        auth_views.PasswordChangeDoneView.as_view(),
         name='password_change_done'),
 
     # password reset
-    url(r'^password_reset/$', auth_views.password_reset, name='password_reset'),
-    url(r'^password_reset/done/$', auth_views.password_reset_done, name='password_reset_done'),
-    url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        auth_views.password_reset_confirm, name='password_reset_confirm'),
-    url(r'^reset/done/$', auth_views.password_reset_complete, name='password_reset_complete'),
+    re_path(r'^password_reset/$', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    re_path(r'^password_reset/done/$', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    re_path(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    re_path(r'^reset/done/$', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     # user registration
-    url(r'^signup/$',
+    re_path(r'^signup/$',
         users_views.register_user,
         name='signup'),
 
     # verify username availability in database via ajax request
-    url(r'^signup/check_username/$', users_views.check_username, name='check_username'),
+    re_path(r'^signup/check_username/$', users_views.check_username, name='check_username'),
 
     # profile edit
-    url(r'^profile_edit/$', users_views.profile_edit,
+    re_path(r'^profile_edit/$', users_views.profile_edit,
         name='profile_edit'),
-    url(r'^picture_change/$', users_views.change_picture,
+    re_path(r'^picture_change/$', users_views.change_picture,
         name='picture_change'),
 
     # search
-    url(r'^search/$',search_views.search, name='search'),
-    url(r'^board_search/(?P<board_slug>[-\w]+)/$',search_views.search, name='board_search'),
+    re_path(r'^search/$',search_views.search, name='search'),
+    re_path(r'^board_search/(?P<board_slug>[-\w]+)/$',search_views.search, name='board_search'),
 
-    url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
+    re_path(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
-    url(r'^feedback/', include('feedback_form.urls')),
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^about-us/$', TemplateView.as_view(template_name='about_us.html'), name='about_us'),
-    url(r'^legal/$', TemplateView.as_view(template_name='terms_of_service.html'), name='legal'),
-    url(r'^legal/terms-of-service/$', TemplateView.as_view(template_name='terms_of_service.html'), name='terms_of_service'),
-    url(r'^legal/privacy-policy/$', TemplateView.as_view(template_name='privacy_policy.html'), name='privacy_policy'),
+    path('admin/', admin.site.urls),
+    re_path(r'^about-us/$', TemplateView.as_view(template_name='about_us.html'), name='about_us'),
+    re_path(r'^legal/$', TemplateView.as_view(template_name='terms_of_service.html'), name='legal'),
+    re_path(r'^legal/terms-of-service/$', TemplateView.as_view(template_name='terms_of_service.html'), name='terms_of_service'),
+    re_path(r'^legal/privacy-policy/$', TemplateView.as_view(template_name='privacy_policy.html'), name='privacy_policy'),
 
     # report
-    url(r'^banned_users/(?P<board>[-\w]+)/$',
+    re_path(r'^banned_users/(?P<board>[-\w]+)/$',
         boards_views.banned_users,
         name='banned_users'),
-    url(r'^report_subject/(?P<subject>[-\w]+)/$',
+    re_path(r'^report_subject/(?P<subject>[-\w]+)/$',
         reports_views.report_subject,
         name='report_subject'),
-    url(r'^report_comment/(?P<pk>\d+)/$',
+    re_path(r'^report_comment/(?P<pk>\d+)/$',
         reports_views.report_comment,
         name='report_comment'),
-    url(r'^show_reports/(?P<board>[-\w]+)/$',
+    re_path(r'^show_reports/(?P<board>[-\w]+)/$',
         reports_views.show_reports,
         name='show_reports'),
-    url(r'^deactivate_subject/(?P<subject>[-\w]+)/$',
+    re_path(r'^deactivate_subject/(?P<subject>[-\w]+)/$',
         subjects_views.deactivate_subject,
         name='deactivate_subject'),
-    url(r'^deactivate_comment/(?P<pk>\d+)/$',
+    re_path(r'^deactivate_comment/(?P<pk>\d+)/$',
         comments_views.deactivate_comment,
         name='deactivate_comment'),
-    url(r'^messages/', include('messenger.urls')),
+    re_path(r'^messages/', include('messenger.urls')),
 
     # api urls
-    url(r'^api/auth/token/obtain/', obtain_jwt_token),
-    url(r'^api/auth/token/refresh/', refresh_jwt_token),
-    url(r'^api/auth/token/verify/', verify_jwt_token),
-    url(r'^api/frontboard/', include('subjects.api.urls')),
-    url(r'^api/frontboard/', include('boards.api.urls')),
-    url(r'^api/frontboard/', include('reports.api.urls')),
-    url(r'^api/frontboard/', include('comments.api.urls')),
-    url(r'^api/users/', include('users.api.urls', namespace='users-api')),
-    url(r'^api/users/', include('notifications.api.urls')),
-    url(r'^api/messages/', include('messenger.api.urls', namespace='messages-api')),
+    re_path(r'^api/auth/token/obtain/', obtain_jwt_token),
+    re_path(r'^api/auth/token/refresh/', refresh_jwt_token),
+    re_path(r'^api/auth/token/verify/', verify_jwt_token),
+    re_path(r'^api/frontboard/', include('subjects.api.urls')),
+    re_path(r'^api/frontboard/', include('boards.api.urls')),
+    re_path(r'^api/frontboard/', include('reports.api.urls')),
+    re_path(r'^api/frontboard/', include('comments.api.urls')),
+    re_path(r'^api/users/', include('users.api.urls')),
+    re_path(r'^api/users/', include('notifications.api.urls')),
+    re_path(r'^api/messages/', include('messenger.api.urls')),
 ]
 
 if True:
