@@ -10,15 +10,15 @@ class Report(models.Model):
     """
     Model that represents a report.
     """
-    reporter = models.ForeignKey(User, related_name='reported', null=True)
+    reporter = models.ForeignKey(User, related_name='reported', null=True, on_delete=models.SET_NULL)
     comment = models.ForeignKey(
-        Comment, related_name='comment_reports', blank=True, null=True
+        Comment, related_name='comment_reports', blank=True, null=True, on_delete=models.SET_NULL
     )
     subject = models.ForeignKey(
-        Subject, related_name='subject_reports', blank=True, null=True
+        Subject, related_name='subject_reports', blank=True, null=True, on_delete=models.SET_NULL
     )
     board = models.ForeignKey(
-        Board, related_name='board_reports', blank=True, null=True
+        Board, related_name='board_reports', blank=True, null=True, on_delete=models.SET_NULL
     )
     active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
