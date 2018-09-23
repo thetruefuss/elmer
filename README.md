@@ -15,8 +15,8 @@ Check the website at [https://elmer.pythonanywhere.com](https://elmer.pythonanyw
 ### Technology Stack
 
 * Python 3.6.x
-* Django 1.8.x
-* Django Rest Framework 3.3.x
+* Django 2.1.x
+* Django Rest Framework 3.8.x
 * Twitter Bootstrap 4
 * jQuery 3
 
