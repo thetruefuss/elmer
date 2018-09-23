@@ -7,7 +7,6 @@ from django.template.loader import render_to_string
 from django.views.generic import ListView
 
 import requests
-from cache_memoize import cache_memoize
 
 from comments.forms import CommentForm
 from mysite.decorators import ajax_required
@@ -18,7 +17,6 @@ from .forms import SubjectForm
 from .models import Subject
 
 
-@cache_memoize(60*15)
 def get_trending_subjects():
     subjects = Subject.get_subjects()
     for subject in subjects:
@@ -26,7 +24,6 @@ def get_trending_subjects():
     return subjects.order_by('-rank_score')
 
 
-@cache_memoize(60*15)
 def get_home_subjects():
     return Subject.get_subjects()
 
