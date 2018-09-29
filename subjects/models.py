@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.utils.html import escape
 
 import bleach
-# from autoslug import AutoSlugField
+from slugify import UniqueSlugify
 
 from boards.models import Board
 
@@ -16,7 +16,7 @@ class Subject(models.Model):
     Model that represents a subject.
     """
     title = models.CharField(max_length=150, db_index=True)
-    slug = models.SlugField(max_length=150, null=True, blank=True)  # AutoSlugField(populate_from='title', unique=True, db_index=True)
+    slug = models.SlugField(max_length=150, null=True, blank=True)
     body = models.TextField(max_length=5000, blank=True, null=True)
     photo = models.ImageField(
         upload_to='subject_photos/', verbose_name=u"Add image (optional)",
@@ -44,7 +44,7 @@ class Subject(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = f"{self.title}".replace(" ", "-")
+            self.slug = subject_slugify(f"{self.title}")
 
         super().save(*args, **kwargs)
 
@@ -92,3 +92,18 @@ class Subject(models.Model):
         subject_points = self.points.count() - 1
         self.rank_score = subject_points / pow((subject_hour_age + 2), GRAVITY)
         self.save()
+
+
+def subject_unique_check(text, uids):
+    if text in uids:
+        return False
+    return not Subject.objects.filter(slug=text).exists()
+
+
+subject_slugify = UniqueSlugify(
+                    unique_check=subject_unique_check,
+                    to_lower=True,
+                    max_length=80,
+                    separator='_',
+                    capitalize=False
+                )
