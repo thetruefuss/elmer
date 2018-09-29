@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.db import OperationalError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
@@ -18,14 +19,22 @@ from .models import Subject
 
 
 def get_trending_subjects():
-    subjects = Subject.get_subjects()
-    for subject in subjects:
-        subject.set_rank()
-    return subjects.order_by('-rank_score')
+    try:
+        subjects = Subject.get_subjects()
+        for subject in subjects:
+            subject.set_rank()
+        trending_subjects = subjects.order_by('-rank_score')
+    except OperationalError:
+        trending_subjects = None
+    return trending_subjects
 
 
 def get_home_subjects():
-    return Subject.get_subjects()
+    try:
+        home_subjects = Subject.get_subjects()
+    except OperationalError:
+        home_subjects = None
+    return home_subjects
 
 
 class HomePageView(ListView):
