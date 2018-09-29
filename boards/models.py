@@ -8,7 +8,7 @@ from django.db import models
 from django.db.models.signals import m2m_changed
 from django.utils import timezone
 
-# from autoslug import AutoSlugField
+from slugify import UniqueSlugify
 
 
 class Board(models.Model):
@@ -16,7 +16,7 @@ class Board(models.Model):
     Model that represents a board.
     """
     title = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(max_length=100, null=True, blank=True)  # AutoSlugField(populate_from='title', unique=True)
+    slug = models.SlugField(max_length=100, null=True, blank=True)
     description = models.TextField(max_length=500)
     cover = models.ImageField(
         upload_to='board_covers/', blank=True, null=True
@@ -36,7 +36,7 @@ class Board(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = f"{self.title}".replace(" ", "-")
+            self.slug = board_slugify(f"{self.title}")
 
         super().save(*args, **kwargs)
 
@@ -71,3 +71,18 @@ def admins_changed(sender, **kwargs):
     if kwargs['instance'].admins.count() > 3:
         raise ValidationError("You can't assign more than three admins.")
 m2m_changed.connect(admins_changed, sender=Board.admins.through)  # noqa: E305
+
+
+def board_unique_check(text, uids):
+    if text in uids:
+        return False
+    return not Board.objects.filter(slug=text).exists()
+
+
+board_slugify = UniqueSlugify(
+                    unique_check=board_unique_check,
+                    to_lower=True,
+                    max_length=80,
+                    separator='_',
+                    capitalize=False
+                )
