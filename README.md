@@ -10,15 +10,15 @@ Elmer is a social network inspired by [reddit](https://www.reddit.com/) built wi
 
 Check the website at [https://elmer.pythonanywhere.com](https://elmer.pythonanywhere.com/)
 
-![Elmer Screenshot](https://image.ibb.co/drWiM8/elmer_screenshot.jpg "Elmer Screenshot")
+![Elmer Screenshot](https://image.ibb.co/bFbLrp/elmer_screenshot.jpg "Elmer Screenshot")
 
 ### Technology Stack
 
-* Python 3.6.x
-* Django 2.1.x
-* Django Rest Framework 3.8.x
-* Twitter Bootstrap 4
-* jQuery 3
+* [Python](https://www.python.org/) 3.6.x
+* [Django Web Framework](https://www.djangoproject.com/) 2.1.x
+* [Django Rest Framework](http://www.django-rest-framework.org/) 3.8.x
+* [Twitter Bootstrap 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
+* [jQuery 3](https://api.jquery.com/)
 
 ### Installation Guide
 
