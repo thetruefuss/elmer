@@ -42,6 +42,12 @@ Run Django migrations to create database tables:
 $ python manage.py migrate
 ```
 
+Load initial data for flatpages from fixtures folder:
+
+```shell
+$ python manage.py loaddata fixtures/flatpages_data.json
+```
+
 Run the development server:
 
 ```shell
