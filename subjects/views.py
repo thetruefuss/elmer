@@ -14,6 +14,7 @@ from mysite.decorators import ajax_required
 from notifications.models import Notification
 from utils import image_compression
 
+from .decorators import user_is_subject_author
 from .forms import SubjectForm
 from .models import Subject
 
@@ -158,7 +159,7 @@ def subject_detail(request, board, subject):
 @login_required
 def deactivate_subject(request, subject):
     """
-    Handles requests from board admins to deactivate subjects form the board if reported.
+    Handles requests from board admins to deactivate subjects from the board if reported.
     """
     subject = get_object_or_404(Subject,
                                 slug=subject)
@@ -270,40 +271,34 @@ def like_subject(request, subject):
 
 @login_required
 @ajax_required
+@user_is_subject_author
 def delete_subject(request, subject):
     """
-    Delete the subjects if requester is the author.
+    Ajax call to delete a subject.
     """
     subject = get_object_or_404(Subject,
                                 slug=subject)
-    if request.user == subject.author:
-        subject.delete()
-        return HttpResponse('Subject has been deleted.')
-    else:
-        return HttpResponse('You can not delete this subject.')
+    subject.delete()
+    return HttpResponse('Subject has been deleted.')
 
 
 @login_required
+@user_is_subject_author
 def edit_subject(request, subject):
     """
-    Displays edit from for subjects and handles edit action.
+    Displays edit form for subjects and handles edit action.
     """
     subject = get_object_or_404(Subject,
                                 slug=subject)
-
     if request.method == 'POST':
-        if request.user == subject.author:
-            subject_form = SubjectForm(instance=subject,
-                                       data=request.POST,
-                                       files=request.FILES)
-
-            if subject_form.is_valid():
-                subject_form.save()
-                return redirect(subject.get_absolute_url())
-            else:
-                subject_form = SubjectForm(instance=subject)
+        subject_form = SubjectForm(instance=subject,
+                                   data=request.POST,
+                                   files=request.FILES)
+        if subject_form.is_valid():
+            subject_form.save()
+            return redirect(subject.get_absolute_url())
         else:
-            return redirect('/')
+            subject_form = SubjectForm(instance=subject)
     else:
         subject_form = SubjectForm(instance=subject)
 
