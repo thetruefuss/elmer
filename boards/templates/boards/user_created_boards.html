@@ -4,21 +4,17 @@
 
 {% block content %}
 
-<h1 class="pageHeadingH1">
-  <span class="pageHeadingSpan">Your Boards</span>
-</h1>
-
+{% include "includes/page_heading.html" with text="Your Boards" %}
 {% if user_boards %}
   {% include "includes/partial_board.html" with boards=user_boards %}
 {% else %}
-  <div class="card" style="margin:15px 0px; padding:10px;">
-    <h6 class="text-center">No boards found</h6>
+  <div class="card p-4 my-4 mx-0">
+    <h6 class="text-center">No Boards Found</h6>
     <div style="margin:0 auto;">
     <p class="text-muted">You have not created any boards created yet.</p>
     </div>
   </div>
 {% endif %}
-
 
 <script type="text/javascript">
 // Subscribe boards

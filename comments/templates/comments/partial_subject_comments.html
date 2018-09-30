@@ -3,13 +3,14 @@
 
 <li class="list-group-item" comment-id="{{comment.id}}">
   <p>{{comment.body|emoticons}}
-  <br><a href="{% url 'user_profile' comment.commenter.username %}" title="view profile" id="commenter" class="card-link">{{comment.commenter}}</a> &#8212;
-  <span title="{{comment.created|date:"D d M Y"}} | {{comment.created|time:"H:i:s"}}">{{comment.created|naturaltime}}</span>
+  <br><a href="{% url 'user_profile' comment.commenter.username %}" id="commenter" class="card-link">{{comment.commenter}}</a> &#8212;
+  <span>{{comment.created|naturaltime}}</span>
 
   {% ifequal user comment.commenter %}
-  <a href="{% url 'delete_comment' comment.id %}" title="delete this comment" id="delete_comment"><i class="fa fa-trash-o"></i></a>
+  <a href="{% url 'delete_comment' comment.id %}" id="delete_comment"><i class="fa fa-trash-o"></i></a>
   {% else %}
-  <a href="#" style="text-decoration:none;" title="reply to this comment" id="reply_comment"><i class="fa fa-reply"></i> Reply</a> &bull; <a href="{% url 'report_comment' comment.id %}" style="text-decoration:none;" title="report this comment" id="report_link"><i class="fa fa-flag-o"></i> Report</a>
+  <a href="#" style="text-decoration:none;" id="reply_comment"><i class="fa fa-reply"></i> Reply</a> &bull;
+  <a href="{% url 'report_comment' comment.id %}" style="text-decoration:none;" id="report_link"><i class="fa fa-flag-o"></i> Report</a>
   {% endifequal %}
 
 </p></li>

@@ -7,8 +7,7 @@
 {% endblock head %}
 
 {% block content %}
-  <h1 class="pageHeadingH1"><span class="pageHeadingSpan">Messages</span></h1>
-
+  {% include "includes/page_heading.html" with text="Messages" %}
   <div class="row">
     <div class="col-md-12">
       {% include 'messenger/includes/partial_conversations.html' with conversations=conversations active=active %}

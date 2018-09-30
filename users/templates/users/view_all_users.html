@@ -7,15 +7,12 @@
 
 {% block content %}
 
-<h1 class="pageHeadingH1">
-  <span class="pageHeadingSpan">Users</span>
-</h1>
-
+{% include "includes/page_heading.html" with text="Users" %}
 {% if users %}
   {% include "users/includes/partial_user.html" with users=users %}
 {% else %}
-  <div class="card" style="margin:15px 0px; padding:10px;">
-    <h6 class="text-center">No users found</h6>
+  <div class="card p-4 my-4 mx-0">
+    <h6 class="text-center">No Users Found</h6>
     <div style="margin:0 auto;">
     <p class="text-muted">There are no users right now.</p>
     </div>

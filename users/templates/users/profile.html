@@ -5,15 +5,11 @@
 
 {% block content %}
 
-<h1 class="pageHeadingH1">
-  <span class="pageHeadingSpan">
-    {% if request.user.username == user.username %}
-      Your profile
-    {% else %}
-      {{ user.profile.screen_name }}'s profile
-    {% endif %}
-  </span>
-</h1>
+{% if request.user.username == user.username %}
+  {% include "includes/page_heading.html" with text="Your Profile" %}
+{% else %}
+  {% include "includes/page_heading.html" with text=user.profile.screen_name %}
+{% endif %}
 
 <style>
 #profile_user_links a { border-radius: 100px; padding: 4px 15px; margin:15px; border: 1px solid #d6d6d6; }
@@ -102,20 +98,21 @@
 
 <div style="clear:both;"></div>
 
-<h1 class="pageHeadingH1">
-  <span class="pageHeadingSpan">
-    {% if request.user.username == user.username %}
-    Your recent posts
-    {% else %}
-    {{ user.profile.screen_name }}'s recent posts
-    {% endif %}
-  </span>
-</h1>
+{% if request.user.username == user.username %}
+  {% include "includes/page_heading.html" with text="Your Recent Posts" %}
+{% else %}
+  {% include "includes/page_heading.html" with text="Recent Posts" %}
+{% endif %}
 
 {% if subjects %}
   {% include "includes/partial_subject.html" with subjects=subjects %}
 {% else %}
-  <p class="text-center text-muted">No Posts to display.</p>
+<div class="card p-4 my-4 mx-0">
+  <h6 class="text-center">No Posts Found</h6>
+  <div style="margin:0 auto;">
+  <p class="text-muted">You don't have any posts right now.</p>
+  </div>
+</div>
 {% endif %}
 
 

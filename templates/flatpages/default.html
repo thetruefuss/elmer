@@ -28,9 +28,7 @@
     <div class="container content_block">
       <div class="row">
         <div class="container" style="margin:0 auto; width:75%;">
-          <h1 class="pageHeadingH1">
-            <span class="pageHeadingSpan">{{ flatpage.title }}</span>
-          </h1>
+          {% include "includes/page_heading.html" with text=flatpage.title %}
           {{ flatpage.content }}
         </div>
       </div>

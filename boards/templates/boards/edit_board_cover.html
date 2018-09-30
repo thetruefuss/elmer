@@ -5,8 +5,7 @@
 
 {% block form_content %}
 
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Change Your Board Cover</span></h1>
-
+{% include "includes/page_heading.html" with text="Change Your Board Cover" %}
 {% if board_form.errors %}
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
     {{board_form.errors}}
@@ -16,14 +15,12 @@
   </div>
 {% endif %}
 
-<form action="." method="post" enctype="multipart/form-data">
+<form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
-
   <div class="form-group">
     <label for="id_cover">Cover photo</label>
     <input type="file" class="form-control-file" id="id_cover" name="cover" accept="image/*">
   </div>
-
    <button type="submit" class="btn btn-primary btn-block" id="submit_cover">Submit</button>
 </form>
 

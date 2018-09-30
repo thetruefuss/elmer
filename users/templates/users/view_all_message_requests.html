@@ -7,10 +7,7 @@
 
 {% block content %}
 
-<h1 class="pageHeadingH1">
-  <span class="pageHeadingSpan">Message Requests</span>
-</h1>
-
+{% include "includes/page_heading.html" with text="Message Requests" %}
 {% for user in users %}
 <div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
   <div class="card-body" style="padding:10px;">
@@ -38,8 +35,8 @@
   </div>
 </div>
 {% empty %}
-<div class="card" style="margin:15px 0px; padding:10px;">
-  <h6 class="text-center">No requests found</h6>
+<div class="card p-4 my-4 mx-0">
+  <h6 class="text-center">No Requests Found</h6>
   <div style="margin:0 auto;">
   <p class="text-muted">You don't have any message requests received.</p>
   </div>

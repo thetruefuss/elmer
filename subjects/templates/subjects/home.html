@@ -1,14 +1,8 @@
 {% extends "base.html" %}
-{% load emoticons_tags %}
-{% load boards_tags %}
-{% load humanize %}
 
 {% block content %}
 
-<h1 class="pageHeadingH1">
-  <span class="pageHeadingSpan">Homepage</span>
-</h1>
-
+{% include "includes/page_heading.html" with text="Homepage" %}
 {% include "includes/partial_subject.html" with subjects=subjects %}
 
 {% endblock content %}

@@ -1,23 +1,17 @@
 {% extends "base.html" %}
-{% load boards_tags %}
-{% load humanize %}
-{% load emoticons_tags %}
 
 {% block title %}<title>Search Results | Elmer</title>{% endblock %}
 
 {% block content %}
 
-<h1 class="pageHeadingH1">
-  <span class="pageHeadingSpan">Search Results</span>
-</h1>
-
+{% include "includes/page_heading.html" with text="Search Results" %}
 {% if subjects %}
   {% include "includes/partial_subject.html" with subjects=subjects %}
 {% else %}
-  <div class="card" style="margin:15px 0px; padding:10px;">
-    <h6 class="text-center">No subjects found for <b>{{ q }}</b></h6>
+  <div class="card p-4 my-4 mx-0">
+    <h6 class="text-center">No Subjects Found For <b>"{{ q }}"</b></h6>
     <div style="margin:0 auto;">
-    <p class="text-muted">Make sure that all words are spelled correctly.<br>Or use different keywords.</p>
+    <p class="text-muted text-center">Make sure that all words are spelled correctly.<br>Or use different keywords.</p>
     </div>
   </div>
 {% endif %}

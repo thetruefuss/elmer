@@ -7,17 +7,14 @@
 
 {% block content %}
 
-<h1 class="pageHeadingH1">
-  <span class="pageHeadingSpan">{{ board.title }} | Banned Users</span>
-</h1>
-
+{% include "includes/page_heading.html" with text="Banned Users" %}
 {% if users %}
 <p class="text-muted text-center">Unban user if they were banned by mistake from board.</p>
 {% endif %}
 
 {% for user in users %}
-<div class="card" style="border:none; border-bottom:1px solid #dcd7d7; margin-bottom:5px;">
-  <div class="card-body" style="padding:10px;">
+<div class="card mb-2" style="border:none; border-bottom:1px solid #dcd7d7;">
+  <div class="card-body p-4">
 
     <div class="text-center" style="float:left; width:10%;">
       {% if user.profile.get_picture %}
@@ -26,18 +23,17 @@
     </div>
 
     <div style="float:right; width:90%;">
-      <h5 style="font-size:16px;">
+      <h6>
         <a href="{% url 'user_profile' user.username %}"
-           class="card-link"
-           title="{{ user.username }}">{{ user.profile.screen_name }}</a> &nbsp; &nbsp; &nbsp;
+           class="card-link">{{ user.profile.screen_name }}</a> &nbsp; &nbsp; &nbsp;
         <a href="{% url 'ban_user' board.slug user.id %}"
            class="btn btn-outline-secondary btn-sm">Unban User</a>
-      </h5>
+      </h6>
     </div>
   </div>
 </div>
 {% empty %}
-<p class="text-muted text-center">No User Banned</p>
+<p class="text-muted text-center">No User Banned Yet!</p>
 {% endfor %}
 
 {% endblock content %}

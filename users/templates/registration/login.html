@@ -13,7 +13,7 @@ label {
     font-weight:bold;
 }
 </style>
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Login to Elmer</span></h1>
+{% include "includes/page_heading.html" with text="Login to Elmer" %}
 
 {% if form.errors %}
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -35,12 +35,12 @@ label {
   </div>
   <input type="hidden" name="next" value="{{next}}"/>
   <button type="submit" class="btn btn-primary btn-block">Login</button>
-  <div class="text-center" style="margin-top:10px;">
+  <div class="text-center mt-4">
     <a href="{% url 'password_reset' %}">Forgot password?</a>
   </div>
 </form>
 
-<div class="card text-center" style="margin-top:15px;">
+<div class="card text-center mt-4">
   <div class="card-body">
     Don't have an account? <a href="{% url 'signup' %}" class="card-link">Sign up</a>
   </div>

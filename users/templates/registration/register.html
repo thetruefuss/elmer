@@ -18,7 +18,7 @@ label {
     font-weight:bold;
 }
 </style>
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Register to Elmer</span></h1>
+{% include "includes/page_heading.html" with text="Register to Elmer" %}
 
 {% if user_form.errors %}
   <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -51,7 +51,7 @@ label {
 </form>
 
 
-<div class="card text-center" style="margin-top:15px;">
+<div class="card text-center mt-4">
   <div class="card-body">
     Already have an account? <a href="{% url 'login' %}" class="card-link">Login</a>
   </div>

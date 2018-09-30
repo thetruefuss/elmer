@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-
-{% block title %}<title>Compose new post | Elmer</title>{% endblock %}
+{% block title %}<title>Create New Post | Elmer</title>{% endblock %}
 
 {% block form_content %}
 <style>
@@ -10,21 +9,22 @@
 #subject_form #id_description:focus, #subject_form #id_title:focus, #subject_form #id_cover:focus {
     background-color: #fff;
 }
-span#required_inp {
-    color:red;
+.form-group label span#required_inp {
+    color: red;
 }
-label {
-    font-weight:bold;
+.form-group label {
+    font-weight: bold;
 }
 </style>
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Compose new post</span></h1>
-<form action="." method="post" enctype="multipart/form-data" id="subject_form">
+{% include "includes/page_heading.html" with text="Create New Post" %}
+
+<form method="POST" enctype="multipart/form-data" id="subject_form">
   {% csrf_token %}
   <div class="form-group">
     <label for="id_title"><span id="required_inp">*</span>Title</label>
     <input type="text" class="form-control" id="id_title" maxlength="150" name="title" required>
     <small class="form-text text-muted">
-  You can <b>u/mention</b> other members in your post anywhere.
+      You can <b>u/mention</b> other members in your post anywhere.
     </small>
   </div>
   <div class="form-group">
@@ -50,6 +50,7 @@ label {
 
   <button type="submit" class="btn btn-primary btn-block" id="submit_subject">Submit</button>
 </form>
+
 <script type="text/javascript">
 // Check file size
 $(document).ready(function(){
@@ -64,4 +65,5 @@ $(document).ready(function(){
   });
 });
 </script>
+
 {% endblock %}

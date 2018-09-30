@@ -2,7 +2,7 @@
 {% block title %}<title>Error 500 | Elmer</title>{% endblock %}
 
 {% block content %}
-<h1 class="pageHeadingH1"><span class="pageHeadingSpan">Error 500</span></h1>
+{% include "includes/page_heading.html" with text="Error 500" %}
 <div class="card">
   <div class="card-body text-center">
     <h1 class="card-title">500. Unexpected Server Error</h1>

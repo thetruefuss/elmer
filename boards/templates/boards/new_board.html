@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}<title>Create new board | Elmer</title>{% endblock %}
+{% block title %}<title>Create Board | Elmer</title>{% endblock %}
 {% block head %}<script src='https://www.google.com/recaptcha/api.js'></script>{% endblock %}
 
 {% block form_content %}
@@ -18,7 +18,7 @@ label {
     font-weight:bold;
 }
 </style>
-    <h1 class="pageHeadingH1"><span class="pageHeadingSpan">Create new board</span></h1>
+    {% include "includes/page_heading.html" with text="Create Board" %}
     {% if board_form.errors %}
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
         {{board_form.errors}}
