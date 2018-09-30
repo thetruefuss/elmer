@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render, resolve_url
 from django.template.response import TemplateResponse
 from django.utils.decorators import method_decorator
@@ -89,12 +89,11 @@ def check_username(request):
     """
     Ajax call to check username availability.
     """
-    wanted_username = request.GET.get('wanted_username', '')
-    user_already_exists = User.objects.filter(username=wanted_username).exists()
-    if not user_already_exists:
-        return HttpResponse('good')
-    else:
-        return HttpResponse('bad')
+    username = request.GET.get('username', None)
+    data = {
+        'is_taken': User.objects.filter(username__iexact=username).exists()
+    }
+    return JsonResponse(data)
 
 
 @login_required

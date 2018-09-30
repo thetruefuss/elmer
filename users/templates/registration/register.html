@@ -29,7 +29,7 @@ label {
   </div>
 {% endif %}
 
-<form action="{% url 'signup' %}" method="post" id="register_form">{% csrf_token %}
+<form action="{% url 'signup' %}" method="post" id="register_form" data-check-username-url="{% url 'check_username' %}">{% csrf_token %}
   <div class="form-group">
     <label for="id_username"><span id="required_inp">*</span>Username</label>
     <input type="text" class="form-control" id="id_username" name="username" aria-describedby="username_help" maxlength="30" required>
@@ -59,38 +59,24 @@ label {
 
 
 <script type="text/javascript">
-// check username availability
-$(document).ready(function(){
-  $("input#id_username").on("keyup change", function(){
-    var $input_field=$(this);
-    var $input_value=$input_field.val();
-    console.log($input_value);
-    if ($input_value.length > 0){
-      $.ajax({
-        url: '{% url "check_username" %}',
-        type: 'GET',
-        data: {
-          'wanted_username': $input_value,
-        },
-        success: function (data) {
-          console.log(data);
-          if (data == 'good') {
-            $input_field.removeClass('is-invalid').addClass('is-valid');
-            $('div#username_signal').show();
-          } else if (data == 'bad') {
-            $input_field.removeClass('is-valid').addClass('is-invalid');
-            $('div#username_signal').show();
-          } else { console.log('Unexpected error!'); }
+  // Check username availability.
+  $("#id_username").on("keyup change", function(){
+    var username_field = $(this);
+    var form = $(this).closest("form");
+    $.ajax({
+      url: form.attr("data-check-username-url"),
+      data: form.serialize(),
+      dataType: 'json',
+      success: function (data) {
+        if (data.is_taken) {
+          username_field.removeClass('is-valid').addClass('is-invalid');
+        } else {
+          username_field.removeClass('is-invalid').addClass('is-valid');
         }
-      });
-    }
-    else {
-      $input_field.removeClass('is-valid').removeClass('is-invalid');
-      $('div#username_signal').hide();
-    }
+      }
+    });
     return false;
   });
-});
 </script>
 
 {% endblock %}
