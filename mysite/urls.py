@@ -94,16 +94,16 @@ urlpatterns = [
     re_path(r'^activities/$', notifications_views.ActivitiesPageView.as_view(), name='activities'),
     re_path(r'^activities/check/$', notifications_views.check_activities, name='check_activities'),
 
-    # login/logout re_paths
+    # login / logout urls
     re_path(r'^login/$',
-        auth_views.LoginView.as_view(extra_context={'form_filling': True}),
-        name='login'),
+            auth_views.LoginView.as_view(extra_context={'form_filling': True}),
+            name='login'),
     re_path(r'^logout/$',
-        users_views.user_logout,
-        name='logout'),
+            auth_views.LogoutView.as_view(next_page="/"),
+            name='logout'),
     re_path(r'^logout-then-login/$',
-        auth_views.logout_then_login,
-        name='logout_then_login'),
+            auth_views.logout_then_login,
+            name='logout_then_login'),
 
     # password change re_paths
     re_path(r'^password_change/$',
