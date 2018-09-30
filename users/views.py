@@ -5,6 +5,7 @@ from django.contrib.auth import (
     logout as auth_logout,
 )
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -118,8 +119,7 @@ class UsersPageView(ListView):
         return User.objects.exclude(username=self.request.user.username)
 
 
-@method_decorator(login_required, name='dispatch')
-class FollowersPageView(ListView):
+class FollowersPageView(LoginRequiredMixin, ListView):
     """
     Basic ListView implementation to call the followers list per user.
     """
@@ -132,8 +132,7 @@ class FollowersPageView(ListView):
         return self.request.user.profile.followers.all()
 
 
-@method_decorator(login_required, name='dispatch')
-class FollowingPageView(ListView):
+class FollowingPageView(LoginRequiredMixin, ListView):
     """
     Basic ListView implementation to call the following list per user.
     """
@@ -235,8 +234,7 @@ def change_picture(request):
         return render(request, 'users/change_picture.html', {'profile_form': profile_form})
 
 
-@method_decorator(login_required, name='dispatch')
-class UserProfilePageView(ListView):
+class UserProfilePageView(LoginRequiredMixin, ListView):
     """
     Basic ListView implementation to call the subjects list & profile per user.
     """

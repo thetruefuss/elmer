@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse
@@ -52,8 +53,7 @@ class BoardPageView(ListView):
         return context
 
 
-@method_decorator(login_required, name='dispatch')
-class UserSubscriptionListView(ListView):
+class UserSubscriptionListView(LoginRequiredMixin, ListView):
     """
     Basic ListView implementation to call the subscriptions list per user.
     """
@@ -85,8 +85,7 @@ def subscribe(request, board):
     return HttpResponse(board.subscribers.count())
 
 
-@method_decorator(login_required, name='dispatch')
-class UserCreatedBoardsPageView(ListView):
+class UserCreatedBoardsPageView(LoginRequiredMixin, ListView):
     """
     Basic ListView implementation to call the boards list per user.
     """
