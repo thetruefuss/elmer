@@ -115,7 +115,7 @@ class TestBoardsViews(TestCase):
                                     {'title': 'Not much of a title',
                                      'description': 'babla',})
         self.assertEqual(response.status_code, 302)
-        new_board = Board.objects.first()
+        new_board = Board.objects.get(title='Not much of a title')
         self.assertEqual(new_board.title, 'Not much of a title')
         self.assertEqual(Board.objects.count(),
                          current_boards_count + 1)
@@ -124,14 +124,14 @@ class TestBoardsViews(TestCase):
         """Test the subscribed ajax call & response."""
         response = self.other_client.get(reverse('subscribe', kwargs={'board': self.board.slug}),
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(self.board.subscribers.count(), 2)
+        # `other_user` is banned in previous test so it'll raise PermissionDenied.
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(self.board.subscribers.count(), 1)
 
     def test_edit_board_cover_view(self):
         """Test if non admin can edit board cover."""
         response = self.other_client.get(reverse('edit_board_cover', kwargs={'board': self.board.slug}))
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(b'can not change' in response.content)
+        self.assertEqual(response.status_code, 403)
 
     def test_board_view_success_status_code(self):
         """Test board detail view with right url."""
