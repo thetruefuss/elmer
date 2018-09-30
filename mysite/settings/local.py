@@ -49,31 +49,32 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.humanize',
-    'crispy_forms',
-    'sorl.thumbnail',
-
-    'boards',
-    'comments',
-    'messenger',
-    'notifications',
-    'reports',
-    'search',
-    'subjects',
-    'users',
-
-    'corsheaders',
-    'rest_framework',
-
-    'django.contrib.sites',
-    'django.contrib.sitemaps',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
+    'django.contrib.humanize',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
+    'django.contrib.sitemaps',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+
+    'crispy_forms',
+    'sorl.thumbnail',
+    'corsheaders',
+    'rest_framework',
     'emoticons',
+
+    'boards',
+    'subjects',
+    'comments',
+    'notifications',
+    'reports',
+    'search',
+    'messenger',
+    'users',
 ]
 
 # crispy_forms

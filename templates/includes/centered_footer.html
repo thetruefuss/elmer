@@ -1,8 +1,13 @@
+{% load flatpages %}
+{% get_flatpages as flatpages %}
+
 <div class="row">
-  <div class="container text-muted text-center" style="margin-top:30px;font-size:12px;">
-    <a href="{% url 'privacy_policy' %}">Privacy policy</a><span> &middot; </span>
-    <a href="{% url 'terms_of_service' %}">Terms of Use</a><span> &middot; </span>
-    <a href="{% url 'about_us' %}">About</a><span> &middot; </span>
+  <div class="container text-muted text-center" style="margin-top: 30px; font-size: 12px;">
+
+    {% for page in flatpages %}
+      <a href="{{ page.url }}">{{ page.title }}</a><span> &middot; </span>
+    {% endfor %}
+
     <a href="{% url 'django.contrib.sitemaps.views.sitemap' %}">Sitemap</a><span> &middot; </span>
     <a href="#">Send Feedback</a><br>
     <span>Elmer &copy; 2018. All rights reserved.</span>

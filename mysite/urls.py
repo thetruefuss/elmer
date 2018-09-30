@@ -141,10 +141,6 @@ urlpatterns = [
     re_path(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
     path('admin/', admin.site.urls),
-    re_path(r'^about-us/$', TemplateView.as_view(template_name='about_us.html'), name='about_us'),
-    re_path(r'^legal/$', TemplateView.as_view(template_name='terms_of_service.html'), name='legal'),
-    re_path(r'^legal/terms-of-service/$', TemplateView.as_view(template_name='terms_of_service.html'), name='terms_of_service'),
-    re_path(r'^legal/privacy-policy/$', TemplateView.as_view(template_name='privacy_policy.html'), name='privacy_policy'),
 
     # report
     re_path(r'^banned_users/(?P<board>[-\w]+)/$',
@@ -178,6 +174,9 @@ urlpatterns = [
     re_path(r'^api/users/', include('users.api.urls')),
     re_path(r'^api/users/', include('notifications.api.urls')),
     re_path(r'^api/messages/', include('messenger.api.urls')),
+
+    # flatpages urls
+    re_path(r'^', include('django.contrib.flatpages.urls')),
 ]
 
 if True:
