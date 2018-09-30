@@ -6,6 +6,7 @@ from django.template.loader import render_to_string
 from mysite.decorators import ajax_required
 from subjects.models import Subject
 
+from .decorators import user_is_comment_owner
 from .models import Comment
 
 
@@ -80,14 +81,12 @@ def deactivate_comment(request, pk):
 
 @login_required
 @ajax_required
+@user_is_comment_owner
 def delete_comment(request, pk):
     """
     Delete the comment if the requester is the commenter.
     """
     comment = get_object_or_404(Comment,
                                 pk=pk)
-    if request.user == comment.commenter:
-        comment.delete()
-        return HttpResponse('This comment has been deleted.')
-    else:
-        return HttpResponse('You are unable to delete this comment.')
+    comment.delete()
+    return HttpResponse('This comment has been deleted.')
