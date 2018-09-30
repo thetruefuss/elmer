@@ -119,6 +119,7 @@ class UsersPageView(ListView):
         return User.objects.exclude(username=self.request.user.username)
 
 
+@method_decorator(login_required, name='dispatch')
 class FollowersPageView(ListView):
     """
     Basic ListView implementation to call the followers list per user.
@@ -128,14 +129,11 @@ class FollowersPageView(ListView):
     template_name = 'users/followers.html'
     context_object_name = 'users'
 
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
-
     def get_queryset(self, **kwargs):
         return self.request.user.profile.followers.all()
 
 
+@method_decorator(login_required, name='dispatch')
 class FollowingPageView(ListView):
     """
     Basic ListView implementation to call the following list per user.
@@ -144,10 +142,6 @@ class FollowingPageView(ListView):
     paginate_by = 20
     template_name = 'users/following.html'
     context_object_name = 'profiles'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self, **kwargs):
         return self.request.user.following.all()
@@ -242,6 +236,7 @@ def change_picture(request):
         return render(request, 'users/change_picture.html', {'profile_form': profile_form})
 
 
+@method_decorator(login_required, name='dispatch')
 class UserProfilePageView(ListView):
     """
     Basic ListView implementation to call the subjects list & profile per user.
@@ -250,10 +245,6 @@ class UserProfilePageView(ListView):
     paginate_by = 15
     template_name = 'users/profile.html'
     context_object_name = 'subjects'
-
-    @method_decorator(login_required)
-    def dispatch(self, *args, **kwargs):
-        return super().dispatch(*args, **kwargs)
 
     def get_queryset(self, **kwargs):
         self.user = get_object_or_404(User,
