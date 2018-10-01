@@ -50,6 +50,21 @@ SITE_ID = 1
 # Application definition
 
 INSTALLED_APPS = [
+    'boards',
+    'subjects',
+    'comments',
+    'notifications',
+    'reports',
+    'search',
+    'messenger',
+    'users',
+
+    'crispy_forms',
+    'sorl.thumbnail',
+    'corsheaders',
+    'rest_framework',
+    'emoticons',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -60,22 +75,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-
-    'crispy_forms',
-    'sorl.thumbnail',
-    'corsheaders',
-    'rest_framework',
-    'emoticons',
-
-    'boards',
-    'subjects',
-    'comments',
-    'notifications',
-    'reports',
-    'search',
-    'messenger',
-    'users',
 ]
 
 # crispy_forms
