@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/custom.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}?v=2">
 
     <link rel="icon" type="image/png" href="{% static 'img/elmer_logo.png' %}?lastmod=1">
     <script src='https://www.google.com/recaptcha/api.js'></script>
@@ -71,8 +71,8 @@
           {% if bv %}
                 {% include "includes/board_info.html" %}
           {% else %}
-                <a href="{% url 'new_subject' %}" class="btn btn-primary btn-block mt-4" role="button" title="Create new post" style="font-weight:bold;letter-spacing:0.8px;">CREATE NEW POST</a>
-                <a href="{% url 'new_board' %}" class="btn btn-outline-primary btn-block mt-2" role="button" title="Create new post" style="font-weight:bold;letter-spacing:0.8px;">CREATE BOARD</a>
+                <a href="{% url 'new_subject' %}" class="btn btn-primary btn-block mt-4" role="button" style="font-weight:bold; letter-spacing:0.8px;">CREATE POST</a>
+                <a href="{% url 'new_board' %}" class="btn btn-outline-primary btn-block mt-2" role="button" style="font-weight:bold; letter-spacing:0.8px;">CREATE BOARD</a>
           {% endif %}
           {% if request.user.is_authenticated %}
             {% if not bv %}

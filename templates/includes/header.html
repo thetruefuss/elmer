@@ -9,10 +9,10 @@
     <div class="collapse navbar-collapse" id="topNavbar">
 
       <ul class="navbar-nav mr-auto">
-        <form class="form-inline" {% if not bv %}action="{% url 'search' %}"{% else %}action="{% url 'board_search' board.slug %}"{% endif %} method="get">
+        <form class="form-inline" {% if not bv %}action="{% url 'search' %}"{% else %}action="{% url 'board_search' board.slug %}"{% endif %} method="get" autocomplete="off">
           <div class="form-group">
             <label for="search" class="sr-only">Search</label>
-            <input type="text" class="form-control form-control-sm" id="search" name="query" {% if not bv %}placeholder="Search Elmer"{% else %}placeholder='Search "{{board.title}}"'{% endif %} style="width:360px;border-radius: 3rem;text-indent:10px;margin:0px 15px;">
+            <input type="text" class="form-control form-control-md" id="search" name="query" {% if not bv %}placeholder="Search Elmer"{% else %}placeholder='Search b/{{board.slug}}'{% endif %}>
           </div>
         </form>
         <li class="nav-item">

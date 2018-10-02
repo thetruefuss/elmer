@@ -1,6 +1,6 @@
 body {
   background-color: #f8f9fa;
-  font-family: "Noto Sans", sans-serif;
+  font-family: Noto Sans, Helvetica Neue, Segoe UI, Helvetica, Verdana, Arial, sans-serif;
 }
 #topNavbar .nav-link,
 .navbar-brand {
@@ -109,10 +109,26 @@ a {
   box-shadow: 0 1px 0 rgba(12, 13, 14, 0.1), 0 1px 3px rgba(12, 13, 14, 0.1),
     0 4px 20px rgba(12, 13, 14, 0.035), 0 1px 1px rgba(12, 13, 14, 0.025);
 }
-#search {
-  background: url(/static/img/search_icon.png) 10px 6px no-repeat;
-  padding-left: 25px;
-  background-size: 17px;
+input[name="query"]#search {
+  background: url(/static/img/search_icon.png) 16px 8px no-repeat;
+  background-color: rgb(246, 247, 248);
+  padding-left: 30px;
+  background-size: 18px;
+  width: 360px;
+  text-indent: 10px;
+  margin: 0px 15px;
+  outline: none;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(237, 239, 241);
+  box-shadow: none;
+  font-size: 14px;
+  line-height: 21px;
+}
+input[name="query"]#search:hover, input[name="query"]#search:active {
+  background-color: #fff;
+  border-color: #2196f3;
 }
 #welcome_signup_block {
   padding: 50px;
