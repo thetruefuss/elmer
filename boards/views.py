@@ -110,22 +110,10 @@ def new_board(request):
     if request.method == 'POST':
         board_form = BoardForm(request.POST, request.FILES)
         if board_form.is_valid():
-
-            """ Begin reCAPTCHA validation """
-            recaptcha_response = request.POST.get('g-recaptcha-response')
-            data = {
-                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
-                'response': recaptcha_response
-            }
-            r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
-            result = r.json()
-            """ End reCAPTCHA validation """
-
-            if result['success']:
-                new_board = board_form.save()
-                new_board.admins.add(request.user)
-                new_board.subscribers.add(request.user)
-                return redirect(new_board.get_absolute_url())
+            new_board = board_form.save()
+            new_board.admins.add(request.user)
+            new_board.subscribers.add(request.user)
+            return redirect(new_board.get_absolute_url())
         else:
             board_form = BoardForm()
     else:

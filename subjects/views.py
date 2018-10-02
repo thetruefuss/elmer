@@ -187,55 +187,43 @@ def new_subject(request):
     if request.method == 'POST':
         subject_form = SubjectForm(request.POST, request.FILES)
         if subject_form.is_valid():
+            new_subject = subject_form.save(commit=False)
+            author = request.user
+            new_subject.author = author
+            new_subject.save()
+            new_subject.points.add(author)
+            new_subject.save()
 
-            """ Begin reCAPTCHA validation """
-            recaptcha_response = request.POST.get('g-recaptcha-response')
-            data = {
-                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
-                'response': recaptcha_response
-            }
-            r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
-            result = r.json()
-            """ End reCAPTCHA validation """
+            # Checks if someone is mentioned in the subject
+            words = new_subject.title + ' ' + new_subject.body
+            words = words.split(" ")
+            names_list = []
+            for word in words:
 
-            if result['success']:
-                new_subject = subject_form.save(commit=False)
-                author = request.user
-                new_subject.author = author
-                new_subject.save()
-                new_subject.points.add(author)
-                new_subject.save()
+                # if first two letter of the word is "u/" then the rest of the word
+                # will be treated as a username
 
-                # Checks if someone is mentioned in the subject
-                words = new_subject.title + ' ' + new_subject.body
-                words = words.split(" ")
-                names_list = []
-                for word in words:
+                if word[:2] == "u/":
+                    u = word[2:]
+                    try:
+                        user = User.objects.get(username=u)
+                        if user not in names_list:
+                            new_subject.mentioned.add(user)
+                            if request.user is not user:
+                                Notification.objects.create(
+                                    Actor=new_subject.author,
+                                    Object=new_subject,
+                                    Target=user,
+                                    notif_type='subject_mentioned'
+                                )
+                            names_list.append(user)
+                    except:  # noqa: E722
+                        pass
 
-                    # if first two letter of the word is "u/" then the rest of the word
-                    # will be treated as a username
+            if new_subject.photo:
+                image_compression(new_subject.photo.name)
 
-                    if word[:2] == "u/":
-                        u = word[2:]
-                        try:
-                            user = User.objects.get(username=u)
-                            if user not in names_list:
-                                new_subject.mentioned.add(user)
-                                if request.user is not user:
-                                    Notification.objects.create(
-                                        Actor=new_subject.author,
-                                        Object=new_subject,
-                                        Target=user,
-                                        notif_type='subject_mentioned'
-                                    )
-                                names_list.append(user)
-                        except:  # noqa: E722
-                            pass
-
-                if new_subject.photo:
-                    image_compression(new_subject.photo.name)
-
-                return redirect(new_subject.get_absolute_url())
+            return redirect(new_subject.get_absolute_url())
         else:
             subject_form = SubjectForm(**{'user': request.user})
     else:
