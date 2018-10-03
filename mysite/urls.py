@@ -174,9 +174,6 @@ urlpatterns = [
     re_path(r'^api/users/', include('users.api.urls')),
     re_path(r'^api/users/', include('notifications.api.urls')),
     re_path(r'^api/messages/', include('messenger.api.urls')),
-
-    # flatpages urls
-    re_path(r'^', include('django.contrib.flatpages.urls')),
 ]
 
 if True:
@@ -188,3 +185,6 @@ if True:
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT
     )
+
+# flatpages urls
+urlpatterns.append(re_path(r'^', include('django.contrib.flatpages.urls')))
