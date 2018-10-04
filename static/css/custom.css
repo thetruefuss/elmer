@@ -1,6 +1,7 @@
 body {
   background-color: #f8f9fa;
-  font-family: Noto Sans, Helvetica Neue, Segoe UI, Helvetica, Verdana, Arial, sans-serif;
+  font-family: Noto Sans, Helvetica Neue, Segoe UI, Helvetica, Verdana, Arial,
+    sans-serif;
 }
 #topNavbar .nav-link,
 .navbar-brand {
@@ -12,6 +13,10 @@ body {
 }
 .form-control:focus {
   box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25), inset 0 2px 3px #e6e1e2;
+}
+.cta_btn {
+  font-weight: bold;
+  letter-spacing: 0.8px;
 }
 p {
   font-size: 14px;
@@ -126,7 +131,8 @@ input[name="query"]#search {
   font-size: 14px;
   line-height: 21px;
 }
-input[name="query"]#search:hover, input[name="query"]#search:active {
+input[name="query"]#search:hover,
+input[name="query"]#search:active {
   background-color: #fff;
   border-color: #2196f3;
 }

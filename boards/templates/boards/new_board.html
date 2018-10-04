@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block title %}<title>Create Board | Elmer</title>{% endblock %}
-{% block head %}<script src='https://www.google.com/recaptcha/api.js'></script>{% endblock %}
 
 {% block form_content %}
 <style>
@@ -42,7 +41,7 @@ label {
         <input type="file" class="form-control-file" id="id_cover" name="cover" accept="image/*">
         <small id="cover_help" class="form-text text-muted">Image size should be <b>900 &#10005; 300</b>.</small>
       </div>
-      
+
    <button type="submit" class="btn btn-success btn-block" id="submit_board">Submit</button>
 </form>
 <script type="text/javascript">

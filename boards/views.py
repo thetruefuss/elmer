@@ -103,7 +103,7 @@ class UserCreatedBoardsPageView(LoginRequiredMixin, ListView):
 @login_required
 def new_board(request):
     """
-    Displays a new board form and handles creation by validating reCAPTCHA.
+    Displays a form & handle action for creating new board.
     """
     board_form = BoardForm()
 

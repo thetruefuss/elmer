@@ -182,7 +182,7 @@ def deactivate_subject(request, subject):
 @login_required
 def new_subject(request):
     """
-    Displays a new subject form and handles creation by validating reCAPTCHA.
+    Displays a form & handle action for creating new subject.
     """
     if request.method == 'POST':
         subject_form = SubjectForm(request.POST, request.FILES)
