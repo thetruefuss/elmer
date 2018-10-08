@@ -5,14 +5,7 @@ body {
 }
 #topNavbar .nav-link,
 .navbar-brand {
-  font-weight: 700;
-}
-.form-control {
-  box-shadow: inset 0 1px 2px #e6e1e2;
-  transition: border-color ease-in-out 0.15s;
-}
-.form-control:focus {
-  box-shadow: 0 0 0 1px rgba(0, 123, 255, 0.25), inset 0 2px 3px #e6e1e2;
+  font-weight: 600;
 }
 .cta_btn {
   font-weight: bold;
@@ -87,9 +80,27 @@ input[name="query"]#search {
   line-height: 21px;
 }
 input[name="query"]#search:hover,
-input[name="query"]#search:active {
+input[name="query"]#search:focus {
   background-color: #fff;
   border-color: #2196f3;
+}
+/* form styling */
+form[method="post"] label {
+  font-weight: 600;
+}
+form[method="post"] label span.asteriskField {
+  color: #ff1100;
+}
+form[method="post"] input,
+form[method="post"] textarea {
+    background-color: rgb(246, 247, 248);
+    outline: none;
+    border-radius: 4px;
+    box-shadow: none;
+}
+form[method="post"] input:focus,
+form[method="post"] textarea:focus {
+    background-color: #fff;
 }
 #welcome_signup_block {
   padding: 50px;

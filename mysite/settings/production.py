@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'users',
 
     'crispy_forms',
+    'widget_tweaks',
     'sorl.thumbnail',
     'corsheaders',
     'rest_framework',

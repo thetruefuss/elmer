@@ -1,39 +1,14 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+
 {% block title %}<title>Login | Elmer</title>{% endblock %}
 
 {% block form_content %}
-<style>
-#login_form input {
-    background-color: #f8f9fa;
-}
-#login_form input:focus {
-    background-color: #fff;
-}
-label {
-    font-weight:bold;
-}
-</style>
 {% include "includes/page_heading.html" with text="Login to Elmer" %}
 
-{% if form.errors %}
-  <div class="alert alert-danger alert-dismissible fade show" role="alert">
-    Please enter a correct username and password. Note that both fields are case-sensitive.
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-{% endif %}
-
-<form action="{% url 'login' %}" method="post" id="login_form">{% csrf_token %}
-  <div class="form-group">
-    <label for="id_username">Username</label>
-    <input type="text" class="form-control" id="id_username" name="username" required>
-  </div>
-  <div class="form-group">
-    <label for="id_password">Password</label>
-    <input type="password" class="form-control" id="id_password" name="password" required>
-  </div>
-  <input type="hidden" name="next" value="{{next}}"/>
+<form action="{% url 'login' %}" method="post">
+  {% csrf_token %}
+  {{ form|crispy }}
   <button type="submit" class="btn btn-primary btn-block">Login</button>
   <div class="text-center mt-4">
     <a href="{% url 'password_reset' %}">Forgot password?</a>
@@ -42,7 +17,7 @@ label {
 
 <div class="card text-center mt-4">
   <div class="card-body">
-    Don't have an account? <a href="{% url 'signup' %}" class="card-link">Sign up</a>
+    Don't have an account? <a href="{% url 'signup' %}" class="card-link">Sign Up</a>
   </div>
 </div>
 {% endblock %}

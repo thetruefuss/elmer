@@ -184,6 +184,8 @@ def new_subject(request):
     """
     Displays a form & handle action for creating new subject.
     """
+    subject_form = SubjectForm(**{'user': request.user})
+
     if request.method == 'POST':
         subject_form = SubjectForm(request.POST, request.FILES)
         if subject_form.is_valid():
@@ -224,10 +226,6 @@ def new_subject(request):
                 image_compression(new_subject.photo.name)
 
             return redirect(new_subject.get_absolute_url())
-        else:
-            subject_form = SubjectForm(**{'user': request.user})
-    else:
-        subject_form = SubjectForm(**{'user': request.user})
 
     form_filling = True
 

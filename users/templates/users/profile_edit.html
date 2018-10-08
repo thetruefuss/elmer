@@ -1,10 +1,13 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+
 {% block title %}<title>Account Settings | Elmer</title>{% endblock %}
 
 {% block content %}
 {% include "includes/page_heading.html" with text="Account Settings" %}
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs mb-4">
   <li class="nav-item">
     <a class="nav-link active" href="{% url 'profile_edit' %}">Edit profile</a>
   </li>
@@ -15,42 +18,13 @@
     <a class="nav-link" href="{% url 'password_change' %}">Change password</a>
   </li>
 </ul>
-<br>
-<style>
-#profile_form input {
-    background-color: #f8f9fa;
-}
-#profile_form input:focus {
-    background-color: #fff;
-}
-span#required_inp {
-    color:red;
-}
-label {
-    font-weight:bold;
-}
-</style>
-<form action="." method="post" enctype="multipart/form-data" id="profile_form">
+
+<form action="{% url 'profile_edit' %}" method="post">
   {% csrf_token %}
+  {{ user_form|crispy }}
   <div class="form-group">
-    <label for="id_first_name">First name</label>
-    <input type="text" class="form-control" id="id_username" maxlength="30" name="first_name" value="{{user_form.first_name.value}}">
-  </div>
-  <div class="form-group">
-    <label for="id_last_name">Last Name</label>
-    <input type="text" class="form-control" id="id_password" maxlength="30" name="last_name" value="{{user_form.last_name.value}}">
-  </div>
-  <div class="form-group">
-    <label for="id_email">Email address</label>
-    <input type="email" class="form-control" id="id_email" maxlength="254" name="email" value="{{user_form.email.value}}">
-  </div>
-  <div class="form-group">
-    <label for="id_dob">Date of birth</label>
-    {% if profile_form.dob.value %}
-    <input type="text" class="form-control" id="id_dob" maxlength="150" name="dob" placeholder="y-m-d" value="{{profile_form.dob.value}}">
-    {% else %}
-    <input type="text" class="form-control" id="id_dob" maxlength="150" name="dob" placeholder="y-m-d">
-    {% endif %}
+    <label for="id_dob">Date of Birth</label>
+    {% render_field profile_form.dob class="form-control" %}
   </div>
   <button type="submit" class="btn btn-success btn-block">Save</button>
 </form>

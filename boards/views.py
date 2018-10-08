@@ -114,11 +114,7 @@ def new_board(request):
             new_board.admins.add(request.user)
             new_board.subscribers.add(request.user)
             return redirect(new_board.get_absolute_url())
-        else:
-            board_form = BoardForm()
-    else:
-        board_form = BoardForm()
-
+            
     form_filling = True
 
     return render(request, 'boards/new_board.html', {

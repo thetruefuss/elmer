@@ -1,61 +1,14 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}<title>Create Board | Elmer</title>{% endblock %}
 
 {% block form_content %}
-<style>
-#board_form #id_description, #board_form #id_title {
-    background-color: #f8f9fa;
-}
-#board_form #id_description:focus, #board_form #id_title:focus {
-    background-color: #fff;
-}
-span#required_inp {
-    color:red;
-}
-label {
-    font-weight:bold;
-}
-</style>
-    {% include "includes/page_heading.html" with text="Create Board" %}
-    {% if board_form.errors %}
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{board_form.errors}}
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    {% endif %}
-    <form action="{% url 'new_board' %}" method="post" enctype="multipart/form-data" id="board_form">
-      {% csrf_token %}
-      <div class="form-group">
-        <label for="id_title"><span id="required_inp">*</span>Title</label>
-        <input type="text" class="form-control" id="id_title" maxlength="500" name="title" required>
-      </div>
-      <div class="form-group">
-        <label for="id_description"><span id="required_inp">*</span>Description</label>
-        <textarea class="form-control" cols="40" rows="4" id="id_description" name="description" maxlength="2000" placeholder="Describe your board verbosely" required></textarea>
-      </div>
-      <div class="form-group">
-        <label for="id_cover">Background cover</label>
-        <input type="file" class="form-control-file" id="id_cover" name="cover" accept="image/*">
-        <small id="cover_help" class="form-text text-muted">Image size should be <b>900 &#10005; 300</b>.</small>
-      </div>
+{% include "includes/page_heading.html" with text="Create Board" %}
 
-   <button type="submit" class="btn btn-success btn-block" id="submit_board">Submit</button>
+<form action="{% url 'new_board' %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ board_form|crispy }}
+ <button type="submit" class="btn btn-success btn-block">Submit</button>
 </form>
-<script type="text/javascript">
-// Check file size
-$(document).ready(function(){
-  $("input#id_cover").on("change", function () {
-    var file_size = this.files[0].size;
-    if (file_size > 2097152) {
-      alert("Image size should be less than 2 megabytes.")
-      $("button#submit_board").prop('disabled', true);
-    } else {
-        $("button#submit_board").prop('disabled', false);
-    }
-  });
-});
-</script>
 {% endblock %}

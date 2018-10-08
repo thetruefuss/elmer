@@ -2,15 +2,9 @@
 {% block title %}<title>Account Settings | Elmer</title>{% endblock %}
 
 {% block content %}
-<style>
-
-label {
-    font-weight:bold;
-}
-</style>
 {% include "includes/page_heading.html" with text="Account Settings" %}
 
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs mb-4">
   <li class="nav-item">
     <a class="nav-link" href="{% url 'profile_edit' %}">Edit profile</a>
   </li>
@@ -21,34 +15,17 @@ label {
     <a class="nav-link" href="{% url 'password_change' %}">Change password</a>
   </li>
 </ul>
-<br>
+
 <div class="container" style="text-align:center;">
   <img src="{{request.user.profile.get_picture}}" width="300px" height="300px">
 </div>
-<form enctype="multipart/form-data" method="post" action="{% url 'picture_change' %}">
+
+<form action="{% url 'picture_change' %}" method="post" enctype="multipart/form-data">
   {% csrf_token %}
   <div class="form-group">
     <label for="id_dp">Upload a picture</label>
     <input type="file" class="form-control-file" id="id_dp" name="dp" accept="image/*">
   </div>
-
  <button type="submit" class="btn btn-primary btn-block" id="submit_pic">Submit</button>
 </form>
-
-
-<script type="text/javascript">
-// Check file size
-$(document).ready(function(){
-  $("input#id_dp").on("change", function () {
-    var file_size = this.files[0].size;
-    if (file_size > 2097152) {
-      alert("Image size should be less than 2 megabytes.")
-      $("button#submit_pic").prop('disabled', true);
-    } else {
-        $("button#submit_pic").prop('disabled', false);
-    }
-  });
-});
-</script>
-
 {% endblock %}
