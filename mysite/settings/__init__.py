@@ -1,10 +1,12 @@
 try:
-    from .local import *
+    from .dev import *
 except:
     pass
 
-# Uncomment if using in production
+# Uncomment following lines when
+# settings.DEBUG is False.
+
 # try:
-#     from .production import *
+#     from .prod import *
 # except:
 #     pass
