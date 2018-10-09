@@ -48,6 +48,12 @@ Load initial data for flatpages from fixtures folder:
 $ python manage.py loaddata fixtures/flatpages_data.json
 ```
 
+[Optional] Populate the database with dummy data:
+
+```shell
+$ python scripts/populate_database.py
+```
+
 Run the development server:
 
 ```shell
