@@ -1,5 +1,5 @@
-# coding: utf-8
-
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import math
 import os
 import random
@@ -12,19 +12,20 @@ sys.path.append(PROJECT_DIR)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mysite.settings')
 
 import django
+
 django.setup()
 
 from django.conf import settings
-from django.db.utils import IntegrityError
 from django.contrib.auth.models import User
+from django.db.utils import IntegrityError
 
 from boards.models import Board
 from comments.models import Comment
 from subjects.models import Subject
 
-
 print("\n\tEnter credentials for creating SUPERUSER.") if not settings.DEBUG \
-    else print("\n\tUsing default credentials for SUPERUSER."); time.sleep(1);
+    else print("\n\tUsing default credentials for SUPERUSER.")
+time.sleep(1)
 
 SUPERUSER_USERNAME = input("\n\tUsername: ") if not settings.DEBUG else "admin"
 SUPERUSER_EMAIL = input("\n\tEmail: ") if not settings.DEBUG else "admin@example.com"
@@ -83,7 +84,7 @@ def generate_dummy_text(length):
     """Generate dummy text for boards, subjects & comments."""
     chars_list = [random.choice(CHARS) for i in range(length)]
     for i in range(len(chars_list)):
-        if i%5 == 0:
+        if i % 5 == 0:
             chars_list.insert(i, " ")
     text = "".join(chars_list)
     return text
@@ -112,11 +113,9 @@ def final_report():
 def create_superuser():
     """Create superuser."""
     try:
-        user = User.objects.create_superuser(
-            username=SUPERUSER_USERNAME,
-            email=SUPERUSER_EMAIL,
-            password=SUPERUSER_PASSWORD
-        )
+        user = User.objects.create_superuser(username=SUPERUSER_USERNAME,
+                                             email=SUPERUSER_EMAIL,
+                                             password=SUPERUSER_PASSWORD)
         user.save()
         task_done_message(func_name=create_superuser.__name__)
     except IntegrityError as e:
@@ -133,10 +132,7 @@ def create_boards():
             show_progress_bar(percentage, create_boards.__name__)
             title = generate_dummy_text(BOARDS_TITLE_LENGTH)
             description = title * random.randint(1, 10)
-            board = Board.objects.create(
-                title=title,
-                description=description
-            )
+            board = Board.objects.create(title=title, description=description)
             board.save()
             board.admins.add(admin)
             board.subscribers.add(admin)
@@ -154,11 +150,7 @@ def create_users():
             show_progress_bar(percentage, create_users.__name__)
             username = "".join(random.choice(CHARS) for i in range(10))
             email = username + "@example.com"
-            user = User.objects.create_user(
-                username=username,
-                email=email,
-                password=USERS_PASSWORD
-            )
+            user = User.objects.create_user(username=username, email=email, password=USERS_PASSWORD)
             user.save()
         except IntegrityError as e:
             print(e)
@@ -176,12 +168,7 @@ def create_subjects():
             body = title * random.randint(1, 10)
             author = User.objects.get(id=random.randint(1, TOTAL_USERS))
             board = Board.objects.get(id=random.randint(1, TOTAL_BOARDS))
-            subject = Subject.objects.create(
-                title=title,
-                body=body,
-                author=author,
-                board=board
-            )
+            subject = Subject.objects.create(title=title, body=body, author=author, board=board)
             subject.save()
             subject.points.add(author)
         except IntegrityError as e:
@@ -213,11 +200,7 @@ def distribute_comments():
         user = User.objects.get(id=random.randint(1, TOTAL_USERS))
         subject = Subject.objects.get(id=random.randint(1, TOTAL_SUBJECTS))
         body = generate_dummy_text(COMMENTS_BODY_LENGTH)
-        comment = Comment.objects.create(
-            body=body,
-            subject=subject,
-            commenter=user
-        )
+        comment = Comment.objects.create(body=body, subject=subject, commenter=user)
         comment.save()
     task_done_message(total_entries, distribute_comments.__name__)
 

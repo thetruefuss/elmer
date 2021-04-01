@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
@@ -25,10 +27,21 @@ class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
         fields = [
-            'id', 'title', 'slug', 'body', 'body_linkified',
-            'photo', 'author', 'board', 'board_slug', 'stars_count',
-            'comments_count', 'is_starred', 'created',
-            'created_naturaltime', 'is_author',
+            'id',
+            'title',
+            'slug',
+            'body',
+            'body_linkified',
+            'photo',
+            'author',
+            'board',
+            'board_slug',
+            'stars_count',
+            'comments_count',
+            'is_starred',
+            'created',
+            'created_naturaltime',
+            'is_author',
         ]
 
     def get_body_linkified(self, obj):
@@ -99,12 +112,10 @@ class SubjectSerializer(serializers.ModelSerializer):
                     if mentioned_user not in names_list:
                         instance.mentioned.add(user)
                         if user is not mentioned_user:
-                            Notification.objects.create(
-                                Actor=user,
-                                Object=instance,
-                                Target=mentioned_user,
-                                notif_type='subject_mentioned'
-                            )
+                            Notification.objects.create(Actor=user,
+                                                        Object=instance,
+                                                        Target=mentioned_user,
+                                                        notif_type='subject_mentioned')
                         names_list.append(user)
                 except:  # noqa: E722
                     pass

@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.urls import reverse
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import escape
 
@@ -18,25 +20,18 @@ class Subject(models.Model):
     title = models.CharField(max_length=150, db_index=True)
     slug = models.SlugField(max_length=150, null=True, blank=True)
     body = models.TextField(max_length=5000, blank=True, null=True)
-    photo = models.ImageField(
-        upload_to='subject_photos/', verbose_name=u"Add image (optional)",
-        blank=True, null=True
-    )
+    photo = models.ImageField(upload_to='subject_photos/', verbose_name=u"Add image (optional)", blank=True, null=True)
     author = models.ForeignKey(User, related_name='posted_subjects', on_delete=models.CASCADE)
     board = models.ForeignKey(Board, related_name='submitted_subjects', on_delete=models.CASCADE)
-    points = models.ManyToManyField(
-        settings.AUTH_USER_MODEL, related_name='liked_subjects', blank=True
-    )
-    mentioned = models.ManyToManyField(
-        User, related_name='m_in_subjects', blank=True
-    )
+    points = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='liked_subjects', blank=True)
+    mentioned = models.ManyToManyField(User, related_name='m_in_subjects', blank=True)
     rank_score = models.FloatField(default=0.0)
     active = models.BooleanField(default=True)
     created = models.DateTimeField(default=timezone.now)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ('-created',)
+        ordering = ('-created', )
 
     def __str__(self):
         """Unicode representation for a subject model."""
@@ -50,16 +45,13 @@ class Subject(models.Model):
 
     def get_absolute_url(self):
         """Return absolute url for a subject."""
-        return reverse('subject_detail',
-                       args=[self.board.slug,
-                             self.slug])
+        return reverse('subject_detail', args=[self.board.slug, self.slug])
 
     @staticmethod
     def get_subjects(user=None):
         """Returns a list of subjects."""
         if user:
-            subjects = Subject.objects.filter(active=True,
-                                              author=user)
+            subjects = Subject.objects.filter(active=True, author=user)
         else:
             subjects = Subject.objects.filter(active=True)
         return subjects
@@ -68,12 +60,9 @@ class Subject(models.Model):
     def search_subjects(query, board=None):
         """Searches for subjects."""
         if board:
-            search_results = Subject.objects.filter(active=True,
-                                                    title__icontains=query,
-                                                    board=board)
+            search_results = Subject.objects.filter(active=True, title__icontains=query, board=board)
         else:
-            search_results = Subject.objects.filter(active=True,
-                                                    title__icontains=query)
+            search_results = Subject.objects.filter(active=True, title__icontains=query)
         return search_results
 
     def get_points(self):
@@ -100,10 +89,8 @@ def subject_unique_check(text, uids):
     return not Subject.objects.filter(slug=text).exists()
 
 
-subject_slugify = UniqueSlugify(
-                    unique_check=subject_unique_check,
-                    to_lower=True,
-                    max_length=80,
-                    separator='_',
-                    capitalize=False
-                )
+subject_slugify = UniqueSlugify(unique_check=subject_unique_check,
+                                to_lower=True,
+                                max_length=80,
+                                separator='_',
+                                capitalize=False)

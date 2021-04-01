@@ -1,5 +1,8 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from rest_framework.pagination import (
-    LimitOffsetPagination, PageNumberPagination,
+    LimitOffsetPagination,
+    PageNumberPagination,
 )
 
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect
@@ -12,18 +14,18 @@ from .models import Comment
 
 def _html_comments(comment_id, board, subject):
     """Handles comment postings via ajax."""
-    subject = get_object_or_404(Subject,
-                                board__slug=board.slug,
-                                slug=subject.slug)
+    subject = get_object_or_404(Subject, board__slug=board.slug, slug=subject.slug)
     comment = subject.comments.get(id=comment_id)
     user = comment.commenter
     html = ''
-    html = '{0}{1}'.format(html,
-                               render_to_string('comments/partial_subject_comments.html',  # noqa: E127
-                                                {
-                                                    'comment': comment,
-                                                    'user': user,
-                                                    }))
+    html = '{0}{1}'.format(
+        html,
+        render_to_string(
+            'comments/partial_subject_comments.html',  # noqa: E127
+            {
+                'comment': comment,
+                'user': user,
+            }))
 
     return html
 
@@ -38,18 +40,18 @@ def load_new_comments(request):
     subject = request.GET.get('subject')
     user = request.user
 
-    subject = get_object_or_404(Subject,
-                                board__slug=board,
-                                slug=subject)
+    subject = get_object_or_404(Subject, board__slug=board, slug=subject)
     comments = subject.comments.filter(id__gt=last_comment_id)
     if comments:
         html = ''
-        html = '{0}{1}'.format(html,
-                                   render_to_string('comments/partial_load_more_comments.html',  # noqa: E127
-                                                    {
-                                                        'comments': comments,
-                                                        'user': user,
-                                                        }))
+        html = '{0}{1}'.format(
+            html,
+            render_to_string(
+                'comments/partial_load_more_comments.html',  # noqa: E127
+                {
+                    'comments': comments,
+                    'user': user,
+                }))
         return HttpResponse(html)
     else:
         return HttpResponse('')
@@ -61,8 +63,7 @@ def deactivate_comment(request, pk):
     Handles requests from board admins to deactivate comments form
     the board if reported.
     """
-    comment = get_object_or_404(Comment,
-                                pk=pk)
+    comment = get_object_or_404(Comment, pk=pk)
     admins = comment.subject.board.admins.all()
     if request.user in admins:
         reports = comment.comment_reports.all()
@@ -86,7 +87,6 @@ def delete_comment(request, pk):
     """
     Delete the comment if the requester is the commenter.
     """
-    comment = get_object_or_404(Comment,
-                                pk=pk)
+    comment = get_object_or_404(Comment, pk=pk)
     comment.delete()
     return HttpResponse('This comment has been deleted.')

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
@@ -19,8 +21,13 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = [
-            'id', 'body', 'subject', 'commenter', 'is_commenter',
-            'created', 'created_naturaltime',
+            'id',
+            'body',
+            'subject',
+            'commenter',
+            'is_commenter',
+            'created',
+            'created_naturaltime',
         ]
 
     def get_is_commenter(self, obj):
@@ -48,12 +55,7 @@ class CommentSerializer(serializers.ModelSerializer):
         # Use celery to create notifications in the background.
         subject = validated_data['subject']
         if user is not subject.author:
-            Notification.objects.create(
-                Actor=user,
-                Object=subject,
-                Target=subject.author,
-                notif_type='comment'
-            )
+            Notification.objects.create(Actor=user, Object=subject, Target=subject.author, notif_type='comment')
         # Checks if someone is mentioned in the comment
         body = validated_data['body']
         words_list = body.split(" ")
@@ -67,12 +69,10 @@ class CommentSerializer(serializers.ModelSerializer):
                     mentioned_user = User.objects.get(username=username)
                     if mentioned_user not in names_list:
                         if user is not mentioned_user:
-                            Notification.objects.create(
-                                Actor=user,
-                                Object=subject,
-                                Target=mentioned_user,
-                                notif_type='comment_mentioned'
-                            )
+                            Notification.objects.create(Actor=user,
+                                                        Object=subject,
+                                                        Target=mentioned_user,
+                                                        notif_type='comment_mentioned')
                         names_list.append(mentioned_user)
                 except:  # noqa: E722
                     pass

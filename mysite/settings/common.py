@@ -1,4 +1,6 @@
-# Settings for elmer (A social network inspired by reddit).
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Settings for elmer (A social network inspired by reddit)."""
 import datetime
 import os
 
@@ -24,14 +26,12 @@ INSTALLED_APPS = [
     'search',
     'messenger',
     'users',
-
     'crispy_forms',
     'widget_tweaks',
     'sorl.thumbnail',
     'corsheaders',
     'rest_framework',
     'emoticons',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -61,7 +61,7 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL = reverse_lazy('home')
 LOGIN_URL = reverse_lazy('login')
-LOGOUT_URL= reverse_lazy('logout')
+LOGOUT_URL = reverse_lazy('logout')
 
 MESSAGE_TAGS = {
     messages.DEBUG: 'alert-info',
@@ -74,9 +74,7 @@ MESSAGE_TAGS = {
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(BASE_DIR, 'templates')
-        ],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,9 +120,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # static (css, js, images etc) settings
 STATIC_URL = '/s/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static_root')
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'), )
 
 # media (images, videos, uploads etc) settings
 MEDIA_URL = '/m/'
@@ -135,9 +131,7 @@ GOOGLE_RECAPTCHA_SECRET_KEY = config('GOOGLE_RECAPTCHA_SECRET_KEY')
 
 # djangorestframework settings
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly',
-    ),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticatedOrReadOnly', ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',

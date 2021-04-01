@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -70,18 +72,18 @@ def _html_comments(comment_id, board, subject):
     """
     Handles comment postings via ajax.
     """
-    subject = get_object_or_404(Subject,
-                                board__slug=board.slug,
-                                slug=subject.slug)
+    subject = get_object_or_404(Subject, board__slug=board.slug, slug=subject.slug)
     comment = subject.comments.get(id=comment_id)
     user = comment.commenter
     html = ''
-    html = '{0}{1}'.format(html,
-                               render_to_string('comments/partial_subject_comments.html',  # noqa: E127
-                                                {
-                                                    'comment': comment,
-                                                    'user': user,
-                                                    }))
+    html = '{0}{1}'.format(
+        html,
+        render_to_string(
+            'comments/partial_subject_comments.html',  # noqa: E127
+            {
+                'comment': comment,
+                'user': user,
+            }))
 
     return html
 
@@ -90,9 +92,7 @@ def subject_detail(request, board, subject):
     """
     Displays the subject details and handles comment action.
     """
-    subject = get_object_or_404(Subject,
-                                board__slug=board,
-                                slug=subject)
+    subject = get_object_or_404(Subject, board__slug=board, slug=subject)
     comments = subject.comments.filter(active=True)
     board = subject.board
     bv = True
@@ -111,12 +111,10 @@ def subject_detail(request, board, subject):
                     new_comment.save()
 
                     if request.user is not subject.author:
-                        Notification.objects.create(
-                            Actor=new_comment.commenter,
-                            Object=new_comment.subject,
-                            Target=subject.author,
-                            notif_type='comment'
-                        )
+                        Notification.objects.create(Actor=new_comment.commenter,
+                                                    Object=new_comment.subject,
+                                                    Target=subject.author,
+                                                    notif_type='comment')
 
                     # Checks if someone is mentioned in the comment
                     words = new_comment.body
@@ -133,12 +131,10 @@ def subject_detail(request, board, subject):
                                 user = User.objects.get(username=u)
                                 if user not in names_list:
                                     if request.user is not user:
-                                        Notification.objects.create(
-                                            Actor=new_comment.commenter,
-                                            Object=new_comment.subject,
-                                            Target=user,
-                                            notif_type='comment_mentioned'
-                                        )
+                                        Notification.objects.create(Actor=new_comment.commenter,
+                                                                    Object=new_comment.subject,
+                                                                    Target=user,
+                                                                    notif_type='comment_mentioned')
                                     names_list.append(user)
                             except:  # noqa: E722
                                 pass
@@ -161,8 +157,7 @@ def deactivate_subject(request, subject):
     """
     Handles requests from board admins to deactivate subjects from the board if reported.
     """
-    subject = get_object_or_404(Subject,
-                                slug=subject)
+    subject = get_object_or_404(Subject, slug=subject)
     admins = subject.board.admins.all()
     if request.user in admins:
         reports = subject.subject_reports.all()
@@ -212,12 +207,10 @@ def new_subject(request):
                         if user not in names_list:
                             new_subject.mentioned.add(user)
                             if request.user is not user:
-                                Notification.objects.create(
-                                    Actor=new_subject.author,
-                                    Object=new_subject,
-                                    Target=user,
-                                    notif_type='subject_mentioned'
-                                )
+                                Notification.objects.create(Actor=new_subject.author,
+                                                            Object=new_subject,
+                                                            Target=user,
+                                                            notif_type='subject_mentioned')
                             names_list.append(user)
                     except:  # noqa: E722
                         pass
@@ -229,9 +222,7 @@ def new_subject(request):
 
     form_filling = True
 
-    return render(request, 'subjects/new_subject.html', {
-        'subject_form': subject_form, 'form_filling': form_filling
-    })
+    return render(request, 'subjects/new_subject.html', {'subject_form': subject_form, 'form_filling': form_filling})
 
 
 @login_required
@@ -241,8 +232,7 @@ def like_subject(request, subject):
     Ajax call to like a subject & return status.
     """
     data = dict()
-    subject = get_object_or_404(Subject,
-                                slug=subject)
+    subject = get_object_or_404(Subject, slug=subject)
     user = request.user
     if subject in user.liked_subjects.all():
         subject.points.remove(user)
@@ -262,8 +252,7 @@ def delete_subject(request, subject):
     """
     Ajax call to delete a subject.
     """
-    subject = get_object_or_404(Subject,
-                                slug=subject)
+    subject = get_object_or_404(Subject, slug=subject)
     subject.delete()
     return HttpResponse('Subject has been deleted.')
 
@@ -274,12 +263,9 @@ def edit_subject(request, subject):
     """
     Displays edit form for subjects and handles edit action.
     """
-    subject = get_object_or_404(Subject,
-                                slug=subject)
+    subject = get_object_or_404(Subject, slug=subject)
     if request.method == 'POST':
-        subject_form = SubjectForm(instance=subject,
-                                   data=request.POST,
-                                   files=request.FILES)
+        subject_form = SubjectForm(instance=subject, data=request.POST, files=request.FILES)
         if subject_form.is_valid():
             subject_form.save()
             return redirect(subject.get_absolute_url())
@@ -290,6 +276,4 @@ def edit_subject(request, subject):
 
     form_filling = True
 
-    return render(request, 'subjects/edit_subject.html', {
-        'subject_form': subject_form, 'form_filling': form_filling
-    })
+    return render(request, 'subjects/edit_subject.html', {'subject_form': subject_form, 'form_filling': form_filling})

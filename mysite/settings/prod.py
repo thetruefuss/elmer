@@ -1,11 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from .common import *  # noqa
 
 # database settings
-DATABASES = {
-    'default': dj_database_url.config(
-        default = config('DATABASE_URL')
-    )
-}
+DATABASES = {'default': dj_database_url.config(default=config('DATABASE_URL'))}
 
 # email settings
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')
@@ -18,6 +16,4 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_BACKEND = config('EMAIL_BACKEND')
 
 # django-cors-headers settings
-CORS_ORIGIN_WHITELIST = (
-    'localhost:3000',
-)
+CORS_ORIGIN_WHITELIST = ('localhost:3000', )

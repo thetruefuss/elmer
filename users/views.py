@@ -1,12 +1,16 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import (
-    REDIRECT_FIELD_NAME, authenticate, login as auth_login,
+    REDIRECT_FIELD_NAME,
+    authenticate,
+    login as auth_login,
     logout as auth_logout,
 )
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -37,15 +41,13 @@ def register_user(request):
         user_form = SignupForm(data=request.POST or None)
         if not user_form.is_valid():
             return render(request, 'registration/register.html', {
-                'user_form': user_form, 'form_filling': form_filling
+                'user_form': user_form,
+                'form_filling': form_filling
             })
         else:
             """ Begin reCAPTCHA validation """
             recaptcha_response = request.POST.get('g-recaptcha-response')
-            data = {
-                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
-                'response': recaptcha_response
-            }
+            data = {'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY, 'response': recaptcha_response}
             r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
             result = r.json()
             """ End reCAPTCHA validation """
@@ -80,9 +82,7 @@ def register_user(request):
                 return redirect('/')
     else:
         user_form = SignupForm()
-    return render(request, 'registration/register.html', {
-        'user_form': user_form, 'form_filling': form_filling
-    })
+    return render(request, 'registration/register.html', {'user_form': user_form, 'form_filling': form_filling})
 
 
 @ajax_required
@@ -91,9 +91,7 @@ def check_username(request):
     Ajax call to check username availability.
     """
     username = request.GET.get('username', None)
-    data = {
-        'is_taken': User.objects.filter(username__iexact=username).exists()
-    }
+    data = {'is_taken': User.objects.filter(username__iexact=username).exists()}
     return JsonResponse(data)
 
 
@@ -151,18 +149,13 @@ def follow_user(request, user_id):
     """
     Ajax call to follow a user.
     """
-    user = get_object_or_404(User,
-                             id=user_id)
+    user = get_object_or_404(User, id=user_id)
     if request.user in user.profile.followers.all():
         user.profile.followers.remove(request.user)
         text = 'Follow'
     else:
         user.profile.followers.add(request.user)
-        Notification.objects.create(
-            Actor=request.user,
-            Target=user,
-            notif_type='follow'
-        )
+        Notification.objects.create(Actor=request.user, Target=user, notif_type='follow')
         text = 'Unfollow'
     return HttpResponse(text)
 
@@ -173,10 +166,8 @@ def profile_edit(request):
     Handles user profile edit action.
     """
     if request.method == 'POST':
-        user_form = UserEditForm(instance=request.user,
-                                 data=request.POST)
-        profile_form = ProfileEditForm(instance=request.user.profile,
-                                       data=request.POST)
+        user_form = UserEditForm(instance=request.user, data=request.POST)
+        profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST)
         if user_form.is_valid():
             user_form.save()
         else:
@@ -197,10 +188,7 @@ def profile_edit(request):
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
 
-    return render(request, 'users/profile_edit.html', {
-        'user_form': user_form,
-        'profile_form': profile_form
-    })
+    return render(request, 'users/profile_edit.html', {'user_form': user_form, 'profile_form': profile_form})
 
 
 @login_required
@@ -244,8 +232,7 @@ class UserProfilePageView(LoginRequiredMixin, ListView):
     context_object_name = 'subjects'
 
     def get_queryset(self, **kwargs):
-        self.user = get_object_or_404(User,
-                                      username=self.kwargs['username'])
+        self.user = get_object_or_404(User, username=self.kwargs['username'])
         return Subject.get_subjects(self.user)
 
     def get_context_data(self, *args, **kwargs):
@@ -365,9 +352,4 @@ def all_friends(request):
 
     p_obj = users
 
-    return render(request, 'users/view_all_contacts.html', {
-        'users': users,
-        'page': page,
-        'p': p,
-        'p_obj': p_obj
-    })
+    return render(request, 'users/view_all_contacts.html', {'users': users, 'page': page, 'p': p, 'p_obj': p_obj})

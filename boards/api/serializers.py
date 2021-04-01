@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
 from rest_framework import serializers
@@ -22,9 +24,19 @@ class BoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = [
-            'id', 'title', 'slug', 'description', 'cover', 'cover_url',
-            'total_posts', 'admins', 'subscribers_count', 'created',
-            'created_naturaltime', 'is_subscribed', 'is_admin',
+            'id',
+            'title',
+            'slug',
+            'description',
+            'cover',
+            'cover_url',
+            'total_posts',
+            'admins',
+            'subscribers_count',
+            'created',
+            'created_naturaltime',
+            'is_subscribed',
+            'is_admin',
         ]
 
     def get_admins(self, obj):

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
 from rest_framework import serializers
@@ -17,8 +19,13 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = [
-            'id', 'notification_string', 'Actor', 'Object', 'is_read',
-            'created', 'created_naturaltime',
+            'id',
+            'notification_string',
+            'Actor',
+            'Object',
+            'is_read',
+            'created',
+            'created_naturaltime',
         ]
 
     def get_notification_string(self, obj):

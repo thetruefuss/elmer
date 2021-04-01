@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 
@@ -7,7 +9,6 @@ from rest_framework_jwt.settings import api_settings
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 jwt_response_payload_handler = api_settings.JWT_RESPONSE_PAYLOAD_HANDLER
-
 
 User = get_user_model()
 
@@ -23,7 +24,9 @@ class CurrentUserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'username', 'screen_name', 'profile_picture',
+            'username',
+            'screen_name',
+            'profile_picture',
         ]
 
     def get_screen_name(self, obj):
@@ -54,9 +57,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [
-            'screen_name', 'username'
-        ]
+        fields = ['screen_name', 'username']
 
     def get_screen_name(self, obj):
         """
@@ -77,15 +78,8 @@ class UserLoginSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = [
-            'username', 'password', 'token'
-
-        ]
-        extra_kwargs = {
-            "password": {
-                "write_only": True
-            }
-        }
+        fields = ['username', 'password', 'token']
+        extra_kwargs = {"password": {"write_only": True}}
 
     def validate(self, data):
         """
@@ -96,10 +90,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
         """
         username = data['username']
         password = data['password']
-        user_qs = User.objects.filter(
-            Q(username__iexact=username) |
-            Q(email__iexact=username)
-        ).distinct()
+        user_qs = User.objects.filter(Q(username__iexact=username) | Q(email__iexact=username)).distinct()
         if user_qs.exists() and user_qs.count() == 1:
             user_obj = user_qs.first()
             if user_obj.check_password(password):
@@ -149,7 +140,10 @@ class UserSerializerWithToken(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'token', 'username', 'email', 'password',
+            'token',
+            'username',
+            'email',
+            'password',
         ]
 
 
@@ -171,9 +165,15 @@ class ProfileRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'profile_picture_url', 'screen_name', 'requester_in_contact_list',
-            'requester_in_pending_list', 'has_followed', 'is_requesters_profile',
-            'created_boards_count', 'posted_subjects_count', 'boards_subsribed_count',
+            'profile_picture_url',
+            'screen_name',
+            'requester_in_contact_list',
+            'requester_in_pending_list',
+            'has_followed',
+            'is_requesters_profile',
+            'created_boards_count',
+            'posted_subjects_count',
+            'boards_subsribed_count',
             'member_since',
         ]
 

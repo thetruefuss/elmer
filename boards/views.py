@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -41,8 +43,7 @@ class BoardPageView(ListView):
     context_object_name = 'subjects'
 
     def get_queryset(self, **kwargs):
-        self.board = get_object_or_404(Board,
-                                       slug=self.kwargs['board'])
+        self.board = get_object_or_404(Board, slug=self.kwargs['board'])
         return self.board.submitted_subjects.filter(active=True)
 
     def get_context_data(self, *args, **kwargs):
@@ -63,8 +64,7 @@ class UserSubscriptionListView(LoginRequiredMixin, ListView):
     context_object_name = 'subscriptions'
 
     def get_queryset(self, **kwargs):
-        user = get_object_or_404(User,
-                                 username=self.request.user)
+        user = get_object_or_404(User, username=self.request.user)
         return user.subscribed_boards.all()
 
 
@@ -75,8 +75,7 @@ def subscribe(request, board):
     """
     Subscribes a board & returns subscribers count.
     """
-    board = get_object_or_404(Board,
-                              slug=board)
+    board = get_object_or_404(Board, slug=board)
     user = request.user
     if board in user.subscribed_boards.all():
         board.subscribers.remove(user)
@@ -95,8 +94,7 @@ class UserCreatedBoardsPageView(LoginRequiredMixin, ListView):
     context_object_name = 'user_boards'
 
     def get_queryset(self, **kwargs):
-        user = get_object_or_404(User,
-                                 username=self.request.user)
+        user = get_object_or_404(User, username=self.request.user)
         return user.inspected_boards.all()
 
 
@@ -114,12 +112,10 @@ def new_board(request):
             new_board.admins.add(request.user)
             new_board.subscribers.add(request.user)
             return redirect(new_board.get_absolute_url())
-            
+
     form_filling = True
 
-    return render(request, 'boards/new_board.html', {
-        'board_form': board_form, 'form_filling': form_filling
-    })
+    return render(request, 'boards/new_board.html', {'board_form': board_form, 'form_filling': form_filling})
 
 
 @login_required
@@ -128,8 +124,7 @@ def edit_board_cover(request, board):
     """
     Displays edit form for board cover and handles edit action.
     """
-    board = get_object_or_404(Board,
-                              slug=board)
+    board = get_object_or_404(Board, slug=board)
     if request.method == 'POST':
         board_cover = request.FILES.get('cover')
         if check_image_extension(board_cover.name):
@@ -140,9 +135,7 @@ def edit_board_cover(request, board):
             return HttpResponse('Filetype not supported. Supported filetypes are .jpg, .png etc.')
     else:
         form_filling = True
-        return render(request, 'boards/edit_board_cover.html', {
-            'board': board, 'form_filling': form_filling
-        })
+        return render(request, 'boards/edit_board_cover.html', {'board': board, 'form_filling': form_filling})
 
 
 @login_required
@@ -151,8 +144,7 @@ def banned_users(request, board):
     """
     Displays a list of banned users to the board admins.
     """
-    board = get_object_or_404(Board,
-                              slug=board)
+    board = get_object_or_404(Board, slug=board)
     users = board.banned_users.all()
 
     paginator = Paginator(users, 20)
@@ -187,10 +179,8 @@ def ban_user(request, board, user_id):
     """
     Handles requests from board admins to ban users from the board.
     """
-    board = get_object_or_404(Board,
-                              slug=board)
-    user = get_object_or_404(User,
-                             id=user_id)
+    board = get_object_or_404(Board, slug=board)
+    user = get_object_or_404(User, id=user_id)
     if board in user.subscribed_boards.all():
         board.subscribers.remove(user)
         board.banned_users.add(user)

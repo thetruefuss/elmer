@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -16,8 +18,7 @@ def search(request, board_slug=None):
             bv = False
             board = False
         else:
-            board = get_object_or_404(Board,
-                                      slug=board_slug)
+            board = get_object_or_404(Board, slug=board_slug)
             subjects_list = Subject.search_subjects(q, board)
             bv = True
 

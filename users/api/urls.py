@@ -1,7 +1,12 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.conf.urls import url
 
 from .views import (
-    ProfileRetrieveAPIView, UserLoginAPIView, UserSignUpAPIView, current_user,
+    ProfileRetrieveAPIView,
+    UserLoginAPIView,
+    UserSignUpAPIView,
+    current_user,
 )
 
 urlpatterns = [

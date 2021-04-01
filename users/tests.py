@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from django.urls import reverse
 from django.test import Client, TestCase
+from django.urls import reverse
 
 from .models import Profile
 
@@ -11,22 +13,14 @@ class TestProfileModel(TestCase):
     TestCase class to test the profile model functionality
     """
     def setUp(self):
-        self.user = get_user_model().objects.create(
-            username='test_user',
-            email='test@gmail.com',
-            password='top_secret'
-        )
-        self.other_user = get_user_model().objects.create(
-            username='other_test_user',
-            email='other_test@gmail.com',
-            password='top_secret'
-        )
-        self.profile = Profile.objects.get(
-            user=self.user,
-        )
-        self.profile_two = Profile.objects.get(
-            user=self.other_user,
-        )
+        self.user = get_user_model().objects.create(username='test_user',
+                                                    email='test@gmail.com',
+                                                    password='top_secret')
+        self.other_user = get_user_model().objects.create(username='other_test_user',
+                                                          email='other_test@gmail.com',
+                                                          password='top_secret')
+        self.profile = Profile.objects.get(user=self.user, )
+        self.profile_two = Profile.objects.get(user=self.other_user, )
         self.profile.dob = '2002-12-12'
         self.profile.save()
 
@@ -50,19 +44,14 @@ class TestRegisterViews(TestCase):
     def setUp(self):
         self.client = Client()
         self.other_client = Client()
-        self.user = get_user_model().objects.create(
-            username='test_user',
-            email='test@gmail.com',
-            password='top_secret'
-        )
-        self.other_user = get_user_model().objects.create(
-            username='other_test_user',
-            email='other_test@gmail.com',
-            password='top_secret'
-        )
+        self.user = get_user_model().objects.create(username='test_user',
+                                                    email='test@gmail.com',
+                                                    password='top_secret')
+        self.other_user = get_user_model().objects.create(username='other_test_user',
+                                                          email='other_test@gmail.com',
+                                                          password='top_secret')
         self.client.login(username='test_user', password='top_secret')
-        self.other_client.login(username='other_test_user',
-                                password='top_secret')
+        self.other_client.login(username='other_test_user', password='top_secret')
 
     def test_post_empty_response(self):
         response = self.client.post(reverse('signup'))

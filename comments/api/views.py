@@ -1,9 +1,7 @@
-from rest_framework.generics import (
-    DestroyAPIView, ListCreateAPIView,
-)
-from rest_framework.permissions import (
-    IsAuthenticatedOrReadOnly,
-)
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+from rest_framework.generics import DestroyAPIView, ListCreateAPIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from comments.models import Comment
 

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
@@ -13,15 +15,9 @@ class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile', on_delete=models.CASCADE)
     dp = models.ImageField(upload_to='dps/', blank=True, null=True)
     dob = models.DateField(blank=True, null=True)
-    followers = models.ManyToManyField(
-        User, related_name='following', blank=True
-    )
-    contact_list = models.ManyToManyField(
-        User, related_name='contacters', blank=True
-    )
-    pending_list = models.ManyToManyField(
-        User, related_name='my_pending_requests', blank=True
-    )
+    followers = models.ManyToManyField(User, related_name='following', blank=True)
+    contact_list = models.ManyToManyField(User, related_name='contacters', blank=True)
+    pending_list = models.ManyToManyField(User, related_name='my_pending_requests', blank=True)
     member_since = models.DateTimeField(default=timezone.now)
 
     class Meta:

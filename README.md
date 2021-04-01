@@ -14,18 +14,37 @@ Check the website at [https://elmer.pythonanywhere.com](https://elmer.pythonanyw
 
 ### Technology Stack
 
-* [Python](https://www.python.org/) 3.6.x
-* [Django Web Framework](https://www.djangoproject.com/) 2.1.x
-* [Django Rest Framework](http://www.django-rest-framework.org/) 3.8.x
-* [Twitter Bootstrap 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
-* [jQuery 3](https://api.jquery.com/)
+- [Python](https://www.python.org/) 3.6.x
+- [Django Web Framework](https://www.djangoproject.com/) 2.1.x
+- [Django Rest Framework](http://www.django-rest-framework.org/) 3.8.x
+- [Twitter Bootstrap 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
+- [jQuery 3](https://api.jquery.com/)
 
 ### Installation Guide
+
+Create new directory:
+
+```shell
+$ mkdir elmer && cd elmer
+```
+
+Create new virtual environment:
+
+```shell
+$ python -m venv venv
+```
+
+Activate virtual environment:
+
+```shell
+$ source venv/bin/activate  (For Linux)
+$ venv/Scripts/activate  (For Windows)
+```
 
 Clone this repository:
 
 ```shell
-$ git clone https://github.com/thetruefuss/elmer.git
+$ git clone https://github.com/thetruefuss/elmer.git src && cd src
 ```
 
 Install requirements:
@@ -34,7 +53,23 @@ Install requirements:
 $ pip install -r requirements.txt
 ```
 
-Copy `.env.example` file content to new `.env` file and update the credentials if any i.e Gmail account etc.
+Copy environment variables:
+
+```shell
+$ cp .env.example .env
+```
+
+Load static files:
+
+```shell
+$ python manage.py collectstatic --noinput
+```
+
+Check for any project errors:
+
+```shell
+$ python manage.py check
+```
 
 Run Django migrations to create database tables:
 
@@ -48,7 +83,7 @@ Load initial data for flatpages from fixtures folder:
 $ python manage.py loaddata fixtures/flatpages_data.json
 ```
 
-[Optional] Populate the database with dummy data:
+Populate the database with dummy data (Optional):
 
 ```shell
 $ python scripts/populate_database.py

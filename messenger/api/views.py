@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
 
 from rest_framework.generics import ListAPIView
@@ -31,8 +33,7 @@ class MessageListAPIView(ListAPIView):
 
     def get_queryset(self, *args, **kwargs):
         username = self.request.GET.get('username', '')
-        queryset_list = Message.objects.filter(user=self.request.user,
-                                               conversation__username=username)
+        queryset_list = Message.objects.filter(user=self.request.user, conversation__username=username)
         queryset_list.update(is_read=True)
         return queryset_list
 
@@ -54,8 +55,5 @@ class MessageCreateAPIView(APIView):
             if from_user != to_user:
                 chat_msg = Message.send_message(from_user, to_user, message)
             # Return data serialized using new MessageSerializer
-            return Response({
-                "to": to_user,
-                "message": message
-            })
+            return Response({"to": to_user, "message": message})
         return Response({"detail": "User does not exists."}, status=401)

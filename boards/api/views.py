@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import (
-    ListCreateAPIView, RetrieveUpdateDestroyAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
 )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -38,7 +41,6 @@ class BoardRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
 
 class SubscribeBoardView(APIView):
-
     def get(self, request, format=None):
         """
         View that subscribe / unsubscribe a board and returns action status.
@@ -60,7 +62,6 @@ class SubscribeBoardView(APIView):
 
 
 class GetSubscribedBoards(APIView):
-
     def get(self, request, format=None):
         """Return a list of user subscribed boards."""
         boards = request.user.subscribed_boards.all()
@@ -69,7 +70,6 @@ class GetSubscribedBoards(APIView):
 
 
 class TrendingBoardsList(APIView):
-
     def get(self, request, format=None):
         """Return a list of trending boards."""
         boards = Board.objects.all()

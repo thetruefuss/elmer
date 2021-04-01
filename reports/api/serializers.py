@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
 from rest_framework import serializers
@@ -17,8 +19,14 @@ class ReportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Report
         fields = [
-            'id', 'report_string', 'reporter', 'comment', 'subject', 'board',
-            'created', 'created_naturaltime',
+            'id',
+            'report_string',
+            'reporter',
+            'comment',
+            'subject',
+            'board',
+            'created',
+            'created_naturaltime',
         ]
 
     def get_report_string(self, obj):

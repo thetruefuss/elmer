@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Max
@@ -15,7 +17,7 @@ class Message(models.Model):
     is_read = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ('date',)
+        ordering = ('date', )
         db_table = 'messages_message'
 
     def __str__(self):
@@ -38,10 +40,7 @@ class Message(models.Model):
                                        conversation=to_user,
                                        is_read=True)
         current_user_message.save()
-        Message(from_user=from_user,
-                message=message,
-                user=to_user,
-                conversation=from_user).save()
+        Message(from_user=from_user, message=message, user=to_user, conversation=from_user).save()
 
         return current_user_message
 
@@ -50,18 +49,18 @@ class Message(models.Model):
         """
         Returns a list of users having conversation with the `user` passed in.
         """
-        conversations = Message.objects.filter(
-            user=user).values('conversation').annotate(
-                last=Max('date')).order_by('-last')
+        conversations = Message.objects.filter(user=user).values('conversation').annotate(
+            last=Max('date')).order_by('-last')
         users = []
         for conversation in conversations:
             users.append({
-                'user': User.objects.get(pk=conversation['conversation']),
-                'last': conversation['last'],
-                'unread': Message.objects.filter(user=user,
-                                                 conversation__pk=conversation[
-                                                    'conversation'],
-                                                 is_read=False).count(),
-                })
+                'user':
+                User.objects.get(pk=conversation['conversation']),
+                'last':
+                conversation['last'],
+                'unread':
+                Message.objects.filter(user=user, conversation__pk=conversation['conversation'],
+                                       is_read=False).count(),
+            })
 
         return users

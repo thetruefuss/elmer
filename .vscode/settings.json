@@ -1,0 +1,19 @@
+{
+    "python.pythonPath": "/home/thetruefuss/projects/github/elmer/venv/bin/python",
+    "python.linting.enabled": false,
+    "editor.formatOnSave": true,
+    "python.formatting.provider": "yapf",
+    "python.formatting.yapfArgs": [
+        "--style={ based_on_style: pep8, column_limit: 119 }"
+    ],
+    "python.sortImports.args": [
+        "-rc",
+        "-sp setup.cfg"
+    ],
+    "[python]": {
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        }
+    },
+    "python.linting.pylintEnabled": true
+}

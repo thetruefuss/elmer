@@ -1,6 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.generics import (
-    ListCreateAPIView, RetrieveUpdateDestroyAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
 )
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
@@ -32,13 +35,9 @@ class SubjectListCreateAPIView(ListCreateAPIView):
         trending_subjects = self.request.GET.get('trending', '')
 
         if user_query:
-            queryset_list = queryset_list.filter(
-                author__username__icontains=user_query,
-            )
+            queryset_list = queryset_list.filter(author__username__icontains=user_query, )
         if board_query:
-            queryset_list = queryset_list.filter(
-                board__slug__icontains=board_query
-            )
+            queryset_list = queryset_list.filter(board__slug__icontains=board_query)
         if trending_subjects == "True":
             queryset_list = queryset_list.order_by('-rank_score')
 
@@ -63,7 +62,6 @@ class SubjectRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
 
 class StarSubjectView(APIView):
-
     def get(self, request, format=None):
         """
         View that star / unstar a subject and returns action status & total points.
@@ -85,14 +83,13 @@ class StarSubjectView(APIView):
 
 
 class ActiveThreadsList(APIView):
-
     def get(self, request, format=None):
         """Return a list of active threads."""
         current_user = request.user
         active_threads = current_user.posted_subjects.all()[:5]
-        active_threads_list = [
-            {'title': thread.title,
-             'slug': thread.slug,
-             'board_slug': thread.board.slug} for thread in active_threads
-        ]
+        active_threads_list = [{
+            'title': thread.title,
+            'slug': thread.slug,
+            'board_slug': thread.board.slug
+        } for thread in active_threads]
         return Response(active_threads_list)

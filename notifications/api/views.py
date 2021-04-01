@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 

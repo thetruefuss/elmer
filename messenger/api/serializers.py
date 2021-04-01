@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.contrib.auth.models import User
 from django.contrib.humanize.templatetags.humanize import naturaltime
 
@@ -18,7 +20,10 @@ class ContactsListSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'username', 'screen_name', 'profile_picture',
+            'id',
+            'username',
+            'screen_name',
+            'profile_picture',
         ]
 
     def get_screen_name(self, obj):
@@ -51,7 +56,11 @@ class MessageListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = [
-            'id', 'from_user', 'message', 'date', 'data_naturaltime',
+            'id',
+            'from_user',
+            'message',
+            'date',
+            'data_naturaltime',
         ]
 
     def get_data_naturaltime(self, obj):

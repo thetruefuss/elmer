@@ -1,7 +1,11 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from django.conf.urls import url
 
 from .views import (
-    ContactsListAPIView, MessageCreateAPIView, MessageListAPIView,
+    ContactsListAPIView,
+    MessageCreateAPIView,
+    MessageListAPIView,
 )
 
 urlpatterns = [
