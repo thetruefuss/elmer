@@ -31,6 +31,6 @@ six==1.11.0
 sorl-thumbnail==12.5.0
 sqlparse==0.4.1
 Unidecode==0.4.21
-urllib3==1.23
+urllib3==1.26.5
 webencodings==0.5.1
 yapf==0.30.0
