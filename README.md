@@ -1,26 +1,109 @@
-# Elmer
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
-[![Build Status](https://travis-ci.org/thetruefuss/elmer.svg?branch=master)](https://travis-ci.org/thetruefuss/elmer)
-[![Coverage Status](https://coveralls.io/repos/github/thetruefuss/elmer/badge.svg?branch=master)](https://coveralls.io/github/thetruefuss/elmer?branch=master)
-[![Requirements Status](https://requires.io/github/thetruefuss/elmer/requirements.svg?branch=master)](https://requires.io/github/thetruefuss/elmer/requirements/?branch=master)
+<br />
 
-Elmer is a social network inspired by [reddit](https://www.reddit.com/) built with [Python](https://www.python.org/) using the [Django Web Framework](https://www.djangoproject.com/).
+<p align="center">
+  <a href="https://github.com/thetruefuss/elmer">
+    <img src="https://raw.githubusercontent.com/thetruefuss/elmer/master/static/img/elmer_logo.png" alt="Logo" width="50" height="50">
+  </a>
 
-### Demo
+  <h3 align="center">Elmer</h3>
 
-Check the website at [https://elmer.pythonanywhere.com](https://elmer.pythonanywhere.com/)
+  <p align="center">
+    A social network inspired by reddit
+    <br />
+    <a href="https://elmer.pythonanywhere.com"><strong>Explore the app »</strong></a>
+    <br />
+    <br />
+    <a href="https://elmer.pythonanywhere.com">View Demo</a>
+    ·
+    <a href="https://github.com/thetruefuss/elmer/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/thetruefuss/elmer/issues">Request Feature</a>
+  </p>
+</p>
 
-![Elmer Screenshot](https://image.ibb.co/es9ymz/elmer_screenshot.jpg "Elmer Screenshot")
 
-### Technology Stack
+
+<details open="open">
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+        <li><a href="#screenshots">Screenshots</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#contributing">Contributing</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+
+
+
+## About The Project
+
+An open source social network inspired by [reddit](https://www.reddit.com/) built with [Python](https://www.python.org/) using the [Django Web Framework](https://www.djangoproject.com/), trivial templates with Bootstrap & jQuery for UI & UX,  a RESTful API for the web client using [Django Rest Framework](http://www.django-rest-framework.org/). I have designed & developed the [Progressive Web App](https://github.com/thetruefuss/elmer-react) using [React.js](https://reactjs.org/) & [Redux](https://redux.js.org/).
+
+
+
+### Built With
 
 - [Python](https://www.python.org/) 3.6.x
 - [Django Web Framework](https://www.djangoproject.com/) 2.1.x
 - [Django Rest Framework](http://www.django-rest-framework.org/) 3.8.x
-- [Twitter Bootstrap 4](https://getbootstrap.com/docs/4.0/getting-started/introduction/)
-- [jQuery 3](https://api.jquery.com/)
+- [Twitter Bootstrap](https://getbootstrap.com/docs/4.0/getting-started/introduction/) 4.x
+- [jQuery](https://api.jquery.com/) 3.x
 
-### Installation Guide
+
+
+### Screenshots
+
+Check the website at [https://elmer.pythonanywhere.com](https://elmer.pythonanywhere.com)
+
+#### Welcome Page
+[![Elmer][product1-screenshot]](https://elmer.pythonanywhere.com)
+
+#### Home Page
+[![Elmer][product2-screenshot]](https://elmer.pythonanywhere.com)
+
+#### Post Detail Page
+[![Elmer][product3-screenshot]](https://elmer.pythonanywhere.com)
+
+#### Profile Page
+[![Elmer][product4-screenshot]](https://elmer.pythonanywhere.com)
+
+#### Create Post Page
+[![Elmer][product5-screenshot]](https://elmer.pythonanywhere.com)
+
+
+
+## Getting Started
+
+
+
+### Prerequisites
+
+- [Python](https://www.python.org/) 3.6.x
+
+
+
+### Installation
 
 Create new directory:
 
@@ -96,3 +179,61 @@ $ python manage.py runserver
 ```
 
 Verify the deployment by navigating to [http://127.0.0.1:8000](http://127.0.0.1:8000) in your preferred browser.
+
+
+
+## Roadmap
+
+See the [open issues](https://github.com/thetruefuss/elmer/issues) for a list of proposed features (and known issues).
+
+
+
+## Contributing
+
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a pull request
+
+
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+
+
+## Contact
+<p>
+  Send me an e-email to <a href="mailto:alisheikh1114@gmail.com">alisheikh1114@gmail.com</a>
+  <br />
+  Find me online:
+  <a href="https://www.linkedin.com/in/iamalisaleh">LinkedIn</a> &bull;
+  <a href="https://twitter.com/iamalisaleh">Twitter</a> &bull;
+  <a href="https://www.facebook.com/iamalisaleh">Facebook</a> &bull;
+  <a href="https://www.instagram.com/iamalisaleh">Instagram</a> &bull;
+  <a href="https://thetruefuss.github.io/portfolio">Portfolio</a>
+</p>
+
+
+
+[contributors-shield]: https://img.shields.io/github/contributors/thetruefuss/elmer.svg?style=for-the-badge
+[contributors-url]: https://github.com/thetruefuss/elmer/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/thetruefuss/elmer.svg?style=for-the-badge
+[forks-url]: https://github.com/thetruefuss/elmer/network/members
+[stars-shield]: https://img.shields.io/github/stars/thetruefuss/elmer.svg?style=for-the-badge
+[stars-url]: https://github.com/thetruefuss/elmer/stargazers
+[issues-shield]: https://img.shields.io/github/issues/thetruefuss/elmer.svg?style=for-the-badge
+[issues-url]: https://github.com/thetruefuss/elmer/issues
+[license-shield]: https://img.shields.io/github/license/thetruefuss/elmer.svg?style=for-the-badge
+[license-url]: https://github.com/thetruefuss/elmer/blob/master/LICENSE
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/iamalisaleh
+[product1-screenshot]: https://i.ibb.co/vHPWBcD/welcome-page.png
+[product2-screenshot]: https://i.ibb.co/T2WYrTc/home-page.png
+[product3-screenshot]: https://i.ibb.co/6847KkN/subject-detail-page.png
+[product4-screenshot]: https://i.ibb.co/C6MgsDD/profile-page.png
+[product5-screenshot]: https://i.ibb.co/FWPk3CD/create-subject-page.png
