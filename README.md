@@ -208,7 +208,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 <p>
-  Send me an e-email to <a href="mailto:alisheikh1114@gmail.com">alisheikh1114@gmail.com</a>
+  Send me an email to <a href="mailto:alisheikh1114@gmail.com">alisheikh1114@gmail.com</a>
   <br />
   Find me online:
   <a href="https://www.linkedin.com/in/iamalisaleh">LinkedIn</a> &bull;
@@ -220,17 +220,17 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 
 
-[contributors-shield]: https://img.shields.io/github/contributors/thetruefuss/elmer.svg?style=for-the-badge
+[contributors-shield]: https://img.shields.io/github/contributors/thetruefuss/elmer.svg?style=flat
 [contributors-url]: https://github.com/thetruefuss/elmer/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/thetruefuss/elmer.svg?style=for-the-badge
+[forks-shield]: https://img.shields.io/github/forks/thetruefuss/elmer.svg?style=flat
 [forks-url]: https://github.com/thetruefuss/elmer/network/members
-[stars-shield]: https://img.shields.io/github/stars/thetruefuss/elmer.svg?style=for-the-badge
+[stars-shield]: https://img.shields.io/github/stars/thetruefuss/elmer.svg?style=flat
 [stars-url]: https://github.com/thetruefuss/elmer/stargazers
-[issues-shield]: https://img.shields.io/github/issues/thetruefuss/elmer.svg?style=for-the-badge
+[issues-shield]: https://img.shields.io/github/issues/thetruefuss/elmer.svg?style=flat
 [issues-url]: https://github.com/thetruefuss/elmer/issues
-[license-shield]: https://img.shields.io/github/license/thetruefuss/elmer.svg?style=for-the-badge
+[license-shield]: https://img.shields.io/github/license/thetruefuss/elmer.svg?style=flat
 [license-url]: https://github.com/thetruefuss/elmer/blob/master/LICENSE
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=social&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/iamalisaleh
 [product1-screenshot]: https://i.ibb.co/vHPWBcD/welcome-page.png
 [product2-screenshot]: https://i.ibb.co/T2WYrTc/home-page.png
