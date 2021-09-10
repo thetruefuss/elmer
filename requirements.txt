@@ -29,7 +29,7 @@ regex==2021.3.17
 requests==2.19.1
 six==1.11.0
 sorl-thumbnail==12.5.0
-sqlparse==0.4.1
+sqlparse==0.4.2
 Unidecode==0.4.21
 urllib3==1.23
 webencodings==0.5.1
