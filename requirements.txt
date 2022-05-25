@@ -22,7 +22,7 @@ Markdown==3.0.1
 olefile==0.46
 Pillow==8.1.2
 pyflakes==2.1.1
-PyJWT==1.6.4
+PyJWT==2.4.0
 python-decouple==3.1
 pytz==2018.5
 regex==2021.3.17
