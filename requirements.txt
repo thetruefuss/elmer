@@ -5,7 +5,7 @@ bleach==2.1.4
 certifi==2018.8.24
 chardet==3.0.4
 dj-database-url==0.5.0
-Django==2.1
+Django==2.2.28
 django-appconf==1.0.2
 django-cors-headers==2.4.0
 django-crispy-forms==1.7.2
